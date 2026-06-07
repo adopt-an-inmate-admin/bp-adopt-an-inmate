@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   LuClock,
   LuHeart,
@@ -13,30 +13,11 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import Logo from '@/components/Logo';
 import LogoutButton from '@/components/MainDashboard/LogoutButton';
 import { useProfile } from '@/contexts/ProfileProvider';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
+import { appIsActive } from '@/lib/utils';
+import { AdopterApplication } from '@/types/schema';
 import { ButtonLink } from './Button';
 import SidebarItem from './SidebarItem';
-
-const NAV_LINKS = [
-  {
-    href: '/',
-    label: 'Applications',
-    icon: LuLayoutDashboard,
-    external: false,
-  },
-  { href: '/?tab=history', label: 'History', icon: LuClock, external: false },
-  {
-    href: 'https://givebutter.com/zuB5RG',
-    label: 'Donate',
-    icon: LuHeart,
-    external: true,
-  },
-  {
-    href: 'https://adoptaninmate.org/adopting/',
-    label: 'Learn More',
-    icon: LuInfo,
-    external: true,
-  },
-] as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -44,17 +25,77 @@ export default function Sidebar() {
   const tab = searchParams.get('tab');
   const { profileData } = useProfile();
 
+  // counts for Applications and History
+  const [activeCount, setActiveCount] = useState<number>(0);
+  const [historyCount, setHistoryCount] = useState<number>(0);
+
+  // fetch application counts
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: apps } = await supabase
+        .from('adopter_applications_dummy')
+        .select('*')
+        .eq('adopter_uuid', user.id);
+
+      if (!apps) return;
+
+      setActiveCount(
+        apps.filter((app: AdopterApplication) => appIsActive(app)).length,
+      );
+      setHistoryCount(
+        apps.filter((app: AdopterApplication) => !appIsActive(app)).length,
+      );
+    };
+
+    fetchCounts();
+  }, []);
+
+  const NAV_LINKS = [
+    {
+      href: '/',
+      label: `Applications (${activeCount})`,
+      icon: LuLayoutDashboard,
+      external: false,
+    },
+    {
+      href: '/?tab=history',
+      label: `History (${historyCount})`,
+      icon: LuClock,
+      external: false,
+    },
+    {
+      href: 'https://givebutter.com/zuB5RG',
+      label: 'Donate',
+      icon: LuHeart,
+      external: true,
+    },
+    {
+      href: 'https://adoptaninmate.org/adopting/',
+      label: 'Learn More',
+      icon: LuInfo,
+      external: true,
+    },
+  ] as const;
+
   const displayName = useMemo(
     () => profileData?.first_name || 'User',
     [profileData?.first_name],
   );
 
+  // isActive checks for startsWith on Applications/History labels with counts
   const isActive = (label: string, href: string) => {
-    if (label === 'Applications')
+    if (label.startsWith('Applications'))
       return (
         (pathname === '/' || pathname.startsWith('/app')) && tab !== 'history'
       );
-    if (label === 'History') return pathname === '/' && tab === 'history';
+    if (label.startsWith('History'))
+      return pathname === '/' && tab === 'history';
     return pathname.startsWith(href);
   };
 
@@ -66,7 +107,7 @@ export default function Sidebar() {
       </Link>
 
       {/* Greeting */}
-      <section className="flex w-53 flex-col gap-4">
+      <section className="flex w-56 flex-col gap-4">
         <p className="text-xl text-black/60">Hi {displayName}!</p>
 
         {/* Nav links */}
