@@ -1,107 +1,88 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { verifyApplication } from '@/actions/applications/verifyApplication';
 import { Button } from '@/components/Button';
 import QuestionBack from '@/components/questions/QuestionBack';
 import { useApplicationContext } from '@/contexts/ApplicationContext';
-import { useAuth } from '@/contexts/AuthProvider';
-import { useProfile } from '@/contexts/ProfileProvider';
-import { useAppProcess } from '@/hooks/app-process';
-import { formatAgePreference, formatGenderPreference } from '@/lib/formatters';
+import { useApplicationNavigation } from '@/hooks/app-process';
+import { formatGenderPreference } from '@/lib/formatters';
+import { getSupabaseBrowserClient } from '@/lib/supabase';
+import { fetchProfileById } from '@/actions/queries/profile';
+import { Profile } from '@/types/schema';
 import { ApplicationStage } from '@/types/enums';
 
 export default function MainQuestionReview() {
   const { appState } = useApplicationContext();
-  const { advanceToStage } = useAppProcess();
-  const { userId } = useAuth();
-  const { profileData, profileReady, loadProfile } = useProfile();
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { advanceToStage } = useApplicationNavigation();
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
-    if (userId && !profileReady && !profileData) {
-      loadProfile();
-    }
-  }, [userId, profileReady, profileData, loadProfile]);
+    const fetchProfile = async () => {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const data = await fetchProfileById(user.id);
+        setProfile(data);
+      }
+    };
+    fetchProfile();
+  }, []);
 
-  const handleContinue = async () => {
-    // verify app
-    const { data, error } = await verifyApplication(appState.appId);
-
-    if (error) {
-      setErrorMsg(error);
-      return;
-    }
-
-    if (!data?.verified) {
-      setErrorMsg('Some fields are invalid.');
-      return;
-    }
-
+  const handleContinue = () => {
     advanceToStage(ApplicationStage.MATCHING);
   };
 
   return (
-    <div className="flex h-[37rem] w-[27rem] flex-col gap-4">
-      <div className="flex flex-col justify-between">
-        <header className="flex flex-col gap-2">
-          <h1>Review and Submit</h1>
-        </header>
-        <div className="flex items-center gap-2">
-          <p className="text-red-9">{errorMsg ? `Error: ${errorMsg}` : ''}</p>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <header className="flex flex-col gap-2">
+        <h1>Does this look right?</h1>
+      </header>
 
-      {/* Scrollable Text Box*/}
-      <div className="flex-1 space-y-6 overflow-x-hidden overflow-y-auto px-1 pr-2 break-words">
-        <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">First Name</p>
-            <p className="text-gray-12">
-              {profileData?.first_name ?? (profileReady ? 'N/A' : 'Loading...')}
+            <p className="text-sm text-gray-11">First name</p>
+            <p>{profile?.first_name || 'N/A'}</p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-gray-11">Last name</p>
+            <p>{profile?.last_name || 'N/A'}</p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-gray-11">Date of birth</p>
+            <p>
+              {profile?.date_of_birth
+                ? new Date(profile.date_of_birth).toLocaleDateString()
+                : 'N/A'}
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">Last Name</p>
-            <p className="text-gray-12">
-              {profileData?.last_name ?? (profileReady ? 'N/A' : 'Loading...')}
-            </p>
+            <p className="text-sm text-gray-11">State</p>
+            <p>{profile?.state || 'N/A'}</p>
           </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">Date of Birth</p>
-            <p className="text-gray-12">
-              {profileData?.date_of_birth ??
-                (profileReady ? 'N/A' : 'Loading...')}
-            </p>
-          </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">
-              Preferred Pronouns
-            </p>
-            <p className="text-gray-12">
-              {profileData?.pronouns ?? (profileReady ? 'N/A' : 'Loading...')}
-            </p>
-          </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">Personal bio</p>
-            <p className="text-gray-12">{appState.form.bio ?? 'N/A'}</p>
-          </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">
-              Gender preference
-            </p>
-            <p className="text-gray-12">
-              {formatGenderPreference(appState.form.genderPreference ?? 'N/A')}
-            </p>
-          </div>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-8">
-              Age range preference
-            </p>
-            <p className="text-gray-12">
-              {formatAgePreference(appState.form.agePreference)}
-            </p>
-          </div>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-gray-11">Personal bio</p>
+          <p>{appState.form.bio}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-gray-11">Gender preference</p>
+          <p>{formatGenderPreference(appState.form.genderPreference)}</p>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-gray-11">
+            {appState.stillInCorrespondence
+              ? 'Reason for adopting'
+              : 'Why it ended'}
+          </p>
+          <p>
+            {(appState.stillInCorrespondence
+              ? appState.form.whyAdopting
+              : appState.form.whyEnded) || 'N/A'}
+          </p>
         </div>
       </div>
 

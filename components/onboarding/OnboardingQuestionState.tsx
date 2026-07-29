@@ -25,13 +25,12 @@ export default function OnboardingQuestionState() {
   });
 
   const onSubmit = ({ state: stateOption }: StateForm) => {
-    const state = stateOption.value.toLowerCase();
+    const state = stateOption.value;
     setOnboardingInfo(prev => ({ ...prev, state }));
     nextQuestion();
   };
 
   return (
-    // TODO: use styled dropdown component
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <header className="flex flex-col gap-2">
         <h1>What state are you from?</h1>
@@ -39,14 +38,19 @@ export default function OnboardingQuestionState() {
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="firstName" className="text-sm text-gray-11">
+          <label htmlFor="state" className="text-sm text-gray-11">
             State
           </label>
           <Controller
             name="state"
             control={control}
             render={({ field }) => (
-              <Select {...field} options={statesDropdownOptions} />
+              <Select
+                {...field}
+                id="state"
+                instanceId="state-select"
+                options={statesDropdownOptions}
+              />
             )}
           />
         </div>
