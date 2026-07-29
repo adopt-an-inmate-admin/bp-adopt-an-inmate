@@ -1,15 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { fetchProfileById } from '@/actions/queries/profile';
 import { Button } from '@/components/Button';
 import QuestionBack from '@/components/questions/QuestionBack';
 import { useApplicationContext } from '@/contexts/ApplicationContext';
 import { useApplicationNavigation } from '@/hooks/app-process';
 import { formatGenderPreference } from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
-import { fetchProfileById } from '@/actions/queries/profile';
-import { Profile } from '@/types/schema';
 import { ApplicationStage } from '@/types/enums';
+import { Profile } from '@/types/schema';
 
 export default function MainQuestionReview() {
   const { appState } = useApplicationContext();

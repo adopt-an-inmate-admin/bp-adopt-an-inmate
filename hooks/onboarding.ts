@@ -11,12 +11,16 @@ import { OnboardingInfo } from '@/types/types';
 
 // schema used by useSubmitOnboarding for data validation
 const onboardingSchema = z.object({
-  firstName: z.string().nonoptional(),
-  lastName: z.string().nonoptional(),
-  dob: z.date().nonoptional(),
-  pronouns: z.string().nonoptional(),
-  state: z.string().nonoptional(),
-  isVeteran: z.boolean().nonoptional(),
+  firstName: z.string(),
+  lastName: z.string(),
+  dob: z.date(),
+  pronouns: z.string(),
+  state: z.string(),
+  isVeteran: z.boolean(),
+  adoptedBefore: z.boolean(),
+  stillActive: z.boolean(),
+  numPastActive: z.number(),
+  pastInactiveReason: z.string(),
 });
 
 /**
@@ -28,31 +32,41 @@ export const useSubmitOnboarding = () => {
   const { onboardingInfoRef } = useOnboardingContext();
 
   const submitOnboardingInfo = async () => {
-    const info: OnboardingInfo = onboardingSchema.parse(
-      onboardingInfoRef.current,
-    );
+    try {
+      const info: OnboardingInfo = onboardingSchema.parse(
+        onboardingInfoRef.current,
+      );
 
-    const supabase = getSupabaseBrowserClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      Logger.warn('Attempt made to submit onboarding info without logging in');
-      return;
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        Logger.warn(
+          'Attempt made to submit onboarding info without logging in',
+        );
+        return { error: 'You must be logged in to submit onboarding info.' };
+      }
+
+      const profile: Profile = {
+        user_id: user.id,
+        date_of_birth: info.dob.toUTCString(),
+        first_name: info.firstName,
+        last_name: info.lastName,
+        pronouns: info.pronouns,
+        state: info.state,
+        veteran_status: info.isVeteran,
+        monday_id: null,
+        past_inactive_reason: info.pastInactiveReason || null,
+      };
+
+      await upsertProfile(profile, info.numPastActive);
+      await createRow(profile);
+      return { error: null };
+    } catch (err) {
+      Logger.error(`Error in submitOnboardingInfo: ${err}`);
+      return { error: 'An unexpected error occurred during submission.' };
     }
-
-    const profile: Profile = {
-      user_id: user.id,
-      date_of_birth: info.dob.toUTCString(),
-      first_name: info.firstName,
-      last_name: info.lastName,
-      pronouns: info.pronouns,
-      state: info.state,
-      veteran_status: info.isVeteran,
-    };
-
-    await upsertProfile(profile);
-    await createRow(profile);
   };
 
   return { submitOnboardingInfo };
