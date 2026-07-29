@@ -9,11 +9,7 @@ import { useAuth } from '@/contexts/AuthProvider';
 import { ApplicationStage } from '@/types/enums';
 import { AdopterApplicationUpdate } from '@/types/schema';
 
-/**
- * Hook that returns helper functions related to
- * the adopter application process.
- */
-export const useAppProcess = () => {
+export const useApplicationNavigation = () => {
   const router = useRouter();
   const { appState, appStage } = useApplicationContext();
   const { userId } = useAuth();
@@ -85,3 +81,10 @@ export const useAppProcess = () => {
 
   return { advanceToStage, upsertAppInfo, submitApp };
 };
+
+/**
+ * Hook that returns helper functions related to
+ * the adopter application process.
+ * @deprecated Use useApplicationNavigation instead
+ */
+export const useAppProcess = useApplicationNavigation;

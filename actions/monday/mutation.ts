@@ -36,7 +36,8 @@ export const createRow = async (profile: Profile) => {
   // process values according to monday types
   const parsedProfile = Object.entries(processedProfile).reduce(
     (agg: Record<string, unknown>, [key, val]) => {
-      const translatedKey = columnIdTranslation[key as keyof Profile];
+      const translatedKey =
+        columnIdTranslation[key as keyof typeof columnIdTranslation];
       if (!translatedKey) return agg;
 
       const [type] = translatedKey.split('_');
