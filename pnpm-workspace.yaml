@@ -1,7 +1,11 @@
+packages:
+  - "."
+
 allowBuilds:
-  '@tailwindcss/oxide': set this to true or false
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  supabase: set this to true or false
-onlyBuiltDependencies:
-  - sharp
+  "@tailwindcss/oxide": true
+  esbuild: true
+  sharp: true
+  supabase: true
+
+overrides:
+  nanoid: "^3.3.8"
