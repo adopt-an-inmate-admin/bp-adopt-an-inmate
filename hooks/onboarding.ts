@@ -18,9 +18,9 @@ const onboardingSchema = z.object({
   state: z.string(),
   isVeteran: z.boolean(),
   adoptedBefore: z.boolean(),
-  stillActive: z.boolean(),
-  numPastActive: z.number(),
-  pastInactiveReason: z.string(),
+  stillActive: z.boolean().optional(),
+  numPastActive: z.number().optional(),
+  pastInactiveReason: z.string().optional(),
 });
 
 /**
@@ -60,7 +60,7 @@ export const useSubmitOnboarding = () => {
         past_inactive_reason: info.pastInactiveReason || null,
       };
 
-      await upsertProfile(profile, info.numPastActive);
+      await upsertProfile(profile, info.numPastActive ?? 0);
       await createRow(profile);
       return { error: null };
     } catch (err) {
