@@ -16,6 +16,7 @@ export const createRow = async (profile: Profile) => {
     email: 'email_mkxah5b2',
     first_name: 'text_mkxaz93r',
     last_name: 'text_mkxa4ctx',
+    gender: 'dropdown_mkxa8d6z',
     date_of_birth: 'date_mkxagkrj',
     pronouns: 'color_mkxag5bm',
     state: 'location_mkxage9t',

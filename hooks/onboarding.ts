@@ -14,7 +14,8 @@ const onboardingSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   dob: z.date(),
-  pronouns: z.string(),
+  gender: z.enum(['male', 'female', 'other']),
+  pronouns: z.string().optional(),
   state: z.string(),
   isVeteran: z.boolean(),
   adoptedBefore: z.boolean(),
@@ -48,12 +49,13 @@ export const useSubmitOnboarding = () => {
         return { error: 'You must be logged in to submit onboarding info.' };
       }
 
-      const profile: Profile = {
+      const profile: Profile & { gender: string } = {
         user_id: user.id,
         date_of_birth: info.dob.toUTCString(),
         first_name: info.firstName,
         last_name: info.lastName,
-        pronouns: info.pronouns,
+        gender: info.gender,
+        pronouns: info.pronouns || '',
         state: info.state,
         veteran_status: info.isVeteran,
         monday_id: null,

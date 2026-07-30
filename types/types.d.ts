@@ -23,7 +23,8 @@ export interface OnboardingInfo {
   firstName: string;
   lastName: string;
   dob: Date; // date of birth
-  pronouns: string;
+  gender: 'male' | 'female' | 'other';
+  pronouns?: string;
   state: string;
   isVeteran: boolean;
   adoptedBefore: boolean;

@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/components/application/main/MainQuestionReview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/application/main/MainQuestionReview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/onboarding.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/onboarding.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-workspace.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-workspace.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-workspace.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/types.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/types.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,11 +17,14 @@
   </component>
   <component name="ComposerSettings">
     <execution>
-      <execution />
+      <execution>
+        <execution />
+      </execution>
     </execution>
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="cachedIndexableFilesCount" value="175" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Rebase.Settings">
     <option name="NEW_BASE" value="main" />
@@ -40,7 +41,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:calblueprint/adopt-an-inmate&quot;,
+    &quot;url&quot;: &quot;git@github.com:adopt-an-inmate-admin/bp-adopt-an-inmate.git&quot;,
     &quot;accountId&quot;: &quot;80d83274-a486-4c54-b1d3-6bcb93ceb6db&quot;
   }
 }</component>
@@ -50,23 +51,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.7788536267706976" />
-      <entry key="MS500" value="2.6743003636237312" />
-      <entry key="S2" value="6.059311856527869" />
-      <entry key="S5" value="14.249208732708807" />
-      <entry key="S10" value="28.205116277346324" />
-      <entry key="S30" value="80.30844407128534" />
-      <entry key="S60" value="144.94748717543476" />
-      <entry key="M2" value="224.0656723467671" />
-      <entry key="M5" value="310.67948200564837" />
-      <entry key="M10" value="358.0955810119642" />
-      <entry key="M15" value="383.26880868362593" />
-      <entry key="M30" value="422.2270176051161" />
-      <entry key="H1" value="451.527289027679" />
-      <entry key="H2" value="470.0581275827284" />
-      <entry key="H4" value="480.5561516013821" />
-      <entry key="D1" value="490.02262247813997" />
-      <entry key="W1" value="491.7157410811467" />
+      <entry key="MS100" value="1.7666522393143067" />
+      <entry key="MS500" value="3.4244091507645646" />
+      <entry key="S2" value="7.123772660275374" />
+      <entry key="S5" value="11.941811093076426" />
+      <entry key="S10" value="16.09670168225949" />
+      <entry key="S30" value="20.75167981198951" />
+      <entry key="S60" value="22.28190078743304" />
+      <entry key="M2" value="23.371521546016297" />
+      <entry key="M5" value="45.75082147672777" />
+      <entry key="M10" value="125.79948687890204" />
+      <entry key="M15" value="196.93575076466655" />
+      <entry key="M30" value="325.4230586510214" />
+      <entry key="H1" value="428.755126342226" />
+      <entry key="H2" value="495.9201810609646" />
+      <entry key="H4" value="534.5093452114174" />
+      <entry key="D1" value="569.6267907977641" />
+      <entry key="W1" value="575.9392605701528" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -88,23 +89,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.6665827697208724" />
-      <entry key="MS500" value="2.6148003899170447" />
-      <entry key="S2" value="6.023854304292534" />
-      <entry key="S5" value="14.22214611394" />
-      <entry key="S10" value="28.180594127924845" />
-      <entry key="S30" value="80.28596625227433" />
-      <entry key="S60" value="144.92690937218993" />
-      <entry key="M2" value="224.04939192640825" />
-      <entry key="M5" value="310.6699247371077" />
-      <entry key="M10" value="358.0886103610242" />
-      <entry key="M15" value="383.2626348518713" />
-      <entry key="M30" value="422.2223294882508" />
-      <entry key="H1" value="451.52424439869895" />
-      <entry key="H2" value="470.05637128269103" />
-      <entry key="H4" value="480.55520568457285" />
-      <entry key="D1" value="490.0224545181396" />
-      <entry key="W1" value="491.7157168219613" />
+      <entry key="MS100" value="1.6455446541748968" />
+      <entry key="MS500" value="3.3810117503929855" />
+      <entry key="S2" value="7.101537868306441" />
+      <entry key="S5" value="11.925132181321581" />
+      <entry key="S10" value="16.08461455029022" />
+      <entry key="S30" value="20.746196722117933" />
+      <entry key="S60" value="22.278916715746323" />
+      <entry key="M2" value="23.369937837304025" />
+      <entry key="M5" value="45.749348547715705" />
+      <entry key="M10" value="125.79694643565698" />
+      <entry key="M15" value="196.93258099330765" />
+      <entry key="M30" value="325.4195903962996" />
+      <entry key="H1" value="428.7523925707465" />
+      <entry key="H2" value="495.9184383329862" />
+      <entry key="H4" value="534.5083577409071" />
+      <entry key="D1" value="569.6266078132088" />
+      <entry key="W1" value="575.9392339458641" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -116,43 +117,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "git.auto.fetch.suggestion.counter": "1",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/rfisk/IdeaProjects/adopt-an-inmate",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "npm.Next.js: server-side.executor": "Run",
-    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/home/rfisk/IdeaProjects/adopt-an-inmate/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git.auto.fetch.suggestion.counter&quot;: &quot;1&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/rfisk/IdeaProjects/adopt-an-inmate&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/800/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "DotEnv"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;DotEnv&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>

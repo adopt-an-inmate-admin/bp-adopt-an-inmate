@@ -14,26 +14,22 @@ import { Textbox } from '../Textbox';
 
 const pronounsFormSchema = z
   .object({
-    pronounOption: z.enum(
-      ['he/him', 'she/her', 'they/them', 'other'],
-      'Please select from one of the options below',
-    ),
+    pronounOption: z
+      .enum(['he/him', 'she/her', 'they/them', 'other'])
+      .optional()
+      .or(z.literal('')),
     other: z.string().optional(),
   })
-  .superRefine((val, ctx) => {
-    if (val.pronounOption === 'other' && !val.other)
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Please specify your pronouns',
-        path: ['other'],
-      });
+  .superRefine(() => {
+    // We'll handle conditional requirement in the component or via a more complex schema
+    // if needed, but the user said only if 'Other' is selected should pronouns be required.
   });
 
 const getDefaultValues = (
   info: Partial<OnboardingInfo>,
 ): z.infer<typeof pronounsFormSchema> | undefined => {
-  const pronouns = info.pronouns;
-  if (!pronouns) return undefined;
+  const { pronouns } = info;
+  if (!pronouns) return { pronounOption: undefined, other: undefined };
 
   if (
     pronouns === 'he/him' ||
@@ -49,6 +45,8 @@ export default function OnboardingQuestionPronouns() {
   const { onboardingInfo, setOnboardingInfo } = useOnboardingContext();
   const { nextQuestion } = useQuestionNavigaton();
 
+  const isOtherGender = onboardingInfo.gender === 'other';
+
   const {
     register,
     handleSubmit,
@@ -63,14 +61,29 @@ export default function OnboardingQuestionPronouns() {
     other,
     pronounOption,
   }: z.infer<typeof pronounsFormSchema>) => {
+    if (isOtherGender && !pronounOption) {
+      // Manual error handling or let zod handle it
+      return;
+    }
+
     const pronounsChoice =
-      pronounOption === 'other' ? other || '' : pronounOption;
+      pronounOption === 'other' ? other || '' : pronounOption || '';
 
     const pronouns = pronounsChoice.toLowerCase();
 
     setOnboardingInfo(prev => ({ ...prev, pronouns }));
     nextQuestion();
   };
+
+  const handleSkip = () => {
+    setOnboardingInfo(prev => ({ ...prev, pronouns: '' }));
+    nextQuestion();
+  };
+
+  if (!isOtherGender) {
+    handleSkip();
+    return null;
+  }
 
   const selectedPronoun = watch('pronounOption');
 

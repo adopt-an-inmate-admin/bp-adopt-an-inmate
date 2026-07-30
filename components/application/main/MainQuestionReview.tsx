@@ -14,7 +14,9 @@ import { Profile } from '@/types/schema';
 export default function MainQuestionReview() {
   const { appState } = useApplicationContext();
   const { advanceToStage } = useApplicationNavigation();
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<
+    (Profile & { gender?: string }) | null
+  >(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -62,6 +64,16 @@ export default function MainQuestionReview() {
             <p className="text-sm text-gray-11">State</p>
             <p>{profile?.state || 'N/A'}</p>
           </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-gray-11">Sex/Gender</p>
+            <p className="capitalize">{profile?.gender || 'N/A'}</p>
+          </div>
+          {profile?.gender === 'other' && (
+            <div className="flex flex-col gap-1">
+              <p className="text-sm text-gray-11">Pronouns</p>
+              <p>{profile?.pronouns || 'N/A'}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-1">

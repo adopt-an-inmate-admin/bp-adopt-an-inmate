@@ -3,6 +3,7 @@ import Logo from '@/components/Logo';
 import OnboardingComplete from '@/components/onboarding/OnboardingComplete';
 import OnboardingQuestionAdoptedBefore from '@/components/onboarding/OnboardingQuestionAdoptedBefore';
 import OnboardingQuestionDOB from '@/components/onboarding/OnboardingQuestionDOB';
+import OnboardingQuestionGender from '@/components/onboarding/OnboardingQuestionGender';
 import OnboardingQuestionName from '@/components/onboarding/OnboardingQuestionName';
 import OnboardingQuestionPronouns from '@/components/onboarding/OnboardingQuestionPronouns';
 import OnboardingQuestionState from '@/components/onboarding/OnboardingQuestionState';
@@ -26,6 +27,7 @@ export default function OnboardingPage() {
               questions={[
                 <OnboardingQuestionName key="name" />,
                 <OnboardingQuestionDOB key="dob" />,
+                <OnboardingQuestionGender key="gender" />,
                 <OnboardingQuestionPronouns key="pronouns" />,
                 <OnboardingQuestionState key="state" />,
                 <OnboardingQuestionVeteran key="veteran" />,
