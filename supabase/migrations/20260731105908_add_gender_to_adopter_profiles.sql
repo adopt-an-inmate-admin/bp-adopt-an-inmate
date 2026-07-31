@@ -1,0 +1,1 @@
+ALTER TABLE adopter_profiles ADD COLUMN IF NOT EXISTS gender TEXT;

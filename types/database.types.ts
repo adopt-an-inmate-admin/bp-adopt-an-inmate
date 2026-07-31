@@ -291,6 +291,7 @@ export type Database = {
         Row: {
           date_of_birth: string
           first_name: string
+          gender: string | null
           last_name: string
           monday_id: string | null
           past_inactive_reason: string | null
@@ -302,6 +303,7 @@ export type Database = {
         Insert: {
           date_of_birth: string
           first_name: string
+          gender?: string | null
           last_name: string
           monday_id?: string | null
           past_inactive_reason?: string | null
@@ -313,6 +315,7 @@ export type Database = {
         Update: {
           date_of_birth?: string
           first_name?: string
+          gender?: string | null
           last_name?: string
           monday_id?: string | null
           past_inactive_reason?: string | null

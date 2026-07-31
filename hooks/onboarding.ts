@@ -49,7 +49,7 @@ export const useSubmitOnboarding = () => {
         return { error: 'You must be logged in to submit onboarding info.' };
       }
 
-      const profile: Profile & { gender: string } = {
+      const profile: Profile = {
         user_id: user.id,
         date_of_birth: info.dob.toUTCString(),
         first_name: info.firstName,

@@ -18,7 +18,7 @@ export const createRow = async (profile: Profile) => {
     last_name: 'text_mkxa4ctx',
     gender: 'dropdown_mkxa8d6z',
     date_of_birth: 'date_mkxagkrj',
-    pronouns: 'color_mkxag5bm',
+    pronouns: 'text_mkxag5bm',
     state: 'location_mkxage9t',
     veteran_status: 'dropdown_mkxa18jg',
     user_id: '', // blank on purpose
@@ -28,8 +28,11 @@ export const createRow = async (profile: Profile) => {
   const processedProfile: Record<string, string> = Object.entries(
     profile,
   ).reduce((agg: Record<string, string>, [key, val]) => {
-    if (key === 'veteran_status') agg[key] = val ? 'yes' : 'no';
-    else agg[key] = val as string;
+    if (key === 'veteran_status') agg[key] = val ? 'Yes' : 'No';
+    else if (key === 'gender') {
+      agg[key] =
+        (val as string).charAt(0).toUpperCase() + (val as string).slice(1);
+    } else agg[key] = val as string;
     return agg;
   }, {});
 

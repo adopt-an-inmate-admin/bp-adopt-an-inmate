@@ -10,12 +10,9 @@ export async function upsertProfile(profile: Profile, num_ext: number) {
   const supabaseService = await dangerous_getSupabaseServiceClient();
 
   // upsert general app
-  const { gender: _, ...restProfile } = profile as Profile & {
-    gender?: string;
-  };
   const { error: upsertAppError } = await supabase
     .from('adopter_profiles')
-    .upsert(restProfile);
+    .upsert(profile);
 
   if (upsertAppError) {
     Logger.error(`Error upserting profile data: ${upsertAppError.message}`);

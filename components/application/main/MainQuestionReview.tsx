@@ -14,9 +14,7 @@ import { Profile } from '@/types/schema';
 export default function MainQuestionReview() {
   const { appState } = useApplicationContext();
   const { advanceToStage } = useApplicationNavigation();
-  const [profile, setProfile] = useState<
-    (Profile & { gender?: string }) | null
-  >(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
