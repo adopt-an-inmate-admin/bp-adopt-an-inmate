@@ -32,10 +32,10 @@ const onboardingSchema = z.object({
 export const useSubmitOnboarding = () => {
   const { onboardingInfoRef } = useOnboardingContext();
 
-  const submitOnboardingInfo = async () => {
+  const submitOnboardingInfo = async (overrideInfo?: OnboardingInfo) => {
     try {
       const info: OnboardingInfo = onboardingSchema.parse(
-        onboardingInfoRef.current,
+        overrideInfo || onboardingInfoRef.current,
       );
 
       const supabase = getSupabaseBrowserClient();
@@ -62,7 +62,10 @@ export const useSubmitOnboarding = () => {
         past_inactive_reason: info.pastInactiveReason || null,
       };
 
-      await upsertProfile(profile, info.numPastActive ?? 0);
+      const result = await upsertProfile(profile, info.numPastActive ?? 0);
+      if (result.error) {
+        return { error: result.error };
+      }
       await createRow(profile);
       return { error: null };
     } catch (err) {

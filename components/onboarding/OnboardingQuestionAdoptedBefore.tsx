@@ -8,6 +8,7 @@ import { useOnboardingContext } from '@/contexts/OnboardingContext';
 import { endReasons } from '@/data/endCorrespondenceDropdown';
 import { useSubmitOnboarding } from '@/hooks/onboarding';
 import { useQuestionNavigaton } from '@/hooks/questions';
+import { OnboardingInfo } from '@/types/types';
 import AsyncButton from '../AsyncButton';
 import Dropdown from '../Dropdown';
 import QuestionBack from '../questions/QuestionBack';
@@ -70,8 +71,9 @@ export default function OnboardingQuestionAdoptedBefore() {
   const stillActive = watch('stillActive');
 
   const onSubmit = async (data: AdoptedBeforeSchemaType) => {
-    setOnboardingInfo(prev => ({
-      ...prev,
+    setErrorMsg(null);
+    const updatedInfo = {
+      ...onboardingInfo,
       adoptedBefore: data.adoptedBefore,
       stillActive: data.adoptedBefore ? data.stillActive : undefined,
       numPastActive:
@@ -80,9 +82,13 @@ export default function OnboardingQuestionAdoptedBefore() {
         data.adoptedBefore && !data.stillActive
           ? data.pastInactiveReason
           : undefined,
-    }));
+    };
+    setOnboardingInfo(updatedInfo);
 
-    const { error } = await submitOnboardingInfo();
+    // Use a temporary ref or pass the data directly if possible,
+    // but here we just rely on the context update being reflected when the hook is called.
+    // Actually, useSubmitOnboarding uses onboardingInfoRef.current, which is updated by setOnboardingInfo.
+    const { error } = await submitOnboardingInfo(updatedInfo as OnboardingInfo);
     if (error) {
       setErrorMsg(error);
       return;
