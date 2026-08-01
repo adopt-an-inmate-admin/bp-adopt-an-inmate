@@ -1,7 +1,9 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv(os.path.join(os.path.dirname(__file__), "../../.env.local"))
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(__file__), "../../.env.local"))
+except ImportError:
+    pass
 
 # Model configuration
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"

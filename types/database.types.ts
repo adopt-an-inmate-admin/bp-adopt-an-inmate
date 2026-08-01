@@ -455,6 +455,7 @@ export type Database = {
           exported_to_monday: boolean
           first_name: string
           gender_pref: string
+          gender: string
           last_name: string
           monday_id: string
           personal_bio: string

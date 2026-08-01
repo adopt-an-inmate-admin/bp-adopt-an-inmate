@@ -1,8 +1,11 @@
 .github/
 .vscode/
 .next/
+venv/
+.venv
 
 README.md
+migration.md
 package-lock.json
 pnpm-lock.yaml
 next-env.d.ts

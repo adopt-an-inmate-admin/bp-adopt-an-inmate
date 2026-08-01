@@ -115,6 +115,19 @@ const getQueryCreateMainItem = (
     .map(p => capitalize(p.trim()))
     .join(' / ');
 
+  // parse gender preference
+  const genderPrefMap = {
+    no_preference: 'None',
+    female: 'Female',
+    male: 'Male',
+  };
+
+  const parsedGenderPref = Object.keys(genderPrefMap).includes(
+    appData.gender_pref,
+  )
+    ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
+    : 'Default';
+
   const mainItemColumnValues = parseColumns(
     {
       email: 'email__1',
@@ -122,9 +135,9 @@ const getQueryCreateMainItem = (
       first_name: 'text__1',
       last_name: 'text5__1',
       current_status: 'status4',
-      gender: 'label__1',
+      gender: 'gender__1',
       pronouns: 'single_select__1',
-      gender_preference: 'color__1',
+      gender_preference: 'status2__1',
       date_of_birth: 'date',
       location: 'location7',
       notes: 'notes__1',
@@ -137,6 +150,8 @@ const getQueryCreateMainItem = (
       date_of_birth: appData.date_of_birth,
       first_name: appData.first_name,
       last_name: appData.last_name,
+      gender: appData.gender,
+      gender_preference: parsedGenderPref,
       location: { lat: 0, lng: 0, address: appData.state },
       pronouns: capitalizedPronouns,
       veteran_status: appData.veteran_status ? 'Yes' : 'No',
