@@ -7,10 +7,11 @@ import { assertEnvVarExists } from '@/lib/utils';
 import { mondayApiClient } from '../core';
 
 assertEnvVarExists('MONDAY_WL_PIPS_BOARD_ID');
+assertEnvVarExists('MONDAY_ADOPTED_BOARD_ID');
 
-const MONDAY_WL_PIPS_BOARD_ID = process.env.MONDAY_WL_PIPS_BOARD_ID ?? ''; //store env var
+const MONDAY_ADOPTED_BOARD_ID = process.env.MONDAY_ADOPTED_BOARD_ID ?? '';
 
-export type MondayAdopteeStatus = 'WL' | 'OFC'; //restricts to 2 values
+export type MondayAdopteeStatus = 'WL' | 'OFC';
 
 //as other server
 export type UpdateAdopteeMondayStatusResult = {
@@ -23,20 +24,53 @@ const WL_STATUS_LABEL = 'WL: Wait Listed';
 const WLFA_STATUS_LABEL = 'WLFA: Wait Listed Formerly Adopted';
 
 //build mutation operations
-function buildStatusMutationFields(
+async function buildStatusMutationFields(
   adopteeMondayIds: string[],
   statusLabelsById: Record<string, string>,
 ) {
+  const query = `
+    query ($ids: [ID!]!) {
+      items(ids: $ids) {
+        id
+        board {
+          id
+        }
+      }
+    }
+  `;
+
+  const response = await mondayApiClient.request<{
+    items: { id: string; board: { id: string } }[];
+  }>(query, {
+    ids: adopteeMondayIds,
+  });
+
+  const boardIdByItemId = new Map(
+    response.items.map(item => [item.id, item.board.id]),
+  );
+
   return adopteeMondayIds
     .map((id, idx) => {
+      const boardId = boardIdByItemId.get(id);
+      if (!boardId) {
+        Logger.warn(
+          `Item ${id} not found in Monday when building status mutation`,
+        );
+        return '';
+      }
+
       const value = statusLabelsById[id];
+      const columnId =
+        boardId === MONDAY_ADOPTED_BOARD_ID ? 'status4' : 'status__1';
+
       return `update${idx + 1}:change_simple_column_value(
-        board_id: "${MONDAY_WL_PIPS_BOARD_ID}",
+        board_id: "${boardId}",
         item_id: "${id}",
-        column_id: "status__1",
+        column_id: "${columnId}",
         value: "${value}"
       ) { id }`;
     })
+    .filter(Boolean)
     .join(',');
 }
 
@@ -121,10 +155,14 @@ export async function updateAdopteeMondayStatus(
     );
   }
 
-  const mutationFields = buildStatusMutationFields(
+  const mutationFields = await buildStatusMutationFields(
     adopteeMondayIds,
     statusLabelsById,
   );
+
+  if (!mutationFields) {
+    return { data: '', error: null };
+  }
 
   //only run if WL to avoid extra queries
   if (status === 'WL') {
@@ -136,9 +174,10 @@ export async function updateAdopteeMondayStatus(
 
     try {
       await mondayApiClient.request(mutationQuery);
+      return { data: mutationFields, error: null };
     } catch (error) {
       Logger.error(
-        `Failed to update adoptee Monday status to WL for ids ${adopteeMondayIds.join(',')}: ${error}`,
+        `Failed to update adoptee Monday status to WL for ids ${adopteeMondayIds.join(',')}: ${JSON.stringify(error, null, 2)}`,
       );
       return {
         data: null,

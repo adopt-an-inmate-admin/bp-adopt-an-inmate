@@ -152,7 +152,7 @@ const getQueryCreateMainItem = (
       last_name: appData.last_name,
       gender: appData.gender,
       gender_preference: parsedGenderPref,
-      location: { lat: 0, lng: 0, address: appData.state },
+      location: { address: appData.state },
       pronouns: capitalizedPronouns,
       veteran_status: appData.veteran_status ? 'Yes' : 'No',
     },
@@ -330,6 +330,12 @@ const exportApplication = async (appId: string) => {
     // interpret response, get main item id
     try {
       const resObj = response as Record<string, unknown>;
+      if (resObj.errors) {
+        Logger.error(
+          `Monday API error during create item: ${JSON.stringify(resObj.errors, null, 2)}`,
+        );
+        return { success: false, error: 'Monday API request failed.' };
+      }
       const createItemField = resObj.create_item as Record<string, string>;
       mainItemId = createItemField.id;
     } catch (err) {
@@ -393,10 +399,18 @@ const exportApplication = async (appId: string) => {
 
   const response = await mondayApiClient.request(supplementaryQuery);
 
+  // interpret response for errors
+  const resObj = response as Record<string, unknown>;
+  if (resObj.errors) {
+    Logger.error(
+      `Monday API error during supplementary query: ${JSON.stringify(resObj.errors, null, 2)}`,
+    );
+    return { success: false, error: 'Monday API request failed.' };
+  }
+
   // interpret subitem id
   let subitemId = '';
   try {
-    const resObj = response as Record<string, unknown>;
     const createSubitemField = resObj.create_subitem as Record<string, string>;
     subitemId = createSubitemField.id;
   } catch (err) {
