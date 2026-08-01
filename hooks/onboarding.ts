@@ -1,5 +1,3 @@
-'use client';
-
 import z from 'zod';
 import Logger from '@/actions/logging';
 import { createRow } from '@/actions/monday/mutation';
@@ -16,7 +14,7 @@ const onboardingSchema = z.object({
   dob: z.date(),
   gender: z.enum(['male', 'female', 'other']),
   pronouns: z.string().optional(),
-  state: z.string(),
+  location: z.string(), // now holds full address
   isVeteran: z.boolean(),
   adoptedBefore: z.boolean(),
   stillActive: z.boolean().optional(),
@@ -56,7 +54,7 @@ export const useSubmitOnboarding = () => {
         last_name: info.lastName,
         gender: info.gender,
         pronouns: info.pronouns || '',
-        state: info.state,
+        state: info.location,
         veteran_status: info.isVeteran,
         monday_id: null,
         past_inactive_reason: info.pastInactiveReason || null,

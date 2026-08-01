@@ -25,7 +25,7 @@ export interface OnboardingInfo {
   dob: Date; // date of birth
   gender: 'male' | 'female' | 'other';
   pronouns?: string;
-  state: string;
+  location: string; // full address string
   isVeteran: boolean;
   adoptedBefore: boolean;
   stillActive?: boolean;

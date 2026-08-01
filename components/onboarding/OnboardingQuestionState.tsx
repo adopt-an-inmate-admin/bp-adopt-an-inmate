@@ -1,57 +1,51 @@
 'use client';
 
-import { Controller, useForm } from 'react-hook-form';
-import Select from 'react-select';
+import { useForm } from 'react-hook-form';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
-import { statesDropdownOptions } from '@/data/states';
 import { useQuestionNavigaton } from '@/hooks/questions';
 import { Button } from '../Button';
 import QuestionBack from '../questions/QuestionBack';
+import { Textbox } from '../Textbox';
 
 interface StateForm {
-  state: { label: string; value: string };
+  location: string;
 }
 
 export default function OnboardingQuestionState() {
   const { onboardingInfo, setOnboardingInfo } = useOnboardingContext();
   const { nextQuestion } = useQuestionNavigaton();
 
-  const { control, handleSubmit } = useForm<StateForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<StateForm>({
     defaultValues: {
-      state: onboardingInfo.state
-        ? statesDropdownOptions.find(d => d.value === onboardingInfo.state)
-        : undefined,
+      location: onboardingInfo.location || '',
     },
   });
 
-  const onSubmit = ({ state: stateOption }: StateForm) => {
-    const state = stateOption.value;
-    setOnboardingInfo(prev => ({ ...prev, state }));
+  const onSubmit = ({ location }: StateForm) => {
+    setOnboardingInfo(prev => ({ ...prev, location }));
     nextQuestion();
   };
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <header className="flex flex-col gap-2">
-        <h1>What state are you from?</h1>
+        <h1>Where are you located?</h1>
       </header>
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label htmlFor="state" className="text-sm text-gray-11">
-            State
+          <label htmlFor="location" className="text-sm text-gray-11">
+            City, State, Zip, Country
           </label>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                id="state"
-                instanceId="state-select"
-                options={statesDropdownOptions}
-              />
-            )}
+          <Textbox
+            {...register('location', { required: 'Location is required' })}
+            id="location"
+            placeholder="e.g. Houston, TX 77021, USA"
+            error={errors.location?.message}
           />
         </div>
       </div>

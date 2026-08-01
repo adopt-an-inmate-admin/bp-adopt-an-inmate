@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Dropdown from '@/components/Dropdown';
 import { useProfile } from '@/contexts/ProfileProvider';
-import { statesDropdownOptions } from '@/data/states';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Profile } from '@/types/schema';
 import { Textbox } from '../Textbox';
@@ -55,7 +54,7 @@ export default function EditProfileForm({
       last_name: profile.last_name ?? '',
       date_of_birth: profile.date_of_birth,
       pronouns: profile.pronouns,
-      state: profile.state?.toLowerCase(),
+      state: profile.state ?? '',
       veteran_status: profile.veteran_status ? 'yes' : 'no',
     },
   });
@@ -143,22 +142,14 @@ export default function EditProfileForm({
           </FieldWrapper>
         )}
       />
-      {/* State */}
-      <Controller
-        name="state"
-        control={control}
-        render={({ field }) => (
-          <FieldWrapper label="State">
-            <Dropdown
-              value={field.value}
-              onChange={field.onChange}
-              options={statesDropdownOptions}
-              placeholder={profile.state}
-              variant="borderless"
-            />
-          </FieldWrapper>
-        )}
-      />
+      {/* Location */}
+      <FieldWrapper label="Location">
+        <Textbox
+          variant="borderless"
+          placeholder="e.g. Houston, TX 77021, USA"
+          {...register('state')}
+        />
+      </FieldWrapper>
       {/* Veteran Status */}
       <Controller
         name="veteran_status"
