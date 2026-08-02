@@ -1,7 +1,13 @@
-import { ClassNamesConfig } from 'react-select';
+import { ClassNamesConfig, GroupBase } from 'react-select';
 import { cn } from '@/lib/utils';
 
-export const reactSelectClassnames: ClassNamesConfig = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const reactSelectClassnames: ClassNamesConfig<
+  any,
+  boolean,
+  GroupBase<any>
+> = {
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   control: () =>
     'bg-input px-3 py-1 rounded-lg ring-gray-9 focus-within:ring-1',
   indicatorSeparator: () => 'hidden',
