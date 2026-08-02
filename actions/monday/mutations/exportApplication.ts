@@ -115,6 +115,8 @@ const getQueryCreateMainItem = (
     .map(p => capitalize(p.trim()))
     .join(' / ');
 
+  const capitalizedGender = capitalize(appData.gender ?? '');
+
   // parse gender preference
   const genderPrefMap = {
     no_preference: 'None',
@@ -150,7 +152,7 @@ const getQueryCreateMainItem = (
       date_of_birth: appData.date_of_birth,
       first_name: appData.first_name,
       last_name: appData.last_name,
-      gender: appData.gender,
+      gender: capitalizedGender,
       gender_preference: parsedGenderPref,
       location: { address: appData.state, lat: '0', lng: '0' },
       pronouns: capitalizedPronouns,
