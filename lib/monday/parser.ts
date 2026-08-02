@@ -9,6 +9,8 @@ const parseDropdown = (dropdownIds: string[]) => {
 const parseLocation = (address: string) => {
   return {
     address,
+    lat: '',
+    lng: '',
   };
 };
 

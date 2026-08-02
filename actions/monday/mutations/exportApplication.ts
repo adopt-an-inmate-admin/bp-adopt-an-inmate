@@ -152,7 +152,7 @@ const getQueryCreateMainItem = (
       last_name: appData.last_name,
       gender: appData.gender,
       gender_preference: parsedGenderPref,
-      location: { address: appData.state },
+      location: { address: appData.state, lat: '', lng: '' },
       pronouns: capitalizedPronouns,
       veteran_status: appData.veteran_status ? 'Yes' : 'No',
     },
