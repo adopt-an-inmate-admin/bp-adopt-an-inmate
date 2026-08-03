@@ -234,7 +234,7 @@ export default function ApplicationPreviewDialog() {
                           ? 'ADOPTEE BIOGRAPHY'
                           : 'PERSONAL BIOGRAPHY'}
                       </p>
-                      <p>
+                      <p className="whitespace-pre-wrap">
                         {data.matched
                           ? data.matchedAdoptee.personal_bio
                           : data.appData.personal_bio}

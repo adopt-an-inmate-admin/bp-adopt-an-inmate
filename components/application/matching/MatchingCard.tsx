@@ -104,7 +104,7 @@ export default function MatchingCard({
             className="h-52 overflow-y-auto pr-2 pb-4"
             onScroll={handleBioScroll}
           >
-            <p>{match.bio}</p>
+            <p className="whitespace-pre-wrap">{match.bio}</p>
           </div>
           <div
             className={cn(

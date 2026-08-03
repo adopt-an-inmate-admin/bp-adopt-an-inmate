@@ -56,7 +56,7 @@ export default function MainQuestionBio() {
 
             <label htmlFor="bio" className="text-sm text-gray-11">
               This bio will be used for matching you with adoptees. Minimum 350
-              characters, maximum 750 characters.
+              characters, maximum 4000 characters.
             </label>
           </header>
 
@@ -71,6 +71,7 @@ export default function MainQuestionBio() {
           <div className="flex flex-col">
             <TextArea
               id="bio"
+              rows={12}
               placeholder="Ex. I love eating food, traveling, lorem ipsum..."
               {...register('bio', {
                 required: 'Bio is required',
@@ -79,13 +80,13 @@ export default function MainQuestionBio() {
                   message: 'Must be at least 350 characters',
                 },
                 maxLength: {
-                  value: 750,
-                  message: 'Must be 750 characters or less',
+                  value: 4000,
+                  message: 'Must be 4000 characters or less',
                 },
               })}
             />
             <span className="text-[10px] font-normal text-gray-11">
-              {bioValue.length}/750 characters
+              {bioValue.length}/4000 characters
             </span>
           </div>
         </div>

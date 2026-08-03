@@ -76,7 +76,7 @@ export default function MainQuestionReview() {
 
         <div className="flex flex-col gap-1">
           <p className="text-sm text-gray-11">Personal bio</p>
-          <p>{appState.form.bio}</p>
+          <p className="whitespace-pre-wrap">{appState.form.bio}</p>
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm text-gray-11">Gender preference</p>
