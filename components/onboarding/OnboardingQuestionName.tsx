@@ -40,6 +40,7 @@ export default function OnboardingQuestionName() {
           </label>
           <Textbox
             id="firstName"
+            autoComplete="given-name"
             {...register('firstName', { required: true })}
           />
         </div>
@@ -49,6 +50,7 @@ export default function OnboardingQuestionName() {
           </label>
           <Textbox
             id="lastName"
+            autoComplete="family-name"
             {...register('lastName', { required: true })}
           />
         </div>

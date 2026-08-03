@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Golos_Text } from 'next/font/google';
 import localFont from 'next/font/local';
 import '@/styles/global.css';
+import { DevResetButton } from '@/components/dev/DevResetButton';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import ProfileProvider from '@/contexts/ProfileProvider';
 import { cn } from '@/lib/utils';
@@ -45,7 +46,10 @@ export default function RootLayout({
         className={cn(bespoke.variable, golos.variable, 'h-svh w-full bg-bg')}
       >
         <AuthProvider>
-          <ProfileProvider>{children}</ProfileProvider>
+          <ProfileProvider>
+            {children}
+            {process.env.NODE_ENV === 'development' && <DevResetButton />}
+          </ProfileProvider>
         </AuthProvider>
       </body>
     </html>

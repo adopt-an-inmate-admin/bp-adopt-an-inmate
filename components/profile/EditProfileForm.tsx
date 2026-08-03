@@ -107,6 +107,7 @@ export default function EditProfileForm({
         <Textbox
           variant="borderless"
           placeholder="First Name"
+          autoComplete="given-name"
           {...register('first_name')}
         />
       </FieldWrapper>
@@ -115,6 +116,7 @@ export default function EditProfileForm({
         <Textbox
           variant="borderless"
           placeholder="Last Name"
+          autoComplete="family-name"
           {...register('last_name')}
         />
       </FieldWrapper>
@@ -125,6 +127,7 @@ export default function EditProfileForm({
           type="date"
           max={date}
           min="1900-01-01"
+          autoComplete="bday"
           {...register('date_of_birth')}
         />
       </FieldWrapper>
@@ -149,6 +152,7 @@ export default function EditProfileForm({
         <Textbox
           variant="borderless"
           placeholder="e.g. Houston, TX 77021, USA"
+          autoComplete="street-address"
           {...register('state')}
         />
       </FieldWrapper>

@@ -46,6 +46,7 @@ export default function OnboardingQuestionState() {
           <Textbox
             {...register('location', { required: 'Location is required' })}
             id="location"
+            autoComplete="street-address"
             placeholder="e.g. Houston, TX 77021, USA"
             error={errors.location?.message}
           />

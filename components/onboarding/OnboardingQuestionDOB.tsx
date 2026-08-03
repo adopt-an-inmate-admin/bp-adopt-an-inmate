@@ -44,6 +44,7 @@ export default function OnboardingQuestionDOB() {
           <Textbox
             type="date"
             id="dob"
+            autoComplete="bday"
             max={date}
             min="1900-01-01"
             {...register('dob', { required: true })}
