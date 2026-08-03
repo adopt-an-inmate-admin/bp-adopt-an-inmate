@@ -95,7 +95,19 @@ export function formatAppDateByStatus(app: AdopterApplication) {
  * Capitalize the first letter.
  */
 export function capitalize(s: string) {
+  if (!s) return s;
   return `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+}
+
+/**
+ * Capitalizes pronouns (e.g. "he/him" -> "He / Him")
+ */
+export function capitalizePronouns(pronouns: string) {
+  if (!pronouns) return '';
+  return pronouns
+    .split('/')
+    .map(p => capitalize(p.trim()))
+    .join(' / ');
 }
 
 /**

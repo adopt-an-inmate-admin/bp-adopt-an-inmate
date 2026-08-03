@@ -86,6 +86,11 @@ export default function ProfileView() {
               />
               <ProfileRow
                 icon={<BsGenderAmbiguous size={22} />}
+                label="Gender"
+                value={profileData.gender}
+              />
+              <ProfileRow
+                icon={<BsGenderAmbiguous size={22} />}
                 label="Pronouns"
                 value={profileData.pronouns}
               />

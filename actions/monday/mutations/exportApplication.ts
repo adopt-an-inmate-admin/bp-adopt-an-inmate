@@ -115,11 +115,24 @@ const getQueryCreateMainItem = (
     .map(p => capitalize(p.trim()))
     .join(' / ');
 
-  const capitalizedGender = capitalize(appData.gender ?? '');
+  // parse gender mapping
+  const genderToMonday: Record<string, string> = {
+    male: 'Male',
+    female: 'Female',
+    lgbtqi: 'LGBTQI+',
+    'lgbtqi+': 'LGBTQI+',
+    other: 'LGBTQI+',
+    both: 'Both (for group)',
+    prefer_not_to_say: 'Prefer Not To Say',
+    'prefer-not': 'Prefer Not To Say',
+  };
+
+  const mappedGender =
+    genderToMonday[(appData.gender ?? '').toLowerCase()] ?? 'Prefer Not To Say';
 
   // parse gender preference
   const genderPrefMap = {
-    no_preference: 'None',
+    no_preference: 'No Preference',
     female: 'Female',
     male: 'Male',
   };
@@ -128,7 +141,7 @@ const getQueryCreateMainItem = (
     appData.gender_pref,
   )
     ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
-    : 'Default';
+    : 'No Preference';
 
   const mainItemColumnValues = parseColumns(
     {
@@ -137,9 +150,9 @@ const getQueryCreateMainItem = (
       first_name: 'text__1',
       last_name: 'text5__1',
       current_status: 'status4',
-      gender: 'gender__1',
+      gender: 'label__1',
       pronouns: 'single_select__1',
-      gender_preference: 'status2__1',
+      gender_preference: 'color__1',
       date_of_birth: 'date',
       location: 'location7',
       notes: 'notes__1',
@@ -148,15 +161,15 @@ const getQueryCreateMainItem = (
     {
       email: { email, text: email },
       added_time: currentDateISOString,
-      current_status: 'Pending',
+      current_status: { label: 'Pending' },
       date_of_birth: appData.date_of_birth,
       first_name: appData.first_name,
       last_name: appData.last_name,
-      gender: capitalizedGender,
-      gender_preference: parsedGenderPref,
-      location: { address: appData.state, lat: '0', lng: '0' },
-      pronouns: capitalizedPronouns,
-      veteran_status: appData.veteran_status ? 'Yes' : 'No',
+      gender: { label: mappedGender },
+      gender_preference: { label: parsedGenderPref },
+      location: { address: appData.state },
+      pronouns: { label: capitalizedPronouns },
+      veteran_status: { labels: [appData.veteran_status ? 'Yes' : 'No'] },
     },
   );
 
@@ -165,7 +178,7 @@ const getQueryCreateMainItem = (
       create_item(
         board_id: "${MONDAY_ADOPTER_DATA_BOARD_ID}",
         group_id: "${MONDAY_ADOPTER_DATA_WAITING_GROUP_ID}",
-        item_name: "${email}",
+        item_name: "${appData.first_name} ${appData.last_name}",
         create_labels_if_missing: true,
         column_values: "${JSON.stringify(mainItemColumnValues).replaceAll('"', '\\"')}"
       ) {
@@ -200,11 +213,24 @@ const getQueryCreateSubItem = (
     .map(p => capitalize(p.trim()))
     .join(' / ');
 
-  const capitalizedGender = capitalize(appData.gender ?? '');
+  // parse gender mapping
+  const genderToMonday: Record<string, string> = {
+    male: 'Male',
+    female: 'Female',
+    lgbtqi: 'LGBTQI+',
+    'lgbtqi+': 'LGBTQI+',
+    other: 'LGBTQI+',
+    both: 'Both (for group)',
+    prefer_not_to_say: 'Prefer Not To Say',
+    'prefer-not': 'Prefer Not To Say',
+  };
+
+  const mappedGender =
+    genderToMonday[(appData.gender ?? '').toLowerCase()] ?? 'Prefer Not To Say';
 
   // parse gender preference
   const genderPrefMap = {
-    no_preference: 'None',
+    no_preference: 'No Preference',
     female: 'Female',
     male: 'Male',
   };
@@ -213,7 +239,7 @@ const getQueryCreateSubItem = (
     appData.gender_pref,
   )
     ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
-    : 'Default';
+    : 'No Preference';
 
   // parse ranked cards
   const adopteeMap = adopteeData.reduce(
@@ -237,19 +263,19 @@ const getQueryCreateSubItem = (
   const subItemColumnValues = parseColumns(
     {
       status: 'status',
-      gender: 'gender__1',
+      gender: 'label__1',
       pronouns: 'single_select__1',
-      gender_preference: 'status2__1',
+      gender_preference: 'color__1',
       match_list_links: 'connect_boards1__1',
       bio_and_age: 'long_text__1',
       order: 'long_text5__1',
       date_received: 'date__1',
     },
     {
-      status: 'Pending',
-      gender: capitalizedGender,
-      pronouns: capitalizedPronouns,
-      gender_preference: parsedGenderPref,
+      status: { label: 'Pending' },
+      gender: { label: mappedGender },
+      pronouns: { label: capitalizedPronouns },
+      gender_preference: { label: parsedGenderPref },
       match_list_links: { item_ids: appData.ranked_cards },
       // request notes column: age preference (or "none" if not set) prepended
       // to the adopter bio, e.g. "age preference: 45-78, bio: ..."

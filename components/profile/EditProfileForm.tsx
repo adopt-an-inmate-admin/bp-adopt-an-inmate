@@ -5,7 +5,11 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Dropdown from '@/components/Dropdown';
 import { useProfile } from '@/contexts/ProfileProvider';
-import { capitalizeLocation } from '@/lib/formatters';
+import {
+  capitalize,
+  capitalizeLocation,
+  capitalizePronouns,
+} from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Profile } from '@/types/schema';
 import { Textbox } from '../Textbox';
@@ -18,6 +22,7 @@ interface EditProfileFormData {
   first_name: string;
   last_name: string;
   date_of_birth: string;
+  gender: string;
   pronouns: string;
   state: string;
   veteran_status: string;
@@ -54,16 +59,23 @@ export default function EditProfileForm({
       first_name: profile.first_name ?? '',
       last_name: profile.last_name ?? '',
       date_of_birth: profile.date_of_birth,
-      pronouns: profile.pronouns,
+      gender: capitalize(profile.gender ?? ''),
+      pronouns: capitalizePronouns(profile.pronouns),
       state: profile.state ?? '',
       veteran_status: profile.veteran_status ? 'yes' : 'no',
     },
   });
 
+  const GENDER_OPTIONS: Option[] = [
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
+    { label: 'Other', value: 'Other' },
+  ];
+
   const PRONOUNS_OPTIONS: Option[] = [
-    { label: 'he/him', value: 'he/him' },
-    { label: 'she/her', value: 'she/her' },
-    { label: 'they/them', value: 'they/them' },
+    { label: 'He / Him', value: 'He / Him' },
+    { label: 'She / Her', value: 'She / Her' },
+    { label: 'They / Them', value: 'They / Them' },
   ];
 
   const VETERAN_OPTIONS: Option[] = [
@@ -83,6 +95,7 @@ export default function EditProfileForm({
           first_name: data.first_name,
           last_name: data.last_name,
           date_of_birth: data.date_of_birth,
+          gender: data.gender,
           pronouns: data.pronouns,
           state: formattedLocation,
           veteran_status: data.veteran_status === 'yes',
@@ -131,6 +144,22 @@ export default function EditProfileForm({
           {...register('date_of_birth')}
         />
       </FieldWrapper>
+      {/* Gender */}
+      <Controller
+        name="gender"
+        control={control}
+        render={({ field }) => (
+          <FieldWrapper label="Gender">
+            <Dropdown
+              value={field.value}
+              onChange={field.onChange}
+              options={GENDER_OPTIONS}
+              placeholder={profile.gender ?? 'Select gender'}
+              variant="borderless"
+            />
+          </FieldWrapper>
+        )}
+      />
       {/* Pronouns */}
       <Controller
         name="pronouns"

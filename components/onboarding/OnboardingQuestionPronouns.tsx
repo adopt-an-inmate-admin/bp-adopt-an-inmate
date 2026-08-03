@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
 import { useQuestionNavigaton } from '@/hooks/questions';
+import { capitalizePronouns } from '@/lib/formatters';
 import { OnboardingInfo } from '@/types/types';
 import { Button } from '../Button';
 import ErrorMessage from '../ErrorMessage';
@@ -69,7 +70,7 @@ export default function OnboardingQuestionPronouns() {
     const pronounsChoice =
       pronounOption === 'other' ? other || '' : pronounOption || '';
 
-    const pronouns = pronounsChoice.toLowerCase();
+    const pronouns = capitalizePronouns(pronounsChoice);
 
     setOnboardingInfo(prev => ({ ...prev, pronouns }));
     nextQuestion();

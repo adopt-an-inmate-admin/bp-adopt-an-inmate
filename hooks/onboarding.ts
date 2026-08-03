@@ -3,6 +3,7 @@ import Logger from '@/actions/logging';
 import { createRow } from '@/actions/monday/mutation';
 import { upsertProfile } from '@/actions/queries/profile';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
+import { capitalize, capitalizePronouns } from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { Profile } from '@/types/schema';
 import { OnboardingInfo } from '@/types/types';
@@ -52,8 +53,8 @@ export const useSubmitOnboarding = () => {
         date_of_birth: info.dob.toUTCString(),
         first_name: info.firstName,
         last_name: info.lastName,
-        gender: info.gender,
-        pronouns: info.pronouns || '',
+        gender: capitalize(info.gender),
+        pronouns: capitalizePronouns(info.pronouns || ''),
         state: info.location,
         veteran_status: info.isVeteran,
         monday_id: null,

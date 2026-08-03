@@ -64,9 +64,9 @@ export default function MainQuestionReview() {
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-11">Sex/Gender</p>
-            <p className="capitalize">{profile?.gender || 'N/A'}</p>
+            <p>{profile?.gender || 'N/A'}</p>
           </div>
-          {profile?.gender === 'other' && (
+          {profile?.gender?.toLowerCase() === 'other' && (
             <div className="flex flex-col gap-1">
               <p className="text-sm text-gray-11">Pronouns</p>
               <p>{profile?.pronouns || 'N/A'}</p>
