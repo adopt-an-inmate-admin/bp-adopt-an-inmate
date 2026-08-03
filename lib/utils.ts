@@ -86,12 +86,27 @@ export const getEnvVar = (key: string) => {
 };
 
 /**
- * Get the abbreviation of a state from its name.
+ * Get the abbreviation of a state from its name or a location string.
  * ex: getStateAbbv("California") => "CA"
+ * ex: getStateAbbv("Houston, TX 77021, USA") => "TX"
  */
 export const getStateAbbv = (state: string) => {
+  if (!state) return 'N/A';
   const loweredState = state.toLowerCase();
-  return stateNameAbbv[loweredState] ?? 'N/A';
+  if (stateNameAbbv[loweredState]) return stateNameAbbv[loweredState];
+
+  // If not found, try to find state name or abbreviation within the string
+  const parts = state.split(/[\s,]+/).map(p => p.trim().toLowerCase());
+  for (const part of parts) {
+    if (stateNameAbbv[part]) return stateNameAbbv[part];
+    // Check if part is already an abbreviation
+    const isAbbv = Object.values(stateNameAbbv).some(
+      abbv => abbv.toLowerCase() === part,
+    );
+    if (isAbbv) return part.toUpperCase();
+  }
+
+  return 'N/A';
 };
 
 /**

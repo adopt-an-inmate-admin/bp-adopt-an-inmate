@@ -97,3 +97,28 @@ export function formatAppDateByStatus(app: AdopterApplication) {
 export function capitalize(s: string) {
   return `${s.charAt(0).toUpperCase()}${s.slice(1)}`;
 }
+
+/**
+ * Capitalizes a location string (City, State Zip, USA)
+ */
+export function capitalizeLocation(location: string) {
+  if (!location) return '';
+
+  return location
+    .split(',')
+    .map(part => {
+      return part
+        .trim()
+        .split(' ')
+        .map(word => {
+          const lower = word.toLowerCase();
+          if (lower === 'usa') return 'USA';
+          // If it's a 2-letter state abbreviation, uppercase it
+          if (word.length === 2 && /^[a-zA-Z]{2}$/.test(word))
+            return word.toUpperCase();
+          return word.charAt(0).toUpperCase() + lower.slice(1);
+        })
+        .join(' ');
+    })
+    .join(', ');
+}

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Dropdown from '@/components/Dropdown';
 import { useProfile } from '@/contexts/ProfileProvider';
+import { capitalizeLocation } from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Profile } from '@/types/schema';
 import { Textbox } from '../Textbox';
@@ -75,6 +76,7 @@ export default function EditProfileForm({
     setError(null);
 
     try {
+      const formattedLocation = capitalizeLocation(data.state);
       const { error } = await supabase
         .from('adopter_profiles')
         .update({
@@ -82,7 +84,7 @@ export default function EditProfileForm({
           last_name: data.last_name,
           date_of_birth: data.date_of_birth,
           pronouns: data.pronouns,
-          state: data.state,
+          state: formattedLocation,
           veteran_status: data.veteran_status === 'yes',
         })
         .eq('user_id', profile.user_id);

@@ -59,7 +59,7 @@ export default function MainQuestionReview() {
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-gray-11">State</p>
+            <p className="text-sm text-gray-11">Location</p>
             <p>{profile?.state || 'N/A'}</p>
           </div>
           <div className="flex flex-col gap-1">

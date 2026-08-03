@@ -91,11 +91,8 @@ export default function ProfileView() {
               />
               <ProfileRow
                 icon={<BsGlobe2 size={22} />}
-                label="State"
-                value={
-                  profileData.state[0].toUpperCase() +
-                  profileData.state.slice(1)
-                }
+                label="Location"
+                value={profileData.state}
               />
               <ProfileRow
                 icon={<FaRibbon size={22} />}
