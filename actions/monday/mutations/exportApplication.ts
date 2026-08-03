@@ -110,7 +110,7 @@ const getQueryCreateMainItem = (
   // define and compute column values
   const currentTime = new Date();
   const currentDateISOString = currentTime.toISOString().split('T')[0]; // ex: 2026-02-22
-  const capitalizedPronouns = appData.pronouns
+  const capitalizedPronouns = (appData.pronouns ?? '')
     .split('/')
     .map(p => capitalize(p.trim()))
     .join(' / ');
@@ -195,6 +195,13 @@ const getQueryCreateSubItem = (
   const currentTime = new Date();
   const currentDateISOString = currentTime.toISOString().split('T')[0];
 
+  const capitalizedPronouns = (appData.pronouns ?? '')
+    .split('/')
+    .map(p => capitalize(p.trim()))
+    .join(' / ');
+
+  const capitalizedGender = capitalize(appData.gender ?? '');
+
   // parse gender preference
   const genderPrefMap = {
     no_preference: 'None',
@@ -230,6 +237,8 @@ const getQueryCreateSubItem = (
   const subItemColumnValues = parseColumns(
     {
       status: 'status',
+      gender: 'gender__1',
+      pronouns: 'single_select__1',
       gender_preference: 'status2__1',
       match_list_links: 'connect_boards1__1',
       bio_and_age: 'long_text__1',
@@ -238,6 +247,8 @@ const getQueryCreateSubItem = (
     },
     {
       status: 'Pending',
+      gender: capitalizedGender,
+      pronouns: capitalizedPronouns,
       gender_preference: parsedGenderPref,
       match_list_links: { item_ids: appData.ranked_cards },
       // request notes column: age preference (or "none" if not set) prepended
@@ -295,7 +306,7 @@ const exportApplication = async (appId: string) => {
 
   // fetch app data from database
   const { appData, error: appDataError } = await getAppData(
-    supabase,
+    supabaseService,
     appId,
     user.id,
   );
