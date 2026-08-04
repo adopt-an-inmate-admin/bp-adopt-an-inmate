@@ -56,7 +56,7 @@ export const handleAdopterConfirmation = async ({
     // db: update adopter application status
     const supabase = await getSupabaseServerClient();
     const { error: updateAppError } = await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .update({
         status: 'ACTIVE',
         waiting_confirmation: false,
@@ -75,7 +75,7 @@ export const handleAdopterConfirmation = async ({
     // db: update adoptee status
     const supabaseService = await dangerous_getSupabaseServiceClient();
     const { error: updateAdopteeError } = await supabaseService
-      .from('adoptee_vector_test')
+      .from('adoptee_vector')
       .update({ status: 'ADOPTED', formerly_adopted: true })
       .eq('id', adopteeMondayId);
 
@@ -93,7 +93,7 @@ export const handleAdopterConfirmation = async ({
     const now = new Date();
 
     const { error: updateAppError } = await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .update({
         status: 'ENDED',
         time_ended: now.toISOString(),
@@ -112,7 +112,7 @@ export const handleAdopterConfirmation = async ({
     const supabaseService = await dangerous_getSupabaseServiceClient();
 
     const { error: updateAdopteeError } = await supabaseService
-      .from('adoptee_vector_test')
+      .from('adoptee_vector')
       .update({ status: 'WAIT_LISTED' })
       .eq('id', adopteeMondayId);
 
@@ -125,7 +125,7 @@ export const handleAdopterConfirmation = async ({
 
     // monday: update adoptee status
     const { data: adoptee, error: getAdopteeError } = await supabaseService
-      .from('adoptee_vector_test')
+      .from('adoptee_vector')
       .select('id, formerly_adopted, inmate_id')
       .eq('id', adopteeMondayId)
       .maybeSingle();

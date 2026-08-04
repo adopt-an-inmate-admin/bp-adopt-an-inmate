@@ -8,7 +8,7 @@ export const verifyApplication = async (appId: string) => {
 
   // fetch application
   const { data: appData, error: getAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select()
     .eq('app_uuid', appId)
     .maybeSingle();

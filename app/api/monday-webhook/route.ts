@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   // update app status
   const supabase = await dangerous_getSupabaseServiceClient();
   const { error: updateError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .update({ status })
     .eq('monday_id', appMondayId);
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
   if (status === 'PENDING_CONFIRMATION') {
     // fetch the application to get its app_uuid
     const { data: appData, error: fetchError } = await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .select('app_uuid')
       .eq('monday_id', appMondayId)
       .maybeSingle();
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     // update application with matched adoptee, confirmation due date, and waiting_confirmation
     const { error: appUpdateError } = await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .update({
         matched_adoptee: matchedAdopteeId,
         time_confirmation_due: confirmationDue.toISOString(),
@@ -124,9 +124,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // mark matched adoptee as ADOPTED in adoptee_vector_test
+    // mark matched adoptee as ADOPTED in adoptee_vector
     const { error: adoptedError } = await supabase
-      .from('adoptee_vector_test')
+      .from('adoptee_vector')
       .update({ status: 'ADOPTED' })
       .eq('id', matchedAdopteeId);
 
@@ -136,10 +136,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // mark unmatched adoptees as WAIT_LISTED in adoptee_vector_test and on Monday WL PIPs board
+    // mark unmatched adoptees as WAIT_LISTED in adoptee_vector and on Monday WL PIPs board
     if (unmatchedAdopteeIds.length > 0) {
       const { error: wlError } = await supabase
-        .from('adoptee_vector_test')
+        .from('adoptee_vector')
         .update({ status: 'WAIT_LISTED' })
         .in('id', unmatchedAdopteeIds);
 

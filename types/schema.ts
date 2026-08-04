@@ -9,8 +9,7 @@ export type PublicFunctions = Database['public']['Functions'];
 // types derived from database-generated types
 export type Profile = PublicTable<'adopter_profiles'>;
 
-// TODO: update table name when no longer in testing
-export type AdopterApplication = PublicTable<'adopter_applications_dummy'>;
+export type AdopterApplication = PublicTable<'adopter_applications'>;
 
 export type ProfileAndApplication =
   PublicFunctions['get_user_and_application']['Returns'][number];
@@ -23,7 +22,7 @@ export type RankedAdopteeMatch = Pick<
   'id' | 'age' | 'bio' | 'first_name' | 'state' | 'gender'
 >;
 
-export type Adoptee = PublicTables['adoptee_vector_test']['Row'];
+export type Adoptee = PublicTables['adoptee_vector']['Row'];
 export type AdopteeWithFacility =
   PublicFunctions['get_adoptee_with_facility']['Returns'][number];
 

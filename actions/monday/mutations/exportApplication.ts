@@ -339,7 +339,7 @@ const exportApplication = async (appId: string) => {
 
   // get relevant adoptee data
   const { data: adopteeData, error: getAdopteeError } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .select('id, inmate_id')
     .in('id', appData.ranked_cards as Array<string>);
 
@@ -495,7 +495,7 @@ const exportApplication = async (appId: string) => {
 
   // update application record on supabase
   const { error: updateError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .update({ exported_to_monday: true, monday_id: subitemId })
     .eq('app_uuid', appId);
 
@@ -511,7 +511,7 @@ const exportApplication = async (appId: string) => {
 
   // mark adoptees as OFC on Supabase
   const { error: updateAdopteesError } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .update({ status: 'OUT_FOR_CONSIDERATION' })
     .in('id', appData.ranked_cards as Array<string>);
 

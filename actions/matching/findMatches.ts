@@ -22,7 +22,7 @@ export const findMatches = async (appId: string) => {
 
   // TODO: update table name when it's no longer dummy
   const { data: appData, error: fetchAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select()
     .eq('app_uuid', appId)
     .maybeSingle();
@@ -81,7 +81,7 @@ export const findMatches = async (appId: string) => {
 
   // update application
   const { error: updateError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .update({ ranked_cards: matchIds })
     .eq('app_uuid', appId);
 

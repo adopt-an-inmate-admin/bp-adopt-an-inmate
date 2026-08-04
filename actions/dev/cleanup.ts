@@ -41,7 +41,7 @@ export async function resetTestData(email: string) {
       .eq('user_id', userId)
       .single();
     const { data: apps } = await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .select('monday_id')
       .eq('adopter_uuid', userId);
 
@@ -59,7 +59,7 @@ export async function resetTestData(email: string) {
 
     // 3. Delete from applications
     await supabase
-      .from('adopter_applications_dummy')
+      .from('adopter_applications')
       .delete()
       .eq('adopter_uuid', userId);
 

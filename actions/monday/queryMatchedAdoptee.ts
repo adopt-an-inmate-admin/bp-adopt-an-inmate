@@ -113,7 +113,7 @@ export async function queryMatchedAdoptees(
 ): Promise<MatchedAdopteeResult> {
   const supabase = await dangerous_getSupabaseServiceClient();
   const { data: appData, error } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select('ranked_cards')
     .eq('app_uuid', applicationId)
     .maybeSingle();

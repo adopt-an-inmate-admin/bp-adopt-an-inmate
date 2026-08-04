@@ -29,7 +29,7 @@ export async function handleEndCorrespondence({
 
   // db: update adoptee table
   const { error: updateAdopteeError } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .update({ status: 'WAIT_LISTED' })
     .eq('id', adopteeId);
 
@@ -44,7 +44,7 @@ export async function handleEndCorrespondence({
   const now = new Date();
 
   const { error: updateAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .update({
       status: 'ENDED',
       time_ended: now.toISOString(),

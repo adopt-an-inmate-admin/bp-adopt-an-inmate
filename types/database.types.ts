@@ -79,47 +79,6 @@ export type Database = {
       }
       adoptee_vector: {
         Row: {
-          age: number | null
-          bio: string | null
-          embedding: string | null
-          gender: string | null
-          id: string
-          offense: string | null
-          state: string | null
-          veteran_status: boolean | null
-        }
-        Insert: {
-          age?: number | null
-          bio?: string | null
-          embedding?: string | null
-          gender?: string | null
-          id: string
-          offense?: string | null
-          state?: string | null
-          veteran_status?: boolean | null
-        }
-        Update: {
-          age?: number | null
-          bio?: string | null
-          embedding?: string | null
-          gender?: string | null
-          id?: string
-          offense?: string | null
-          state?: string | null
-          veteran_status?: boolean | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "adoptee_vector1_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "adoptee"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      adoptee_vector_test: {
-        Row: {
           bio: string | null
           dob: string | null
           embedding: string | null
@@ -169,7 +128,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "adoptee_vector_test_facility_id_fkey"
+            foreignKeyName: "adoptee_vector_facility_id_fkey"
             columns: ["facility_id"]
             isOneToOne: false
             referencedRelation: "adoptee_facilities"
@@ -177,7 +136,7 @@ export type Database = {
           },
         ]
       }
-      adopter_applications_dummy: {
+      adopter_applications: {
         Row: {
           adoptee_name: string | null
           adopter_uuid: string
@@ -243,7 +202,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "adopter_applications_dummy_adopter_uuid_fkey"
+            foreignKeyName: "adopter_applications_adopter_uuid_fkey"
             columns: ["adopter_uuid"]
             isOneToOne: false
             referencedRelation: "adopter_profiles"

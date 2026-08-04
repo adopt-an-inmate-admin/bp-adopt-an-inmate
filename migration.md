@@ -14,12 +14,12 @@ The sync logic is implemented in Python and consists of several key components:
 
 *   **Fetcher (`_fetch_data.py`)**: Connects to the Monday.com API using `MONDAY_API_KEY`, `MONDAY_BOARD_ID`, and `MONDAY_GROUP_ID`. It retrieves records updated within the last 31 days.
 *   **Embedder (`_embed_and_upsert.py`)**: Uses the Hugging Face `InferenceClient` with the `sentence-transformers/all-MiniLM-L6-v2` model to generate 384-dimensional vector embeddings from the inmate "bio" field (`notes_for_matching__1`).
-*   **Vector Store (`_clients.py`)**: Uses the `vecs` library to upsert embeddings and associated metadata into the Supabase `adoptee_vector_test` table.
+*   **Vector Store (`_clients.py`)**: Uses the `vecs` library to upsert embeddings and associated metadata into the Supabase `adoptee_vector` table.
 
 #### 3. Real-time Synchronization (Webhook)
 In addition to the monthly bulk sync, real-time status updates are handled via a Monday.com webhook.
 - **Endpoint**: `/api/monday-webhook`
-- **Logic**: When an application status changes on Monday.com, the webhook updates the corresponding record in the `adoptee_vector_test` table (e.g., marking an inmate as `ADOPTED` or `WAIT_LISTED`).
+- **Logic**: When an application status changes on Monday.com, the webhook updates the corresponding record in the `adoptee_vector` table (e.g., marking an inmate as `ADOPTED` or `WAIT_LISTED`).
 
 #### 4. Manual Execution
 To manually trigger the full sync and vectorization pipeline, run the following command from the project root (ensure all required environment variables are set in `.env.local`):

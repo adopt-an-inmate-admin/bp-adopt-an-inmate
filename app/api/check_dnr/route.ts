@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 
   // db: update app status
   const { error: updateAppStatusError } = await supabaseService
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .update({
       status: 'REAPPLY',
       time_ended: now.toISOString(),
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 
   // db: update adoptee status
   const { error: updateAdopteeStatusError } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .update({ status: 'WAIT_LISTED' })
     .in(
       'id',

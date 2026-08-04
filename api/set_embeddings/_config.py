@@ -12,7 +12,7 @@ dimensions = {"sentence-transformers/all-MiniLM-L6-v2": 384}
 MODEL_DIMENSION = dimensions[MODEL_NAME]
 
 # Collection configuration
-VECS_COLLECTION_NAME = "adoptee_vector_test"
+VECS_COLLECTION_NAME = "adoptee_vector"
 
 # Monday configuration
 MONDAY_API_URL = "https://api.monday.com/v2"

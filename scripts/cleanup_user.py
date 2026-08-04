@@ -75,14 +75,14 @@ def cleanup(email):
                 for row in profile_res.data:
                     delete_monday_item(row.get('monday_id'))
             
-            apps_res = supabase.table('adopter_applications_dummy').select('monday_id').eq('adopter_uuid', user_id).execute()
+            apps_res = supabase.table('adopter_applications').select('monday_id').eq('adopter_uuid', user_id).execute()
             if apps_res.data:
                 for row in apps_res.data:
                     delete_monday_item(row.get('monday_id'))
 
             # Delete rows
-            supabase.table('adopter_applications_dummy').delete().eq('adopter_uuid', user_id).execute()
-            print("Deleted rows from adopter_applications_dummy.")
+            supabase.table('adopter_applications').delete().eq('adopter_uuid', user_id).execute()
+            print("Deleted rows from adopter_applications.")
             
             supabase.table('adopter_profiles').delete().eq('user_id', user_id).execute()
             print("Deleted rows from adopter_profiles.")

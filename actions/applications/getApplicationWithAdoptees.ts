@@ -56,7 +56,7 @@ export const getApplicationWithAdoptees = async (
 
   // verify app is tied to user
   const { data: appData, error: getAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select()
     .eq('app_uuid', appId)
     .eq('adopter_uuid', user.id)
@@ -107,7 +107,7 @@ export const getApplicationWithAdoptees = async (
 
   // get unmatched adoptees
   const { data: adopteeData, error: getAdopteeError } = await serviceSupabase
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .select('id, gender, state, first_name, dob')
     .in('id', appData.ranked_cards);
 

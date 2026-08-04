@@ -42,7 +42,7 @@ export async function fetchTopK(
 export async function fetchApplication(app_UUID: string) {
   const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select('*')
     .eq('app_uuid', app_UUID)
     .maybeSingle();
@@ -57,7 +57,7 @@ export async function fetchApplication(app_UUID: string) {
 export async function fetchUserApplicationUUIDs(adopter_UUID: string) {
   const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select('*')
     .eq('adopter_uuid', adopter_UUID);
 
@@ -77,7 +77,7 @@ export async function upsertApplication(
   const supabase = await getSupabaseServerClient();
 
   const { data, error } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .upsert(app)
     .select()
     .single();
@@ -94,7 +94,7 @@ export async function fetchAdopteeCardsInfo(
   const supabaseService = await dangerous_getSupabaseServiceClient();
 
   const { data, error } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .select('id, dob, bio, first_name, gender, state')
     .in('id', ids);
 

@@ -39,7 +39,7 @@ export default function Sidebar() {
       if (!user) return;
 
       const { data: apps } = await supabase
-        .from('adopter_applications_dummy')
+        .from('adopter_applications')
         .select('*')
         .eq('adopter_uuid', user.id);
 

@@ -123,7 +123,7 @@ async function getWaitListStatusLabels(
   }
 
   const { data, error } = await supabaseService
-    .from('adoptee_vector_test')
+    .from('adoptee_vector')
     .select('id, formerly_adopted')
     .in('id', adopteeMondayIds);
 

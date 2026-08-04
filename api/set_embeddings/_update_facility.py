@@ -51,7 +51,7 @@ def fetch_and_update_facilities():
             if not linked:
                 continue
             facility_id = str(linked[0]["id"])
-            supabase.from_("adoptee_vector_test").update(
+            supabase.from_("adoptee_vector").update(
                 {"facility_id": facility_id}
             ).eq("id", item["id"]).execute()
             total += 1

@@ -27,7 +27,7 @@ export default async function ApplicationDetailPage({
   }
 
   const { data: appData, error: getAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select()
     .eq('app_uuid', appId)
     .eq('adopter_uuid', user.id)

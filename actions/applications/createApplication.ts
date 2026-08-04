@@ -61,7 +61,7 @@ export const checkCreationConstraints = async (user: User) => {
 
   // fetch applications
   const { data: appsData, error: getAppError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .select()
     .eq('adopter_uuid', user.id);
 
@@ -187,7 +187,7 @@ export const createApplication = async () => {
 
   // create app with user id
   const { data: insertedRow, error: insertError } = await supabase
-    .from('adopter_applications_dummy')
+    .from('adopter_applications')
     .insert({
       adopter_uuid: user.id,
       status: 'INCOMPLETE',

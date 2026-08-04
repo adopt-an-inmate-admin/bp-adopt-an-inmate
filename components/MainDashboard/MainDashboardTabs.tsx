@@ -37,7 +37,7 @@ export default function MainDashBoardTabs() {
 
       const { data: applicationsData, error: fetchApplicationsError } =
         await supabase
-          .from('adopter_applications_dummy')
+          .from('adopter_applications')
           .select('*')
           .eq('adopter_uuid', user.id);
 
