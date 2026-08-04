@@ -24,9 +24,10 @@ const WL_STATUS_LABEL = 'WL: Wait Listed';
 const WLFA_STATUS_LABEL = 'WLFA: Wait Listed Formerly Adopted';
 
 //build mutation operations
-async function buildStatusMutationFields(
+export async function buildStatusMutationFields(
   adopteeMondayIds: string[],
   statusLabelsById: Record<string, string>,
+  aliasPrefix: string = 'update',
 ) {
   const query = `
     query ($ids: [ID!]!) {
@@ -34,25 +35,36 @@ async function buildStatusMutationFields(
         id
         board {
           id
+          columns {
+            id
+            title
+            type
+          }
         }
       }
     }
   `;
 
   const response = await mondayApiClient.request<{
-    items: { id: string; board: { id: string } }[];
+    items: {
+      id: string;
+      board: {
+        id: string;
+        columns: { id: string; title: string; type: string }[];
+      };
+    }[];
   }>(query, {
     ids: adopteeMondayIds,
   });
 
-  const boardIdByItemId = new Map(
-    response.items.map(item => [item.id, item.board.id]),
+  const boardInfoByItemId = new Map(
+    response.items.map(item => [item.id, item.board]),
   );
 
   return adopteeMondayIds
     .map((id, idx) => {
-      const boardId = boardIdByItemId.get(id);
-      if (!boardId) {
+      const board = boardInfoByItemId.get(id);
+      if (!board) {
         Logger.warn(
           `Item ${id} not found in Monday when building status mutation`,
         );
@@ -60,11 +72,28 @@ async function buildStatusMutationFields(
       }
 
       const value = statusLabelsById[id];
-      const columnId =
-        boardId === MONDAY_ADOPTED_BOARD_ID ? 'status4' : 'status__1';
+      const columns = board.columns || [];
 
-      return `update${idx + 1}:change_simple_column_value(
-        board_id: "${boardId}",
+      // Look for a column titled "Status"
+      const statusColumn = columns.find(
+        col => col.title.toLowerCase() === 'status',
+      );
+
+      let columnId = statusColumn?.id;
+
+      if (!columnId) {
+        // Fallback to legacy hardcoded logic if dynamic lookup fails
+        columnId =
+          board.id === MONDAY_ADOPTED_BOARD_ID ? 'status4' : 'status__1';
+      }
+
+      const alias =
+        adopteeMondayIds.length === 1
+          ? aliasPrefix
+          : `${aliasPrefix}${idx + 1}`;
+
+      return `${alias}:change_simple_column_value(
+        board_id: "${board.id}",
         item_id: "${id}",
         column_id: "${columnId}",
         value: "${value}"

@@ -4,6 +4,7 @@ import { parseMondayValue } from '@/lib/monday/parser';
 import { assertEnvVarExists } from '@/lib/utils';
 import { Profile } from '@/types/schema';
 import { mondayApiClient } from './core';
+import { getColumnIdByTitle } from './utils';
 
 assertEnvVarExists('BOARD_ID');
 assertEnvVarExists('GROUP_ID');
@@ -12,27 +13,50 @@ export const createRow = async (profile: Profile) => {
   const boardId = process.env.BOARD_ID ?? '';
   const groupId = process.env.GROUP_ID ?? '';
 
-  const columnIdTranslation = {
-    email: 'email_mkxah5b2',
-    first_name: 'text_mkxaz93r',
-    last_name: 'text_mkxa4ctx',
-    gender: 'dropdown_mkxa8d6z',
-    date_of_birth: 'date_mkxagkrj',
-    pronouns: 'text_mkxag5bm',
-    state: 'location_mkxage9t',
-    veteran_status: 'dropdown_mkxa18jg',
-    user_id: '', // blank on purpose
+  // Dynamic column mapping by title
+  const columnTitles = {
+    email: 'Email',
+    first_name: 'First Name',
+    last_name: 'Last Name',
+    gender: 'Gender',
+    date_of_birth: 'Date of Birth',
+    pronouns: 'Pronouns',
+    state: 'Location',
+    veteran_status: 'Veteran Status',
   };
 
-  // process veteran status from boolean to "yes" or "no"
-  const processedProfile: Record<string, string> = Object.entries(
+  const columnIdTranslation: Record<string, string> = {};
+  for (const [key, title] of Object.entries(columnTitles)) {
+    const id = await getColumnIdByTitle(boardId, title);
+    if (id) {
+      columnIdTranslation[key] = id;
+    }
+  }
+
+  const genderToMonday: Record<string, string> = {
+    male: 'Male',
+    female: 'Female',
+    lgbtqi: 'LGBTQI+',
+    'lgbtqi+': 'LGBTQI+',
+    other: 'Other', // In this context, we might want to send 'Other' or let it be blank
+    both: 'Both (for group)',
+    prefer_not_to_say: 'Prefer Not To Say',
+  };
+
+  // process profile values according to monday requirements
+  const processedProfile: Record<string, unknown> = Object.entries(
     profile,
-  ).reduce((agg: Record<string, string>, [key, val]) => {
-    if (key === 'veteran_status') agg[key] = val ? 'Yes' : 'No';
-    else if (key === 'gender') {
-      agg[key] =
-        (val as string).charAt(0).toUpperCase() + (val as string).slice(1);
-    } else agg[key] = val as string;
+  ).reduce((agg: Record<string, unknown>, [key, val]) => {
+    if (key === 'veteran_status') {
+      agg[key] = val ? 'Yes' : 'No';
+    } else if (key === 'gender') {
+      const g = ((val as string) || '').toLowerCase();
+      agg[key] = genderToMonday[g] || 'Prefer Not To Say';
+      // If the user wants 'Other' to be blank on Monday:
+      if (g === 'other') agg[key] = undefined;
+    } else {
+      agg[key] = val;
+    }
     return agg;
   }, {});
 
@@ -42,10 +66,10 @@ export const createRow = async (profile: Profile) => {
     (agg: Record<string, unknown>, [key, val]) => {
       const translatedKey =
         columnIdTranslation[key as keyof typeof columnIdTranslation];
-      if (!translatedKey) return agg;
+      if (!translatedKey || val === undefined) return agg;
 
       const [type] = translatedKey.split('_');
-      agg[translatedKey] = parseMondayValue(val, type);
+      agg[translatedKey] = parseMondayValue(val as string, type);
 
       return agg;
     },

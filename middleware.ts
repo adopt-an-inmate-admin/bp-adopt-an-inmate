@@ -28,6 +28,10 @@ export async function middleware(request: NextRequest) {
 
   // If it's a public route, just update session and continue
   if (isPublicRoute) {
+    // If logged in and trying to access login or sign-up, redirect to home
+    if (user && (pathname === '/login' || pathname === '/sign-up')) {
+      return redirectWithSession(new URL('/', request.url), supabaseResponse);
+    }
     return supabaseResponse;
   }
 

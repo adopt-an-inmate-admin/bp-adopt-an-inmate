@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import Logger from '@/actions/logging';
 import { mondayApiClient } from '@/actions/monday/core';
+import { buildStatusMutationFields } from '@/actions/monday/mutations/changeStatus';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { getEnvVar } from '@/lib/utils';
 
@@ -8,7 +9,6 @@ const CRON_SECRET = getEnvVar('CRON_SECRET');
 const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
   'MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID',
 );
-const MONDAY_ADOPTED_BOARD_ID = getEnvVar('MONDAY_ADOPTED_BOARD_ID');
 
 export async function GET(request: NextRequest) {
   // check that this is issued by cron job
@@ -87,8 +87,8 @@ export async function GET(request: NextRequest) {
   // monday: update app status to DNR
   const generateUpdateStatusQuery = (id: string) => `
     app${id}:change_simple_column_value(
-      board_id: ${MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID},
-      item_id: ${id},
+      board_id: "${MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID}",
+      item_id: "${id}",
       column_id: "status",
       value: "DNR (Did Not Respond)"
     ) { id }
@@ -99,26 +99,33 @@ export async function GET(request: NextRequest) {
   );
 
   // monday: update adoptee status to WL/WLFA
-  const generateUpdateAdopteeStatusQuery = (
-    id: string,
-    formerlyAdopted: boolean,
-  ) => `
-    adoptee${id}:change_simple_column_value(
-      board_id: "${MONDAY_ADOPTED_BOARD_ID}",
-      item_id: "${id}",
-      column_id: "status4",
-      value: "${formerlyAdopted ? 'WLFA: Wait Listed Formerly Adopted' : 'WL: Wait Listed'}"
-    ) { id }
-  `;
-
-  const updateAdopteeStatusQueries = dnrAdopteeGroups.map(g =>
-    generateUpdateAdopteeStatusQuery(g.id, g.formerlyAdopted),
+  const statusLabelsById = Object.fromEntries(
+    dnrAdopteeGroups.map(g => [
+      g.id,
+      g.formerlyAdopted
+        ? 'WLFA: Wait Listed Formerly Adopted'
+        : 'WL: Wait Listed',
+    ]),
   );
+
+  let updateAdopteeStatusQueries = '';
+  try {
+    updateAdopteeStatusQueries = await buildStatusMutationFields(
+      dnrAdopteeGroups.map(g => g.id),
+      statusLabelsById,
+      'adoptee',
+    );
+  } catch (error) {
+    Logger.error(
+      `Error building Monday adoptee status update fields: ${error}`,
+    );
+    return new Response('An unexpected error occurred.', { status: 500 });
+  }
 
   const query = `
     mutation {
       ${updateAppStatusQueries.join('\n')}
-      ${updateAdopteeStatusQueries.join('\n')}
+      ${updateAdopteeStatusQueries}
     }
   `;
 

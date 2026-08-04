@@ -6,7 +6,7 @@ import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 
 async function deleteMondayItem(itemId: string | null) {
   if (!itemId) return;
-  const query = `mutation { delete_item (item_id: ${itemId}) { id } }`;
+  const query = `mutation { delete_item (item_id: "${itemId}") { id } }`;
   try {
     await mondayApiClient.request(query);
   } catch (err) {
@@ -80,6 +80,13 @@ export async function resetTestData(email: string) {
       .from('adopter_monday_ids')
       .delete()
       .eq('adopter_email', email);
+
+    // 8. Delete the user from auth.users
+    const { error: deleteUserError } =
+      await supabase.auth.admin.deleteUser(userId);
+    if (deleteUserError) {
+      console.warn(`Could not delete auth user ${userId}:`, deleteUserError);
+    }
 
     revalidatePath('/');
     return { success: true };
