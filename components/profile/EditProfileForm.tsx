@@ -12,6 +12,7 @@ import {
 } from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Profile } from '@/types/schema';
+import { LocationAutocomplete } from '../LocationAutocomplete';
 import { Textbox } from '../Textbox';
 
 interface EditProfileFormProps {
@@ -177,14 +178,21 @@ export default function EditProfileForm({
         )}
       />
       {/* Location */}
-      <FieldWrapper label="Location">
-        <Textbox
-          variant="borderless"
-          placeholder="e.g. Houston, TX 77021, USA"
-          autoComplete="street-address"
-          {...register('state')}
-        />
-      </FieldWrapper>
+      <Controller
+        name="state"
+        control={control}
+        render={({ field }) => (
+          <FieldWrapper label="Location">
+            <LocationAutocomplete
+              id="state"
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="e.g. Houston, TX 77021, USA"
+              variant="borderless"
+            />
+          </FieldWrapper>
+        )}
+      />
       {/* Veteran Status */}
       <Controller
         name="veteran_status"

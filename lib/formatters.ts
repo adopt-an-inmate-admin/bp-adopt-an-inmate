@@ -134,3 +134,152 @@ export function capitalizeLocation(location: string) {
     })
     .join(', ');
 }
+
+export interface MondayLocation {
+  address: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
+  countryShortName?: string;
+  lat?: number;
+  lng?: number;
+}
+
+/**
+ * Parses a location string into its components for Monday.com.
+ */
+export function parseLocationForMonday(location: string): MondayLocation {
+  if (!location) {
+    return {
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: '',
+      countryShortName: '',
+    };
+  }
+
+  let address = location;
+  let lat: number | undefined;
+  let lng: number | undefined;
+
+  // Try to parse as JSON first (new format)
+  try {
+    const parsed = JSON.parse(location);
+    if (parsed && typeof parsed === 'object' && parsed.address) {
+      address = parsed.address;
+      lat = parsed.lat;
+      lng = parsed.lng;
+    }
+  } catch {
+    // Not JSON, continue with plain string
+  }
+
+  const parts = address.split(',').map(p => p.trim());
+  let city = '';
+  let state = '';
+  let zip = '';
+  const country = parts[parts.length - 1] || 'United States';
+
+  if (parts.length >= 3) {
+    // Check if the second to last part contains both state and zip (common in US addresses)
+    // e.g., "Prescott, Arizona 86301, USA"
+    const stateZipPart = parts[parts.length - 2];
+    const stateZipMatch = stateZipPart.match(/^(.+?)\s+(\d{5}(?:-\d{4})?)$/);
+
+    if (stateZipMatch) {
+      state = stateZipMatch[1];
+      zip = stateZipMatch[2];
+      city = parts[parts.length - 3] || '';
+    } else {
+      // If no match, check if zip is separate
+      // e.g., "Prescott, Arizona, 86301, USA"
+      if (
+        parts.length >= 4 &&
+        /^\d{5}(?:-\d{4})?$/.test(parts[parts.length - 2])
+      ) {
+        zip = parts[parts.length - 2];
+        state = parts[parts.length - 3];
+        city = parts[parts.length - 4] || '';
+      } else {
+        // Just state and country
+        // e.g., "Prescott, Arizona, USA"
+        state = parts[parts.length - 2];
+        city = parts[parts.length - 3] || '';
+      }
+    }
+  } else if (parts.length === 2) {
+    city = parts[0];
+  }
+
+  const countryShortName =
+    country.toLowerCase().includes('usa') ||
+    country.toLowerCase().includes('united states')
+      ? 'US'
+      : '';
+
+  const result: MondayLocation = {
+    address,
+    city,
+    state,
+    zipCode: zip,
+    country,
+    countryShortName,
+  };
+  if (lat !== undefined) result.lat = lat;
+  if (lng !== undefined) result.lng = lng;
+
+  // Remove empty strings or undefined
+  (Object.keys(result) as Array<keyof MondayLocation>).forEach(key => {
+    if (result[key] === '' || result[key] === undefined) {
+      delete result[key];
+    }
+  });
+
+  return result;
+}
+
+/**
+ * Extracts just the state from a full location string.
+ */
+export function parseStateFromLocation(location: string) {
+  if (!location) return '';
+
+  let address = location;
+  try {
+    const parsed = JSON.parse(location);
+    if (parsed && typeof parsed === 'object' && parsed.address) {
+      address = parsed.address;
+    }
+  } catch {
+    // Not JSON, use as is
+  }
+
+  const parts = address.split(',').map(p => p.trim());
+  if (parts.length >= 3) {
+    const stateZipPart = parts[parts.length - 2];
+    const stateZipMatch = stateZipPart.match(/^(.+?)\s+(\d{5}(?:-\d{4})?)$/);
+    if (stateZipMatch) return stateZipMatch[1];
+    return parts[parts.length - 2];
+  }
+  if (parts.length === 2) return parts[0];
+  return address;
+}
+
+/**
+ * Extracts the display address from a location string (which might be JSON).
+ */
+export function getDisplayAddress(location: string) {
+  if (!location) return '';
+  try {
+    const parsed = JSON.parse(location);
+    if (parsed && typeof parsed === 'object' && parsed.address) {
+      return parsed.address;
+    }
+  } catch {
+    // Not JSON
+  }
+  return location;
+}

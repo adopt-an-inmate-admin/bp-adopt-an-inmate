@@ -1,12 +1,11 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
 import { useQuestionNavigaton } from '@/hooks/questions';
-import { capitalizeLocation } from '@/lib/formatters';
 import { Button } from '../Button';
+import { LocationAutocomplete } from '../LocationAutocomplete';
 import QuestionBack from '../questions/QuestionBack';
-import { Textbox } from '../Textbox';
 
 interface StateForm {
   location: string;
@@ -17,7 +16,7 @@ export default function OnboardingQuestionState() {
   const { nextQuestion } = useQuestionNavigaton();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<StateForm>({
@@ -27,8 +26,7 @@ export default function OnboardingQuestionState() {
   });
 
   const onSubmit = (data: StateForm) => {
-    const formattedLocation = capitalizeLocation(data.location);
-    setOnboardingInfo(prev => ({ ...prev, location: formattedLocation }));
+    setOnboardingInfo(prev => ({ ...prev, location: data.location }));
     nextQuestion();
   };
 
@@ -43,12 +41,19 @@ export default function OnboardingQuestionState() {
           <label htmlFor="location" className="text-sm text-gray-11">
             Location
           </label>
-          <Textbox
-            {...register('location', { required: 'Location is required' })}
-            id="location"
-            autoComplete="street-address"
-            placeholder="e.g. Houston, TX 77021, USA"
-            error={errors.location?.message}
+          <Controller
+            name="location"
+            control={control}
+            rules={{ required: 'Location is required' }}
+            render={({ field }) => (
+              <LocationAutocomplete
+                id="location"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="e.g. Houston, TX 77021, USA"
+                error={errors.location?.message}
+              />
+            )}
           />
         </div>
       </div>

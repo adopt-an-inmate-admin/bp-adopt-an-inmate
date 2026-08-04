@@ -1,6 +1,7 @@
 'use server';
 
 import { InferenceClient } from '@huggingface/inference';
+import { parseStateFromLocation } from '@/lib/formatters';
 import { getSupabaseServerClient } from '@/lib/supabase';
 import { assertEnvVarExists } from '@/lib/utils';
 import Logger from '../logging';
@@ -71,7 +72,7 @@ export const findMatches = async (appId: string) => {
     4,
     appData.gender_pref ?? undefined,
     userProfile.veteran_status ? 'Yes' : 'No',
-    userProfile.state,
+    parseStateFromLocation(userProfile.state),
     appData.age_pref ?? undefined,
   );
 

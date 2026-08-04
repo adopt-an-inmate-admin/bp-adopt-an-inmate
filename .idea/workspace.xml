@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF #7 increase bio to max 4k">
+    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF #3 still working on making gender come over properly.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/application/main/MainQuestionReview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/application/main/MainQuestionReview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/actions/matching/findMatches.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/matching/findMatches.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/actions/monday/mutations/exportApplication.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/monday/mutations/exportApplication.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/profile/EditProfileForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/profile/EditProfileForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/profile/ProfileView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/profile/ProfileView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/states.ts" beforeDir="false" afterPath="$PROJECT_DIR$/data/states.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/formatters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formatters.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +24,9 @@
           <execution>
             <execution>
               <execution>
-                <execution />
+                <execution>
+                  <execution />
+                </execution>
               </execution>
             </execution>
           </execution>
@@ -62,23 +62,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.3040264787029074" />
-      <entry key="MS500" value="3.3903323990214216" />
-      <entry key="S2" value="9.378089582946158" />
-      <entry key="S5" value="20.160463932224122" />
-      <entry key="S10" value="36.607388974254405" />
-      <entry key="S30" value="93.88157844405173" />
-      <entry key="S60" value="163.26951890934657" />
-      <entry key="M2" value="258.3290760944408" />
-      <entry key="M5" value="439.58856103247916" />
-      <entry key="M10" value="597.7746200845003" />
-      <entry key="M15" value="679.0921166541456" />
-      <entry key="M30" value="783.5213219528638" />
-      <entry key="H1" value="847.0513641691832" />
-      <entry key="H2" value="882.476279239426" />
-      <entry key="H4" value="906.7233535586131" />
-      <entry key="D1" value="1096.100368601103" />
-      <entry key="W1" value="1641.3869122352903" />
+      <entry key="MS100" value="1.432291958636997" />
+      <entry key="MS500" value="2.1994528037693257" />
+      <entry key="S2" value="7.860576462357234" />
+      <entry key="S5" value="18.833831777880423" />
+      <entry key="S10" value="34.16068949370645" />
+      <entry key="S30" value="68.65087341875193" />
+      <entry key="S60" value="95.2278367615301" />
+      <entry key="M2" value="123.74222072642073" />
+      <entry key="M5" value="152.87393037490708" />
+      <entry key="M10" value="166.41527931573995" />
+      <entry key="M15" value="176.10744424628825" />
+      <entry key="M30" value="258.336350781418" />
+      <entry key="H1" value="563.0213990831118" />
+      <entry key="H2" value="1047.6719498488203" />
+      <entry key="H4" value="1501.6257121906592" />
+      <entry key="D1" value="2222.043697433311" />
+      <entry key="W1" value="2888.212604030905" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -89,34 +89,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="7.174473363616906E-190" />
-      <entry key="M10" value="3.786711232935051E-95" />
-      <entry key="M15" value="1.4206439819007105E-63" />
-      <entry key="M30" value="5.330171580049876E-32" />
-      <entry key="H1" value="3.2649872007706285E-16" />
-      <entry key="H2" value="2.5553754141237393E-8" />
-      <entry key="H4" value="2.2606956414455623E-4" />
-      <entry key="D1" value="0.439776457771767" />
-      <entry key="W1" value="1.6108639011564339" />
+      <entry key="M5" value="6.608061977782535E-200" />
+      <entry key="M10" value="3.634161540180718E-100" />
+      <entry key="M15" value="6.415737935474426E-67" />
+      <entry key="M30" value="1.1327181758529717E-33" />
+      <entry key="H1" value="4.759614984473354E-17" />
+      <entry key="H2" value="9.756631043465133E-9" />
+      <entry key="H4" value="1.3968979564249421E-4" />
+      <entry key="D1" value="0.4058688687739971" />
+      <entry key="W1" value="1.5925050403077403" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.231864743666691" />
-      <entry key="MS500" value="3.3560593616511465" />
-      <entry key="S2" value="9.353385291985587" />
-      <entry key="S5" value="20.139490130908882" />
-      <entry key="S10" value="36.58814612101848" />
-      <entry key="S30" value="93.86412421155869" />
-      <entry key="S60" value="163.25371837839955" />
-      <entry key="M2" value="258.3162077333354" />
-      <entry key="M5" value="439.5794983390504" />
-      <entry key="M10" value="597.7683401585975" />
-      <entry key="M15" value="679.0873244665535" />
-      <entry key="M30" value="783.5185345135774" />
-      <entry key="H1" value="847.0498508106234" />
-      <entry key="H2" value="882.4754891284952" />
-      <entry key="H4" value="906.7231728868734" />
-      <entry key="D1" value="1096.5400321998948" />
-      <entry key="W1" value="1642.9977335784674" />
+      <entry key="MS100" value="1.33837224926668" />
+      <entry key="MS500" value="2.1694205428063693" />
+      <entry key="S2" value="7.837569118292158" />
+      <entry key="S5" value="18.810464536899264" />
+      <entry key="S10" value="34.13823196300557" />
+      <entry key="S30" value="68.63513398458954" />
+      <entry key="S60" value="95.21689313980959" />
+      <entry key="M2" value="123.73514931261012" />
+      <entry key="M5" value="152.87045843095518" />
+      <entry key="M10" value="166.41338688520207" />
+      <entry key="M15" value="176.10607924052243" />
+      <entry key="M30" value="258.3351986682323" />
+      <entry key="H1" value="563.0200359998531" />
+      <entry key="H2" value="1047.6706821321977" />
+      <entry key="H4" value="1501.6249529383422" />
+      <entry key="D1" value="2222.4493226164286" />
+      <entry key="W1" value="2889.8050461481866" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -231,7 +231,10 @@
     <MESSAGE value="RWF - #5 change state to location to accomodate intl. applicants - format wasn't correct - adding predixtive text" />
     <MESSAGE value="RWF - #3 tryng to makw gender field properly propogate from the form." />
     <MESSAGE value="RWF #7 increase bio to max 4k" />
-    <option name="LAST_COMMIT_MESSAGE" value="RWF #7 increase bio to max 4k" />
+    <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately" />
+    <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately - predictive text stopped working." />
+    <MESSAGE value="RWF #3 still working on making gender come over properly." />
+    <option name="LAST_COMMIT_MESSAGE" value="RWF #3 still working on making gender come over properly." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

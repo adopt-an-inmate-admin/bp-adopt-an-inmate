@@ -3,7 +3,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import Logger from '@/actions/logging';
 import { CONFIG } from '@/config';
-import { capitalize } from '@/lib/formatters';
+import { capitalizePronouns, parseLocationForMonday } from '@/lib/formatters';
 import { getSupabaseServerClient } from '@/lib/supabase';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assert, getEnvVar } from '@/lib/utils';
@@ -92,7 +92,9 @@ const parseColumns = <K extends string>(
   return Object.entries(columnValues).reduce(
     (agg: Record<string, unknown>, [key, val]) => {
       const k = key as K;
-      agg[columnMapping[k]] = val;
+      if (val !== undefined) {
+        agg[columnMapping[k]] = val;
+      }
       return agg;
     },
     {},
@@ -110,25 +112,25 @@ const getQueryCreateMainItem = (
   // define and compute column values
   const currentTime = new Date();
   const currentDateISOString = currentTime.toISOString().split('T')[0]; // ex: 2026-02-22
-  const capitalizedPronouns = (appData.pronouns ?? '')
-    .split('/')
-    .map(p => capitalize(p.trim()))
-    .join(' / ');
+  const capitalizedPronouns = capitalizePronouns(appData.pronouns ?? '');
 
   // parse gender mapping
-  const genderToMonday: Record<string, string> = {
+  const genderToMonday: Record<string, string | undefined> = {
     male: 'Male',
     female: 'Female',
     lgbtqi: 'LGBTQI+',
     'lgbtqi+': 'LGBTQI+',
-    other: 'LGBTQI+',
+    other: undefined,
     both: 'Both (for group)',
     prefer_not_to_say: 'Prefer Not To Say',
     'prefer-not': 'Prefer Not To Say',
   };
 
   const mappedGender =
-    genderToMonday[(appData.gender ?? '').toLowerCase()] ?? 'Prefer Not To Say';
+    (appData.gender ?? '').toLowerCase() === 'other'
+      ? undefined
+      : (genderToMonday[(appData.gender ?? '').toLowerCase()] ??
+        'Prefer Not To Say');
 
   // parse gender preference
   const genderPrefMap = {
@@ -167,7 +169,7 @@ const getQueryCreateMainItem = (
       last_name: appData.last_name,
       gender: { label: mappedGender },
       gender_preference: { label: parsedGenderPref },
-      location: { address: appData.state },
+      location: parseLocationForMonday(appData.state),
       pronouns: { label: capitalizedPronouns },
       veteran_status: { labels: [appData.veteran_status ? 'Yes' : 'No'] },
     },
@@ -208,25 +210,25 @@ const getQueryCreateSubItem = (
   const currentTime = new Date();
   const currentDateISOString = currentTime.toISOString().split('T')[0];
 
-  const capitalizedPronouns = (appData.pronouns ?? '')
-    .split('/')
-    .map(p => capitalize(p.trim()))
-    .join(' / ');
+  const capitalizedPronouns = capitalizePronouns(appData.pronouns ?? '');
 
   // parse gender mapping
-  const genderToMonday: Record<string, string> = {
+  const genderToMonday: Record<string, string | undefined> = {
     male: 'Male',
     female: 'Female',
     lgbtqi: 'LGBTQI+',
     'lgbtqi+': 'LGBTQI+',
-    other: 'LGBTQI+',
+    other: undefined,
     both: 'Both (for group)',
     prefer_not_to_say: 'Prefer Not To Say',
     'prefer-not': 'Prefer Not To Say',
   };
 
   const mappedGender =
-    genderToMonday[(appData.gender ?? '').toLowerCase()] ?? 'Prefer Not To Say';
+    (appData.gender ?? '').toLowerCase() === 'other'
+      ? undefined
+      : (genderToMonday[(appData.gender ?? '').toLowerCase()] ??
+        'Prefer Not To Say');
 
   // parse gender preference
   const genderPrefMap = {
