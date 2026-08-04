@@ -7,6 +7,7 @@ import { getEnvVar } from '@/lib/utils';
 import autoEmailSender from '../emails/email';
 import Logger from '../logging';
 import { mondayApiClient } from '../monday/core';
+import { buildStatusMutationFields } from '../monday/mutations/changeStatus';
 
 const MONDAY_ADOPTED_BOARD_ID = getEnvVar('MONDAY_ADOPTED_BOARD_ID');
 const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
@@ -143,6 +144,21 @@ export const handleAdopterConfirmation = async ({
       return { error: 'An unexpected error occurred.' };
     }
 
+    const adopteeStatusLabel = adoptee.formerly_adopted
+      ? 'WLFA: Wait Listed Formerly Adopted'
+      : 'WL: Wait Listed';
+    let adopteeStatusFields = '';
+    try {
+      adopteeStatusFields = await buildStatusMutationFields(
+        [adopteeMondayId],
+        { [adopteeMondayId]: adopteeStatusLabel },
+        'adoptee',
+      );
+    } catch (error) {
+      Logger.error(`Error building Monday status update fields: ${error}`);
+      return { error: 'An unexpected error occurred.' };
+    }
+
     // monday: update app status
     const query = `
       mutation {
@@ -152,14 +168,9 @@ export const handleAdopterConfirmation = async ({
           column_id: "status",
           value: "Closed Out"
         ) { id }
-        adoptee:change_simple_column_value(
-          board_id: "${MONDAY_ADOPTED_BOARD_ID}",
-          item_id: "${adopteeMondayId}",
-          column_id: "status4",
-          value: "${adoptee.formerly_adopted ? 'WLFA: Wait Listed Formerly Adopted' : 'WL: Wait Listed'}"
-        ) { id }
+        ${adopteeStatusFields}
       }
-    `; //in WL PIPS: status__1, Adopted: status4
+    `;
 
     try {
       await mondayApiClient.request(query);

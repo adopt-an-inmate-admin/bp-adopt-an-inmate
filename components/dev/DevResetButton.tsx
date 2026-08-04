@@ -16,7 +16,7 @@ export function DevResetButton() {
   const handleReset = async () => {
     if (
       !confirm(
-        'Are you sure you want to RESET ALL test data for this user? This will delete your profile and application from Supabase and reset your onboarding status.',
+        'Are you sure you want to RESET ALL test data for this user? This will delete your profile and application from Supabase and delete your account from Auth (you will be logged out).',
       )
     ) {
       return;

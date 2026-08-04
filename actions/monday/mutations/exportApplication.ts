@@ -9,12 +9,16 @@ import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assert, getEnvVar } from '@/lib/utils';
 import { ProfileAndApplication } from '@/types/schema';
 import { mondayApiClient } from '../core';
+import { getBoardColumns } from '../utils';
 import { updateAdopteeMondayStatus } from './changeStatus';
 
 // get env var and assert it exists at system level to trigger
 // error messages at build time (rather than run time)
 // => alert us to setup these env vars before the function needs them
 const MONDAY_ADOPTER_DATA_BOARD_ID = getEnvVar('MONDAY_ADOPTER_DATA_BOARD_ID');
+const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
+  'MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID',
+);
 const MONDAY_ADOPTER_DATA_WAITING_GROUP_ID = getEnvVar(
   'MONDAY_ADOPTER_DATA_WAITING_GROUP_ID',
 );
@@ -22,6 +26,25 @@ const MONDAY_ADOPTER_DATA_WAITING_GROUP_ID = getEnvVar(
 ////
 // HELPER FUNCTION
 ////
+
+const getBoardColumnMapping = async (
+  boardId: string,
+  titles: Record<string, string>,
+) => {
+  const columns = await getBoardColumns(boardId);
+  const mapping: Record<string, string> = {};
+  for (const [key, title] of Object.entries(titles)) {
+    const col = columns.find(
+      c => c.title.toLowerCase() === title.toLowerCase(),
+    );
+    if (col) {
+      mapping[key] = col.id;
+    } else {
+      Logger.warn(`Column with title "${title}" not found on board ${boardId}`);
+    }
+  }
+  return mapping;
+};
 
 /**
  * Fetches relevant profile and application information
@@ -108,6 +131,7 @@ const parseColumns = <K extends string>(
 const getQueryCreateMainItem = (
   appData: ProfileAndApplication,
   email: string,
+  columnMapping: Record<string, string>,
 ) => {
   // define and compute column values
   const currentTime = new Date();
@@ -145,35 +169,19 @@ const getQueryCreateMainItem = (
     ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
     : 'No Preference';
 
-  const mainItemColumnValues = parseColumns(
-    {
-      email: 'email__1',
-      added_time: 'date7',
-      first_name: 'text__1',
-      last_name: 'text5__1',
-      current_status: 'status4',
-      gender: 'label__1',
-      pronouns: 'single_select__1',
-      gender_preference: 'color__1',
-      date_of_birth: 'date',
-      location: 'location7',
-      notes: 'notes__1',
-      veteran_status: 'dropdown__1',
-    },
-    {
-      email: { email, text: email },
-      added_time: currentDateISOString,
-      current_status: { label: 'Pending' },
-      date_of_birth: appData.date_of_birth,
-      first_name: appData.first_name,
-      last_name: appData.last_name,
-      gender: { label: mappedGender },
-      gender_preference: { label: parsedGenderPref },
-      location: parseLocationForMonday(appData.state),
-      pronouns: { label: capitalizedPronouns },
-      veteran_status: { labels: [appData.veteran_status ? 'Yes' : 'No'] },
-    },
-  );
+  const mainItemColumnValues = parseColumns(columnMapping, {
+    email: { email, text: email },
+    added_time: currentDateISOString,
+    current_status: { label: 'Pending' },
+    date_of_birth: appData.date_of_birth,
+    first_name: appData.first_name,
+    last_name: appData.last_name,
+    gender: { label: mappedGender },
+    gender_preference: { label: parsedGenderPref },
+    location: parseLocationForMonday(appData.state),
+    pronouns: { label: capitalizedPronouns },
+    veteran_status: { labels: [appData.veteran_status ? 'Yes' : 'No'] },
+  });
 
   const mainItemCreateQuery = `
     mutation {
@@ -205,6 +213,7 @@ const getQueryCreateSubItem = (
     id: string;
     inmate_id: string;
   }[],
+  columnMapping: Record<string, string>,
 ) => {
   // get current time
   const currentTime = new Date();
@@ -262,34 +271,22 @@ const getQueryCreateSubItem = (
     .replace(/\r/g, ' ')
     .trim();
 
-  const subItemColumnValues = parseColumns(
-    {
-      status: 'status',
-      gender: 'label__1',
-      pronouns: 'single_select__1',
-      gender_preference: 'color__1',
-      match_list_links: 'connect_boards1__1',
-      bio_and_age: 'long_text__1',
-      order: 'long_text5__1',
-      date_received: 'date__1',
-    },
-    {
-      status: { label: 'Pending' },
-      gender: { label: mappedGender },
-      pronouns: { label: capitalizedPronouns },
-      gender_preference: { label: parsedGenderPref },
-      match_list_links: { item_ids: appData.ranked_cards },
-      // request notes column: age preference (or "none" if not set) prepended
-      // to the adopter bio, e.g. "age preference: 45-78, bio: ..."
-      bio_and_age: `age preference: ${
-        appData.age_pref && appData.age_pref.length === 2
-          ? `${appData.age_pref[0]}-${appData.age_pref[1]}`
-          : 'none'
-      }, bio: ${parsedBio}`,
-      order: rankedCardsOrder,
-      date_received: currentDateISOString,
-    },
-  );
+  const subItemColumnValues = parseColumns(columnMapping, {
+    status: { label: 'Pending' },
+    gender: { label: mappedGender },
+    pronouns: { label: capitalizedPronouns },
+    gender_preference: { label: parsedGenderPref },
+    match_list_links: { item_ids: appData.ranked_cards },
+    // request notes column: age preference (or "none" if not set) prepended
+    // to the adopter bio, e.g. "age preference: 45-78, bio: ..."
+    bio_and_age: `age preference: ${
+      appData.age_pref && appData.age_pref.length === 2
+        ? `${appData.age_pref[0]}-${appData.age_pref[1]}`
+        : 'none'
+    }, bio: ${parsedBio}`,
+    order: rankedCardsOrder,
+    date_received: currentDateISOString,
+  });
 
   const subItemCreateQuery = `
     create_subitem(
@@ -356,9 +353,45 @@ const exportApplication = async (appId: string) => {
   // check if main item (adopter profile) already exists on monday
   let mainItemId = appData.monday_id;
 
+  // fetch board column mappings
+  const mainBoardTitles = {
+    email: 'Email',
+    added_time: 'Added Time',
+    first_name: 'First Name',
+    last_name: 'Last Name',
+    current_status: 'Status',
+    gender: 'Gender',
+    pronouns: 'Pronouns',
+    gender_preference: 'Gender Preference',
+    date_of_birth: 'Date of Birth',
+    location: 'Location',
+    notes: 'Notes',
+    veteran_status: 'Veteran Status',
+  };
+
+  const subBoardTitles = {
+    status: 'Status',
+    gender: 'Gender',
+    pronouns: 'Pronouns',
+    gender_preference: 'Gender Preference',
+    match_list_links: 'Match List Links',
+    bio_and_age: 'Bio and Age',
+    order: 'Order',
+    date_received: 'Date Received',
+  };
+
+  const [mainBoardMapping, subBoardMapping] = await Promise.all([
+    getBoardColumnMapping(MONDAY_ADOPTER_DATA_BOARD_ID, mainBoardTitles),
+    getBoardColumnMapping(MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID, subBoardTitles),
+  ]);
+
   // if main item doesn't exist, create it
   if (!appData.monday_id) {
-    const createMainItemQuery = getQueryCreateMainItem(appData, user.email);
+    const createMainItemQuery = getQueryCreateMainItem(
+      appData,
+      user.email,
+      mainBoardMapping,
+    );
 
     let response;
     try {
@@ -412,6 +445,7 @@ const exportApplication = async (appId: string) => {
     appData,
     mainItemId,
     adopteeData,
+    subBoardMapping,
   );
 
   let updateAdopteesQuery;
