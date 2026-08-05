@@ -11,6 +11,7 @@ export interface PendingApplication {
   time_submitted: string | null;
   adopter_name: string;
   adopter_email: string;
+  adoptee_name: string | null;
   ranked_adoptees: {
     id: string;
     name: string;
@@ -42,13 +43,14 @@ export async function getPendingApplications(): Promise<{
       time_submitted,
       adopter_uuid,
       ranked_cards,
+      adoptee_name,
       adopter_profiles (
         first_name,
         last_name
       )
     `,
     )
-    .eq('status', 'PENDING')
+    .in('status', ['PENDING', 'PENDING_CONFIRMATION'])
     .order('time_submitted', { ascending: false });
 
   if (error) {
@@ -107,6 +109,7 @@ export async function getPendingApplications(): Promise<{
         ? `${profile.first_name} ${profile.last_name}`
         : 'Unknown',
       adopter_email: userEmailMap.get(app.adopter_uuid) || 'Unknown',
+      adoptee_name: app.adoptee_name,
       ranked_adoptees: rankedAdoptees,
     };
   });

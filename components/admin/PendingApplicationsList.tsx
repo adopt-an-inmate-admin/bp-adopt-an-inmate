@@ -61,6 +61,9 @@ export function PendingApplicationsList() {
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  Matched Adoptee
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                   Ranked Candidates
                 </th>
               </tr>
@@ -80,9 +83,20 @@ export function PendingApplicationsList() {
                       : 'N/A'}
                   </td>
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-                    <span className="inline-flex rounded-full bg-yellow-100 px-2 text-xs leading-5 font-semibold text-yellow-800">
+                    <span
+                      className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${
+                        app.status === 'PENDING'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}
+                    >
                       {app.status}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                    {app.adoptee_name || (
+                      <span className="text-gray-400 italic">None</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
                     <ol className="list-inside list-decimal">
