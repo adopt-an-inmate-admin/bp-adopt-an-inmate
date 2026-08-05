@@ -11,6 +11,10 @@ export interface PendingApplication {
   time_submitted: string | null;
   adopter_name: string;
   adopter_email: string;
+  ranked_adoptees: {
+    id: string;
+    name: string;
+  }[];
 }
 
 export async function getPendingApplications(): Promise<{
@@ -37,6 +41,7 @@ export async function getPendingApplications(): Promise<{
       status,
       time_submitted,
       adopter_uuid,
+      ranked_cards,
       adopter_profiles (
         first_name,
         last_name
@@ -62,11 +67,37 @@ export async function getPendingApplications(): Promise<{
 
   const userEmailMap = new Map(users.users.map(u => [u.id, u.email]));
 
+  // Fetch all ranked adoptees' names
+  const allRankedIds = Array.from(
+    new Set(apps.flatMap(app => app.ranked_cards || [])),
+  );
+  const { data: adoptees, error: adopteesError } = await supabaseService
+    .from('adoptee_vector')
+    .select('id, first_name, last_name')
+    .in('id', allRankedIds);
+
+  if (adopteesError) {
+    Logger.error(`Error fetching adoptees: ${adopteesError.message}`);
+    // Non-fatal error, we'll just have unknown names
+  }
+
+  const adopteeNameMap = new Map(
+    (adoptees || []).map(a => [
+      a.id,
+      `${a.first_name || ''} ${a.last_name || ''}`.trim() || 'Unknown',
+    ]),
+  );
+
   const formattedApps: PendingApplication[] = apps.map(app => {
     const profile = app.adopter_profiles as unknown as {
       first_name: string;
       last_name: string;
     } | null;
+
+    const rankedAdoptees = (app.ranked_cards || []).map((id: string) => ({
+      id,
+      name: adopteeNameMap.get(id) || 'Unknown',
+    }));
 
     return {
       app_uuid: app.app_uuid,
@@ -76,6 +107,7 @@ export async function getPendingApplications(): Promise<{
         ? `${profile.first_name} ${profile.last_name}`
         : 'Unknown',
       adopter_email: userEmailMap.get(app.adopter_uuid) || 'Unknown',
+      ranked_adoptees: rankedAdoptees,
     };
   });
 

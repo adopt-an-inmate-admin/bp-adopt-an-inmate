@@ -103,6 +103,17 @@ export async function POST(request: NextRequest) {
 
     const { matchedAdopteeId, unmatchedAdopteeIds } = matchResult;
 
+    // fetch matched adoptee name
+    const { data: adopteeProfile } = await supabase
+      .from('adoptee_vector')
+      .select('first_name, last_name')
+      .eq('id', matchedAdopteeId)
+      .maybeSingle();
+
+    const matchedAdopteeName = adopteeProfile
+      ? `${adopteeProfile.first_name} ${adopteeProfile.last_name}`
+      : 'Unknown';
+
     // calculate time_confirmation_due: midnight UTC 2 weeks from now
     const confirmationDue = new Date();
     confirmationDue.setUTCDate(confirmationDue.getUTCDate() + 14);
@@ -113,6 +124,7 @@ export async function POST(request: NextRequest) {
       .from('adopter_applications')
       .update({
         matched_adoptee: matchedAdopteeId,
+        adoptee_name: matchedAdopteeName,
         time_confirmation_due: confirmationDue.toISOString(),
         waiting_confirmation: true,
       })

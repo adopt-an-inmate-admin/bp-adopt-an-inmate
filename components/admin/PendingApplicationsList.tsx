@@ -60,6 +60,9 @@ export function PendingApplicationsList() {
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                   Status
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  Ranked Candidates
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
@@ -80,6 +83,18 @@ export function PendingApplicationsList() {
                     <span className="inline-flex rounded-full bg-yellow-100 px-2 text-xs leading-5 font-semibold text-yellow-800">
                       {app.status}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    <ol className="list-inside list-decimal">
+                      {app.ranked_adoptees.map(adoptee => (
+                        <li key={adoptee.id} title={adoptee.id}>
+                          {adoptee.name}
+                        </li>
+                      ))}
+                    </ol>
+                    {app.ranked_adoptees.length === 0 && (
+                      <span className="text-gray-400 italic">None</span>
+                    )}
                   </td>
                 </tr>
               ))}
