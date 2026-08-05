@@ -379,7 +379,7 @@ export type Database = {
           state: string
           status: Database["public"]["Enums"]["adoptee_status"]
           system: string
-          veteran_tatus: string
+          veteran_status: string
         }[]
       }
       get_dnr_applications: {
