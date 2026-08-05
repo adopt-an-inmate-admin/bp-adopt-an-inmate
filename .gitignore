@@ -7,6 +7,9 @@
 .yarn/install-state.gz
 /venv
 
+#ide
+.idea/workspace.xml
+
 # testing
 /coverage
 
@@ -14,7 +17,7 @@
 /.next/
 /out/
 
-# production
+# production:
 /build
 
 # misc
