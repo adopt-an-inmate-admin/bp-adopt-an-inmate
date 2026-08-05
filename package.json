@@ -15,7 +15,10 @@
     "pre-commit": "concurrently \"pnpm run tsc\" \"pnpm run lint\" \"pnpm run prettier\"",
     "test": "vitest",
     "gen-schema": "node scripts/generate-schema.mjs",
-    "setup-admin": "node scripts/create-admin.mjs"
+    "setup-admin": "node scripts/create-admin.mjs",
+    "db:migrate": "supabase db push",
+    "db:status": "supabase db status",
+    "db:reset": "supabase db reset"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

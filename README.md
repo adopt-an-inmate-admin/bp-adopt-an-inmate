@@ -105,3 +105,25 @@ This script uses the `SUPABASE_SERVICE_KEY` from your `.env.local` to create the
 - **Reset Test Records**: Completely remove a test user's data to allow for re-testing the onboarding flow.
   - **Effect on Supabase**: Deletes the user's profile, all applications, and the Supabase Auth account.
   - **Effect on Monday.com**: Deletes the adopter's **Main Item** and all associated **Subitems** from the Monday boards using the stored `monday_id`s. This ensures Monday.com remains in sync with the test environment.
+
+## Database & Migrations
+
+This project uses **Supabase** for its database and auth. Schema migrations are located in the `supabase/migrations` directory.
+
+### 1. Manual Migrations
+To deploy new migrations to your linked Supabase project manually:
+```bash
+pnpm db:migrate
+```
+*Note: You may need to login first via `pnpm supabase login`.*
+
+### 2. Automatic Migrations (Recommended)
+Vercel does **not** run database migrations during its build process. To automate this and avoid manual execution, we recommend using the **Supabase GitHub Integration**:
+
+1. Go to your **Supabase Dashboard**.
+2. Navigate to **Project Settings** > **Integrations**.
+3. Link your GitHub repository.
+4. Enable the **GitHub Actions** or **GitHub Integration** toggle.
+5. Now, whenever you push to `main`, Supabase will automatically apply any new migrations in the `supabase/migrations` folder to your production database.
+
+Alternatively, you can set up a custom GitHub Action using the `supabase/setup-cli` action.
