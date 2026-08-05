@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF #3 still working on making gender come over properly.">
+    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF #11 new bug. Raw json shouldn't be displayed">
+      <change afterPath="$PROJECT_DIR$/supabase/migrations/20260804191400_fix_get_user_and_application.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/actions/matching/findMatches.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/matching/findMatches.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/actions/monday/mutations/exportApplication.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/monday/mutations/exportApplication.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/onboarding/OnboardingQuestionState.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/profile/EditProfileForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/profile/EditProfileForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/formatters.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/formatters.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/supabase/migrations/20260731135200_update_get_user_and_application.sql" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/migrations/20260731135200_update_get_user_and_application.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/supabase/migrations/20260804111200_rename_test_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/migrations/20260804111200_rename_test_tables.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,23 +60,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.432291958636997" />
-      <entry key="MS500" value="2.1994528037693257" />
-      <entry key="S2" value="7.860576462357234" />
-      <entry key="S5" value="18.833831777880423" />
-      <entry key="S10" value="34.16068949370645" />
-      <entry key="S30" value="68.65087341875193" />
-      <entry key="S60" value="95.2278367615301" />
-      <entry key="M2" value="123.74222072642073" />
-      <entry key="M5" value="152.87393037490708" />
-      <entry key="M10" value="166.41527931573995" />
-      <entry key="M15" value="176.10744424628825" />
-      <entry key="M30" value="258.336350781418" />
-      <entry key="H1" value="563.0213990831118" />
-      <entry key="H2" value="1047.6719498488203" />
-      <entry key="H4" value="1501.6257121906592" />
-      <entry key="D1" value="2222.043697433311" />
-      <entry key="W1" value="2888.212604030905" />
+      <entry key="MS100" value="1.334034388002081" />
+      <entry key="MS500" value="3.802079552188578" />
+      <entry key="S2" value="7.305717171032768" />
+      <entry key="S5" value="9.967113613405411" />
+      <entry key="S10" value="13.546009131501144" />
+      <entry key="S30" value="26.86498284785369" />
+      <entry key="S60" value="40.68545169538518" />
+      <entry key="M2" value="58.4966788529388" />
+      <entry key="M5" value="86.27750412775646" />
+      <entry key="M10" value="103.41629493007333" />
+      <entry key="M15" value="110.62686345681482" />
+      <entry key="M30" value="118.79257973129774" />
+      <entry key="H1" value="128.0889520116026" />
+      <entry key="H2" value="212.87174152378074" />
+      <entry key="H4" value="527.3307159782256" />
+      <entry key="D1" value="2537.094302292708" />
+      <entry key="W1" value="4383.035307761708" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -89,34 +87,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="6.608061977782535E-200" />
-      <entry key="M10" value="3.634161540180718E-100" />
-      <entry key="M15" value="6.415737935474426E-67" />
-      <entry key="M30" value="1.1327181758529717E-33" />
-      <entry key="H1" value="4.759614984473354E-17" />
-      <entry key="H2" value="9.756631043465133E-9" />
-      <entry key="H4" value="1.3968979564249421E-4" />
-      <entry key="D1" value="0.4058688687739971" />
-      <entry key="W1" value="1.5925050403077403" />
+      <entry key="M5" value="5.831926043687542E-290" />
+      <entry key="M10" value="3.414075949095817E-145" />
+      <entry key="M15" value="6.154024903664849E-97" />
+      <entry key="M30" value="1.1093745180719157E-48" />
+      <entry key="H1" value="1.489532493100515E-24" />
+      <entry key="H2" value="1.725992726442276E-12" />
+      <entry key="H4" value="1.8579508523843247E-6" />
+      <entry key="D1" value="0.19755923281045734" />
+      <entry key="W1" value="1.4368487109477994" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.33837224926668" />
-      <entry key="MS500" value="2.1694205428063693" />
-      <entry key="S2" value="7.837569118292158" />
-      <entry key="S5" value="18.810464536899264" />
-      <entry key="S10" value="34.13823196300557" />
-      <entry key="S30" value="68.63513398458954" />
-      <entry key="S60" value="95.21689313980959" />
-      <entry key="M2" value="123.73514931261012" />
-      <entry key="M5" value="152.87045843095518" />
-      <entry key="M10" value="166.41338688520207" />
-      <entry key="M15" value="176.10607924052243" />
-      <entry key="M30" value="258.3351986682323" />
-      <entry key="H1" value="563.0200359998531" />
-      <entry key="H2" value="1047.6706821321977" />
-      <entry key="H4" value="1501.6249529383422" />
-      <entry key="D1" value="2222.4493226164286" />
-      <entry key="W1" value="2889.8050461481866" />
+      <entry key="MS100" value="1.2886701609259479" />
+      <entry key="MS500" value="3.7653092219461257" />
+      <entry key="S2" value="7.286447028044112" />
+      <entry key="S5" value="9.955984806082935" />
+      <entry key="S10" value="13.534134131366148" />
+      <entry key="S30" value="26.845300847520225" />
+      <entry key="S60" value="40.668088888804064" />
+      <entry key="M2" value="58.48467525095638" />
+      <entry key="M5" value="86.27142572549968" />
+      <entry key="M10" value="103.41295618181786" />
+      <entry key="M15" value="110.62456092097369" />
+      <entry key="M30" value="118.79138691899269" />
+      <entry key="H1" value="128.08833204118596" />
+      <entry key="H2" value="212.87132818406917" />
+      <entry key="H4" value="527.3303263529388" />
+      <entry key="D1" value="2537.291589334413" />
+      <entry key="W1" value="4384.47207343046" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -234,7 +232,12 @@
     <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately" />
     <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately - predictive text stopped working." />
     <MESSAGE value="RWF #3 still working on making gender come over properly." />
-    <option name="LAST_COMMIT_MESSAGE" value="RWF #3 still working on making gender come over properly." />
+    <MESSAGE value="RWF #3 still working on making gender come over properly. And #5 make location pull all from ajax" />
+    <MESSAGE value="RWF #9 fix strange login issue." />
+    <MESSAGE value="RWF #9 fix strange login issue. #3 Gender value push" />
+    <MESSAGE value="RWF #10 add functions and triggers to migration/refactor" />
+    <MESSAGE value="RWF #11 new bug. Raw json shouldn't be displayed" />
+    <option name="LAST_COMMIT_MESSAGE" value="RWF #11 new bug. Raw json shouldn't be displayed" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

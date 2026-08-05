@@ -339,7 +339,7 @@ BEGIN
     p.gender,
     p.last_name,
     p.monday_id,
-    p.personal_bio,
+    a.personal_bio,
     p.pronouns,
     a.ranked_cards,
     p.state,
