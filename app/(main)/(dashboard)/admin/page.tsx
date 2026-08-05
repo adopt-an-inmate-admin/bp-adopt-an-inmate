@@ -3,8 +3,10 @@ import { PendingApplicationsList } from '@/components/admin/PendingApplicationsL
 
 export default function AdminPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div className="flex-1 overflow-y-auto bg-gray-1 px-8 py-12">
+      <h1 className="mb-10 text-3xl font-normal text-gray-12">
+        Admin Dashboard
+      </h1>
 
       <div className="grid grid-cols-1 gap-8">
         <section>

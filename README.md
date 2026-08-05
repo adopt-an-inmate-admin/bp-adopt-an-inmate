@@ -92,7 +92,15 @@ A webhook is configured in Monday.com to send a `POST` request to `/api/monday-w
 - **Status Code 1 (`REAPPLY`)**: The application status is set to `REAPPLY`, allowing the adopter to submit a new one.
 
 ### 3. Admin Tools
-Administrative functions are available at `/admin` (restricted to the global admin user `admin@adoptaninmate`).
+Administrative functions are available at `/admin` (restricted to the global admin user `admin@adoptaninmate.org`).
+
+**Setup Admin User:**
+If the admin user does not exist in your Supabase instance, you can create it by running:
+```bash
+pnpm setup-admin
+```
+This script uses the `SUPABASE_SERVICE_KEY` from your `.env.local` to create the `admin@adoptaninmate.org` user with the default password `St@y0ut!`.
+
 - **Pending Applications**: View a list of applications currently awaiting review.
 - **Reset Test Records**: Completely remove a test user's data to allow for re-testing the onboarding flow.
   - **Effect on Supabase**: Deletes the user's profile, all applications, and the Supabase Auth account.

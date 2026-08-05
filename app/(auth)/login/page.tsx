@@ -81,6 +81,7 @@ export default function LoginPage() {
     <form
       className="flex h-full w-full flex-col items-center justify-center"
       onSubmit={handleSubmit(handleSignIn)}
+      noValidate
     >
       <div className="flex w-106 flex-col gap-4 rounded-2xl bg-gray-1 p-8">
         <p className="text-3xl font-medium">Log in</p>

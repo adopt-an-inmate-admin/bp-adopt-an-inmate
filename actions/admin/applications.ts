@@ -23,7 +23,7 @@ export async function getPendingApplications(): Promise<{
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user?.email !== 'admin@adoptaninmate') {
+  if (user?.email?.toLowerCase() !== 'admin@adoptaninmate.org') {
     return { success: false, error: 'Unauthorized' };
   }
 

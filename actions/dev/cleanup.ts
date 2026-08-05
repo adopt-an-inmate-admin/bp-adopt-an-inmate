@@ -23,7 +23,8 @@ export async function resetTestData(email: string) {
     data: { user: currentUser },
   } = await (await getSupabaseServerClient()).auth.getUser();
 
-  const isGlobalAdmin = currentUser?.email === 'admin@adoptaninmate';
+  const isGlobalAdmin =
+    currentUser?.email?.toLowerCase() === 'admin@adoptaninmate.org';
 
   if (process.env.NODE_ENV !== 'development' && !isGlobalAdmin) {
     return {

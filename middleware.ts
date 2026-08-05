@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
   // Check if it's an admin route
   if (pathname.startsWith('/admin')) {
-    if (!user || user.email !== 'admin@adoptaninmate') {
+    if (!user || user.email?.toLowerCase() !== 'admin@adoptaninmate.org') {
       return redirectWithSession(new URL('/', request.url), supabaseResponse);
     }
     return supabaseResponse;
@@ -62,6 +62,16 @@ export async function middleware(request: NextRequest) {
   if (onboardingComplete && pathname === '/onboarding') {
     const homeUrl = new URL('/', request.url);
     return redirectWithSession(homeUrl, supabaseResponse);
+  }
+
+  // If global admin lands on home page or any other dashboard page, redirect to admin panel
+  const isAdmin = user.email?.toLowerCase() === 'admin@adoptaninmate.org';
+  const isDashboardPath =
+    pathname === '/' || pathname === '/profile' || pathname === '/profile/';
+
+  if (isAdmin && isDashboardPath) {
+    const adminUrl = new URL('/admin', request.url);
+    return redirectWithSession(adminUrl, supabaseResponse);
   }
 
   // All checks passed, update session and continue

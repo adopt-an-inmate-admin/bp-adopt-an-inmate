@@ -6,12 +6,14 @@ import {
   LuHeart,
   LuInfo,
   LuLayoutDashboard,
+  LuShield,
   LuUser,
 } from 'react-icons/lu';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Logo from '@/components/Logo';
 import LogoutButton from '@/components/MainDashboard/LogoutButton';
+import { useAuth } from '@/contexts/AuthProvider';
 import { useProfile } from '@/contexts/ProfileProvider';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { appIsActive } from '@/lib/utils';
@@ -24,6 +26,9 @@ export default function Sidebar() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const { profileData } = useProfile();
+  const { userEmail } = useAuth();
+
+  const isAdmin = userEmail?.toLowerCase() === 'admin@adoptaninmate.org';
 
   // counts for Applications and History
   const [activeCount, setActiveCount] = useState<number>(0);
@@ -57,6 +62,16 @@ export default function Sidebar() {
   }, []);
 
   const NAV_LINKS = [
+    ...(isAdmin
+      ? [
+          {
+            href: '/admin',
+            label: 'Admin',
+            icon: LuShield,
+            external: false,
+          },
+        ]
+      : []),
     {
       href: '/',
       label: `Applications (${activeCount})`,
