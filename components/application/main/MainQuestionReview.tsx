@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import QuestionBack from '@/components/questions/QuestionBack';
 import { useApplicationContext } from '@/contexts/ApplicationContext';
 import { useApplicationNavigation } from '@/hooks/app-process';
-import { formatGenderPreference } from '@/lib/formatters';
+import { formatGenderPreference, getDisplayAddress } from '@/lib/formatters';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { ApplicationStage } from '@/types/enums';
 import { Profile } from '@/types/schema';
@@ -60,7 +60,7 @@ export default function MainQuestionReview() {
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-11">Location</p>
-            <p>{profile?.state || 'N/A'}</p>
+            <p>{getDisplayAddress(profile?.state || 'N/A')}</p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-11">Sex/Gender</p>

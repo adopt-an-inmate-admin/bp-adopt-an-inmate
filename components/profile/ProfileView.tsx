@@ -12,6 +12,7 @@ import { FaRibbon } from 'react-icons/fa';
 import EditProfileModal from '@/components/profile/EditProfileModal';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useProfile } from '@/contexts/ProfileProvider';
+import { getDisplayAddress } from '@/lib/formatters';
 
 type ProfileRowProps = {
   icon: ReactNode;
@@ -97,7 +98,7 @@ export default function ProfileView() {
               <ProfileRow
                 icon={<BsGlobe2 size={22} />}
                 label="Location"
-                value={profileData.state}
+                value={getDisplayAddress(profileData.state)}
               />
               <ProfileRow
                 icon={<FaRibbon size={22} />}

@@ -116,6 +116,17 @@ export function capitalizePronouns(pronouns: string) {
 export function capitalizeLocation(location: string) {
   if (!location) return '';
 
+  // If it's JSON (new format), it should already have its address capitalized
+  // by LocationAutocomplete. We just return it as is to avoid messing up the JSON.
+  try {
+    const parsed = JSON.parse(location);
+    if (parsed && typeof parsed === 'object' && parsed.address) {
+      return location;
+    }
+  } catch {
+    // Not JSON, continue with capitalization
+  }
+
   return location
     .split(',')
     .map(part => {
