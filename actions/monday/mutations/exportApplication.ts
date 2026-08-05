@@ -212,6 +212,8 @@ const getQueryCreateSubItem = (
   adopteeData: {
     id: string;
     inmate_id: string;
+    first_name: string | null;
+    last_name: string | null;
   }[],
   columnMapping: Record<string, string>,
 ) => {
@@ -255,14 +257,26 @@ const getQueryCreateSubItem = (
   // parse ranked cards
   const adopteeMap = adopteeData.reduce(
     (acc, cur) => {
-      acc[cur.id] = cur.inmate_id;
+      const name = `${cur.first_name || ''} ${cur.last_name || ''}`.trim();
+      acc[cur.id] = {
+        name: name || 'Unknown',
+        inmateId: cur.inmate_id,
+      };
       return acc;
     },
-    {} as Record<string, string>,
+    {} as Record<string, { name: string; inmateId: string }>,
   );
 
   const rankedCards = appData.ranked_cards as Array<string>;
-  const rankedCardsOrder = rankedCards.map(c => adopteeMap[c]).join(', ');
+  const rankedCardsOrder = rankedCards
+    .map((c, i) => {
+      const adoptee = adopteeMap[c];
+      const info = adoptee
+        ? `${adoptee.name} (${adoptee.inmateId})`
+        : `Unknown (${c})`;
+      return `${i + 1}. ${info}`;
+    })
+    .join(', ');
 
   const parsedBio = (appData.personal_bio ?? '')
     .replace(/\\/g, '\\\\')
@@ -340,7 +354,7 @@ const exportApplication = async (appId: string) => {
   // get relevant adoptee data
   const { data: adopteeData, error: getAdopteeError } = await supabaseService
     .from('adoptee_vector')
-    .select('id, inmate_id')
+    .select('id, inmate_id, first_name, last_name')
     .in('id', appData.ranked_cards as Array<string>);
 
   if (getAdopteeError || !adopteeData || adopteeData.length !== 4) {
