@@ -15,6 +15,14 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { user, supabaseResponse } = await updateSession(request);
 
+  // Check if it's an admin route
+  if (pathname.startsWith('/admin')) {
+    if (!user || user.email !== 'admin@adoptaninmate') {
+      return redirectWithSession(new URL('/', request.url), supabaseResponse);
+    }
+    return supabaseResponse;
+  }
+
   // Define public routes that don't require authentication
   const publicRoutes = [
     '/login',

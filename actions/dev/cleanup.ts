@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { mondayApiClient } from '@/actions/monday/core';
+import { getSupabaseServerClient } from '@/lib/supabase';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 
 async function deleteMondayItem(itemId: string | null) {
@@ -15,13 +16,23 @@ async function deleteMondayItem(itemId: string | null) {
 }
 
 export async function resetTestData(email: string) {
-  if (process.env.NODE_ENV !== 'development') {
-    return { success: false, error: 'Only allowed in development mode.' };
+  const supabase = await dangerous_getSupabaseServiceClient();
+
+  // Check if current user is the global admin
+  const {
+    data: { user: currentUser },
+  } = await (await getSupabaseServerClient()).auth.getUser();
+
+  const isGlobalAdmin = currentUser?.email === 'admin@adoptaninmate';
+
+  if (process.env.NODE_ENV !== 'development' && !isGlobalAdmin) {
+    return {
+      success: false,
+      error: 'Only allowed in development mode or for global admin.',
+    };
   }
 
   try {
-    const supabase = await dangerous_getSupabaseServiceClient();
-
     // 1. Find user by email
     const { data: users, error: listError } =
       await supabase.auth.admin.listUsers();

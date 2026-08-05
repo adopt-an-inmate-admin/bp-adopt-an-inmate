@@ -67,3 +67,33 @@ pnpm dev
 ```
 
 Then, navigate to http://localhost:3000 to launch the web application.
+
+## Application Workflow & Monday.com Integration
+
+Applications submitted through this site are synchronized with Monday.com for administrative approval.
+
+### 1. Export to Monday.com
+When an adopter submits their application, it is exported to the **Monday Adopter Data** board.
+- The adopter is created as a **Main Item**.
+- The specific application is created as a **Subitem**.
+- Initial status is set to `Pending`.
+
+### 2. Approval via Monday.com Webhooks
+The approval process is driven by status changes on the application **Subitem** in Monday.com.
+
+A webhook is configured in Monday.com to send a `POST` request to `/api/monday-webhook` whenever the `subitemStatus` changes. The system handles the following status codes:
+
+- **Status Code 8 (`PENDING_CONFIRMATION`)**: This signifies the application has been reviewed and a match is ready.
+  - The system automatically identifies the matched adoptee.
+  - The application status in Supabase is updated to `PENDING_CONFIRMATION`.
+  - The adoptee's status is updated to `ADOPTED`.
+  - The adopter is given 2 weeks to confirm the match.
+- **Status Code 4 (`REJECTED`)**: The application is marked as `REJECTED` in Supabase.
+- **Status Code 1 (`REAPPLY`)**: The application status is set to `REAPPLY`, allowing the adopter to submit a new one.
+
+### 3. Admin Tools
+Administrative functions are available at `/admin` (restricted to the global admin user `admin@adoptaninmate`).
+- **Pending Applications**: View a list of applications currently awaiting review.
+- **Reset Test Records**: Completely remove a test user's data to allow for re-testing the onboarding flow.
+  - **Effect on Supabase**: Deletes the user's profile, all applications, and the Supabase Auth account.
+  - **Effect on Monday.com**: Deletes the adopter's **Main Item** and all associated **Subitems** from the Monday boards using the stored `monday_id`s. This ensures Monday.com remains in sync with the test environment.
