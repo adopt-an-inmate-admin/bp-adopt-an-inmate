@@ -221,29 +221,9 @@ const getQueryCreateSubItem = (
   const currentTime = new Date();
   const currentDateISOString = currentTime.toISOString().split('T')[0];
 
-  const capitalizedPronouns = capitalizePronouns(appData.pronouns ?? '');
-
-  // parse gender mapping
-  const genderToMonday: Record<string, string | undefined> = {
-    male: 'Male',
-    female: 'Female',
-    lgbtqi: 'LGBTQI+',
-    'lgbtqi+': 'LGBTQI+',
-    other: undefined,
-    both: 'Both (for group)',
-    prefer_not_to_say: 'Prefer Not To Say',
-    'prefer-not': 'Prefer Not To Say',
-  };
-
-  const mappedGender =
-    (appData.gender ?? '').toLowerCase() === 'other'
-      ? undefined
-      : (genderToMonday[(appData.gender ?? '').toLowerCase()] ??
-        'Prefer Not To Say');
-
   // parse gender preference
   const genderPrefMap = {
-    no_preference: 'No Preference',
+    no_preference: 'None',
     female: 'Female',
     male: 'Male',
   };
@@ -252,7 +232,7 @@ const getQueryCreateSubItem = (
     appData.gender_pref,
   )
     ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
-    : 'No Preference';
+    : 'None';
 
   // parse ranked cards
   const adopteeMap = adopteeData.reduce(
@@ -287,18 +267,16 @@ const getQueryCreateSubItem = (
 
   const subItemColumnValues = parseColumns(columnMapping, {
     status: { label: 'Pending' },
-    gender: { label: mappedGender },
-    pronouns: { label: capitalizedPronouns },
     gender_preference: { label: parsedGenderPref },
     match_list_links: { item_ids: appData.ranked_cards },
     // request notes column: age preference (or "none" if not set) prepended
-    // to the adopter bio, e.g. "age preference: 45-78, bio: ..."
+    // to the adopter bio, e.g. "age preference: 45-78, ranking: 1. ..., bio: ..."
     bio_and_age: `age preference: ${
       appData.age_pref && appData.age_pref.length === 2
         ? `${appData.age_pref[0]}-${appData.age_pref[1]}`
         : 'none'
-    }, bio: ${parsedBio}`,
-    order: rankedCardsOrder,
+    }, ranking: ${rankedCardsOrder}, bio: ${parsedBio}`,
+    list_notes: rankedCardsOrder,
     date_received: currentDateISOString,
   });
 
@@ -385,12 +363,10 @@ const exportApplication = async (appId: string) => {
 
   const subBoardTitles = {
     status: 'Request Status',
-    gender: 'Gender',
-    pronouns: 'Pronouns',
     gender_preference: 'Gender Preference',
     match_list_links: 'Match List Links',
     bio_and_age: 'Request Notes',
-    order: 'Order',
+    list_notes: 'List Notes',
     date_received: 'Request Received',
   };
 
