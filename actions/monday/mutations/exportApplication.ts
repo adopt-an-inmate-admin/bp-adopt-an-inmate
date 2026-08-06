@@ -181,6 +181,8 @@ const getQueryCreateMainItem = (
     location: parseLocationForMonday(appData.state),
     pronouns: { label: capitalizedPronouns },
     veteran_status: { labels: [appData.veteran_status ? 'Yes' : 'No'] },
+    how_did_you_hear: { labels: [appData.how_did_you_hear] },
+    how_did_you_hear_other: appData.how_did_you_hear_other,
   });
 
   const mainItemCreateQuery = `
@@ -359,6 +361,8 @@ const exportApplication = async (appId: string) => {
     location: 'Your Location',
     notes: 'Notes',
     veteran_status: 'Are you a veteran?',
+    how_did_you_hear: 'Source',
+    how_did_you_hear_other: 'For other, please specify',
   };
 
   const subBoardTitles = {

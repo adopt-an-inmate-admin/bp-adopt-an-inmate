@@ -251,6 +251,8 @@ export type Database = {
           date_of_birth: string
           first_name: string
           gender: string | null
+          how_did_you_hear: string | null
+          how_did_you_hear_other: string | null
           last_name: string
           monday_id: string | null
           past_inactive_reason: string | null
@@ -263,6 +265,8 @@ export type Database = {
           date_of_birth: string
           first_name: string
           gender?: string | null
+          how_did_you_hear?: string | null
+          how_did_you_hear_other?: string | null
           last_name: string
           monday_id?: string | null
           past_inactive_reason?: string | null
@@ -275,6 +279,8 @@ export type Database = {
           date_of_birth?: string
           first_name?: string
           gender?: string | null
+          how_did_you_hear?: string | null
+          how_did_you_hear_other?: string | null
           last_name?: string
           monday_id?: string | null
           past_inactive_reason?: string | null
@@ -404,6 +410,8 @@ export type Database = {
           state: string
           user_id: string
           veteran_status: boolean
+          how_did_you_hear: string
+          how_did_you_hear_other: string
         }[]
       }
       get_user_and_application: {
@@ -423,6 +431,8 @@ export type Database = {
           state: string
           user_id: string
           veteran_status: boolean
+          how_did_you_hear: string
+          how_did_you_hear_other: string
         }[]
       }
       transfer_tables: { Args: never; Returns: undefined }

@@ -6,6 +6,7 @@ import OnboardingQuestionDOB from '@/components/onboarding/OnboardingQuestionDOB
 import OnboardingQuestionGender from '@/components/onboarding/OnboardingQuestionGender';
 import OnboardingQuestionName from '@/components/onboarding/OnboardingQuestionName';
 import OnboardingQuestionPronouns from '@/components/onboarding/OnboardingQuestionPronouns';
+import OnboardingQuestionSource from '@/components/onboarding/OnboardingQuestionSource';
 import OnboardingQuestionState from '@/components/onboarding/OnboardingQuestionState';
 import OnboardingQuestionVeteran from '@/components/onboarding/OnboardingQuestionVeteran';
 import ProgressBar from '@/components/questions/ProgressBar';
@@ -31,6 +32,7 @@ export default function OnboardingPage() {
                 <OnboardingQuestionPronouns key="pronouns" />,
                 <OnboardingQuestionState key="state" />,
                 <OnboardingQuestionVeteran key="veteran" />,
+                <OnboardingQuestionSource key="source" />,
                 <OnboardingQuestionAdoptedBefore key="adoptedBefore" />,
                 <OnboardingComplete key="complete" />,
               ]}

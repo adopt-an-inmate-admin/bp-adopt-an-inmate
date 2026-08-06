@@ -27,6 +27,8 @@ export interface OnboardingInfo {
   pronouns?: string;
   location: string; // full address string
   isVeteran: boolean;
+  howDidYouHear: string;
+  howDidYouHearOther?: string;
   adoptedBefore: boolean;
   stillActive?: boolean;
   numPastActive?: number;

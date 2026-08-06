@@ -1,9 +1,9 @@
-const parseEmail = (email: string) => {
-  return { email, text: email };
+const parseDropdown = (labels: string[]) => {
+  return { labels };
 };
 
-const parseDropdown = (dropdownIds: string[]) => {
-  return dropdownIds.join(',');
+const parseEmail = (email: string) => {
+  return { email, text: email };
 };
 
 const parseLocation = (address: string) => {
@@ -15,7 +15,7 @@ const parseLocation = (address: string) => {
 };
 
 export const parseMondayValue = (value: string, type: string) => {
-  if (type === 'dropdown') return parseDropdown([value]);
+  if (type === 'dropdown' || type === 'source') return parseDropdown([value]);
   else if (type === 'email') return parseEmail(value);
   else if (type === 'location') return parseLocation(value);
   return value;

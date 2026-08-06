@@ -17,6 +17,8 @@ const onboardingSchema = z.object({
   pronouns: z.string().optional(),
   location: z.string(), // now holds full address
   isVeteran: z.boolean(),
+  howDidYouHear: z.string(),
+  howDidYouHearOther: z.string().optional(),
   adoptedBefore: z.boolean(),
   stillActive: z.boolean().optional(),
   numPastActive: z.number().optional(),
@@ -57,6 +59,8 @@ export const useSubmitOnboarding = () => {
         pronouns: capitalizePronouns(info.pronouns || ''),
         state: info.location,
         veteran_status: info.isVeteran,
+        how_did_you_hear: info.howDidYouHear,
+        how_did_you_hear_other: info.howDidYouHearOther || null,
         monday_id: null,
         past_inactive_reason: info.pastInactiveReason || null,
       };

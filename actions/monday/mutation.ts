@@ -23,6 +23,8 @@ export const createRow = async (profile: Profile) => {
     pronouns: 'Pronouns',
     state: 'Location',
     veteran_status: 'Veteran Status',
+    how_did_you_hear: 'Source',
+    how_did_you_hear_other: 'For other, please specify',
   };
 
   const columnIdTranslation: Record<string, string> = {};
