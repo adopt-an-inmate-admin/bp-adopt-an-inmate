@@ -115,7 +115,7 @@ const parseColumns = <K extends string>(
   return Object.entries(columnValues).reduce(
     (agg: Record<string, unknown>, [key, val]) => {
       const k = key as K;
-      if (val !== undefined) {
+      if (val !== undefined && columnMapping[k]) {
         agg[columnMapping[k]] = val;
       }
       return agg;
@@ -369,29 +369,29 @@ const exportApplication = async (appId: string) => {
 
   // fetch board column mappings
   const mainBoardTitles = {
-    email: 'Email',
+    email: 'Your Email',
     added_time: 'Added Time',
     first_name: 'First Name',
     last_name: 'Last Name',
-    current_status: 'Status',
-    gender: 'Gender',
-    pronouns: 'Pronouns',
-    gender_preference: 'Gender Preference',
+    current_status: 'Current status',
+    gender: 'Your Gender',
+    pronouns: 'My pronouns are:',
+    gender_preference: 'Gender preference for your adoptee:',
     date_of_birth: 'Date of Birth',
-    location: 'Location',
+    location: 'Your Location',
     notes: 'Notes',
-    veteran_status: 'Veteran Status',
+    veteran_status: 'Are you a veteran?',
   };
 
   const subBoardTitles = {
-    status: 'Status',
+    status: 'Request Status',
     gender: 'Gender',
     pronouns: 'Pronouns',
     gender_preference: 'Gender Preference',
     match_list_links: 'Match List Links',
-    bio_and_age: 'Bio and Age',
+    bio_and_age: 'Request Notes',
     order: 'Order',
-    date_received: 'Date Received',
+    date_received: 'Request Received',
   };
 
   const [mainBoardMapping, subBoardMapping] = await Promise.all([
