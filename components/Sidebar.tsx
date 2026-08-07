@@ -99,8 +99,8 @@ export default function Sidebar() {
   ] as const;
 
   const displayName = useMemo(
-    () => profileData?.first_name || 'User',
-    [profileData?.first_name],
+    () => profileData?.first_name || (isAdmin ? 'Admin' : 'User'),
+    [profileData?.first_name, isAdmin],
   );
 
   // isActive checks for startsWith on Applications/History labels with counts
@@ -150,12 +150,19 @@ export default function Sidebar() {
         <ButtonLink
           variant="outline"
           href="/profile"
-          className="min-w-0 flex-1 justify-start px-4!"
+          className="h-auto min-w-0 flex-1 items-center justify-start px-4! py-2"
         >
-          <LuUser className="size-5 text-red-9" />
-          <p className="w-full overflow-hidden text-left overflow-ellipsis whitespace-nowrap">
-            {displayName}
-          </p>
+          <LuUser className="size-5 shrink-0 text-red-9" />
+          <div className="flex min-w-0 flex-col items-start gap-0">
+            <p className="w-full overflow-hidden text-left text-sm font-medium overflow-ellipsis whitespace-nowrap">
+              {displayName}
+            </p>
+            {userEmail && (
+              <p className="w-full overflow-hidden text-left text-[10px] overflow-ellipsis whitespace-nowrap text-gray-11">
+                {userEmail}
+              </p>
+            )}
+          </div>
         </ButtonLink>
         <LogoutButton />
       </div>
