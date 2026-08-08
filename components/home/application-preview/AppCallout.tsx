@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { cva } from 'class-variance-authority';
 import { CONFIG } from '@/config';
 import { formatDate } from '@/lib/formatters';
+import { t } from '@/lib/i18n';
 import { AdopterApplication } from '@/types/schema';
 
 const calloutStyles = cva(
@@ -42,13 +43,15 @@ export default function AppCallout({
 
     switch (app.status) {
       case 'REAPPLY':
-        return 'Please reapply!';
+        return t('app.callout.status.reapply.title');
       case 'ENDED':
-        return 'Your application has ended.';
+        return t('app.callout.status.ended.title');
       case 'REJECTED':
-        return `Email ${CONFIG.adminEmail}`;
+        return t('app.callout.status.rejected.title', {
+          email: CONFIG.adminEmail,
+        });
       case 'PENDING':
-        return 'The NPO is reviewing your application.';
+        return t('app.callout.status.pending.title');
       default:
         return '';
     }
@@ -59,19 +62,23 @@ export default function AppCallout({
 
     switch (app.status) {
       case 'PENDING':
-        return 'It will take about 5-7 days. Check your email to be updated!';
+        return t('app.callout.status.pending.description');
       case 'PENDING_CONFIRMATION':
         return app.time_confirmation_due
-          ? `You have until ${formatDate(app.time_confirmation_due)} to respond.`
-          : 'You have two weeks to respond.';
+          ? t('app.callout.status.pending_confirmation.description_with_date', {
+              date: formatDate(app.time_confirmation_due),
+            })
+          : t('app.callout.status.pending_confirmation.description');
       case 'REAPPLY':
         return app.matched_adoptee
-          ? "We didn't hear from you within 2 weeks."
-          : 'There was an issue with your application.';
+          ? t('app.callout.status.reapply.description_timeout')
+          : t('app.callout.status.reapply.description_issue');
       case 'ENDED':
-        return `Reason: ${app.ended_reason || 'N/A'}`;
+        return t('app.callout.status.ended.description_with_reason', {
+          reason: app.ended_reason || 'N/A',
+        });
       case 'REJECTED':
-        return 'for appeals or reasoning, and to submit further applications.';
+        return t('app.callout.status.rejected.description');
       default:
         return '';
     }
@@ -86,7 +93,7 @@ export default function AppCallout({
         href="https://docs.google.com/document/d/1ASL6ReAo3zyODDdqjf9bP3OWAWlZQG8bplheDCYFMRM/edit?usp=sharing"
         status={app.status}
       >
-        Click here to see mailing regulation by state
+        {t('app.callout.status.active.link_text')}
       </CalloutLink>
     );
 
