@@ -71,7 +71,7 @@ export const useApplicationNavigation = () => {
     }
 
     // export the application to monday
-    const { success, error } = await exportApplication(appState.appId);
+    const { success, error } = await exportApplication(appState.appId, ranks);
 
     if (!success || error) {
       Logger.error(`Application export failed: ${String(error)}`);

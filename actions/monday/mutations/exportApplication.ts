@@ -218,6 +218,7 @@ const getQueryCreateSubItem = (
     last_name: string | null;
   }[],
   columnMapping: Record<string, string>,
+  rankedCardsOverride?: string[],
 ) => {
   // get current time
   const currentTime = new Date();
@@ -249,7 +250,8 @@ const getQueryCreateSubItem = (
     {} as Record<string, { name: string; inmateId: string }>,
   );
 
-  const rankedCards = appData.ranked_cards as Array<string>;
+  const rankedCards = (rankedCardsOverride ||
+    appData.ranked_cards) as Array<string>;
   const rankedCardsOrder = rankedCards
     .map((c, i) => {
       const adoptee = adopteeMap[c];
@@ -270,7 +272,7 @@ const getQueryCreateSubItem = (
   const subItemColumnValues = parseColumns(columnMapping, {
     status: { label: 'Pending' },
     gender_preference: { label: parsedGenderPref },
-    match_list_links: { item_ids: appData.ranked_cards },
+    match_list_links: { item_ids: rankedCards },
     // request notes column: age preference (or "none" if not set) prepended
     // to the adopter bio, e.g. "age preference: 45-78, ranking: 1. ..., bio: ..."
     bio_and_age: `age preference: ${
@@ -299,7 +301,10 @@ const getQueryCreateSubItem = (
 // MAIN FUNCTION
 ////
 
-const exportApplication = async (appId: string) => {
+const exportApplication = async (
+  appId: string,
+  rankedCardsOverride?: string[],
+) => {
   if (!CONFIG.enableMondayMutations)
     return { success: false, error: 'Forbidden action.' };
 
@@ -329,11 +334,15 @@ const exportApplication = async (appId: string) => {
   );
   if (!appData) return { success: false, error: appDataError };
 
+  // Use override if provided, otherwise use data from database
+  const finalRankedCards = (rankedCardsOverride ||
+    appData.ranked_cards) as string[];
+
   // get relevant adoptee data
   const { data: adopteeData, error: getAdopteeError } = await supabaseService
     .from('adoptee_vector')
     .select('id, inmate_id, first_name, last_name')
-    .in('id', appData.ranked_cards as Array<string>);
+    .in('id', finalRankedCards);
 
   if (getAdopteeError || !adopteeData || adopteeData.length !== 4) {
     Logger.error(
@@ -438,12 +447,13 @@ const exportApplication = async (appId: string) => {
     mainItemId,
     adopteeData,
     subBoardMapping,
+    rankedCardsOverride,
   );
 
   let updateAdopteesQuery;
   try {
     updateAdopteesQuery = await updateAdopteeMondayStatus(
-      appData.ranked_cards as Array<string>,
+      finalRankedCards,
       'OFC',
     );
   } catch (updateAdopteesError) {
@@ -505,7 +515,7 @@ const exportApplication = async (appId: string) => {
   const { error: updateAdopteesError } = await supabaseService
     .from('adoptee_vector')
     .update({ status: 'OUT_FOR_CONSIDERATION' })
-    .in('id', appData.ranked_cards as Array<string>);
+    .in('id', finalRankedCards);
 
   if (updateAdopteesError) {
     Logger.error(
