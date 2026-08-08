@@ -13,6 +13,13 @@ function redirectWithSession(url: URL, supabaseResponse: NextResponse) {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Skip session update for API routes to avoid Authorization header conflicts
+  // and improve performance. API routes handle their own authentication.
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
   const { user, supabaseResponse } = await updateSession(request);
 
   // Check if it's an admin route

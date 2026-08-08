@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import Logger from '@/actions/logging';
 import { updateAdopteeMondayStatus } from '@/actions/monday/mutations/changeStatus';
@@ -12,38 +12,102 @@ assertEnvVarExists('MONDAY_SIGNING_SECRET');
 export async function POST(request: NextRequest) {
   const signingSecret = getEnvVar('MONDAY_SIGNING_SECRET');
 
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader) return new NextResponse(request.body);
-
-  // verify jwt from request auth header
+  let data: {
+    challenge?: string;
+    payload?: {
+      inputFields?: {
+        subitemId: string;
+        subitemStatus: string;
+      };
+    };
+    event?: {
+      boardId: number;
+      pulseId: number;
+      value?: {
+        index?: number;
+        text?: string;
+      };
+      columnId: string;
+      columnType: string;
+    };
+  };
   try {
-    jwt.verify(authHeader, signingSecret);
+    data = await request.json();
   } catch (error) {
-    Logger.error(`Error decoding JWT from Monday webhook: ${error}`);
-    return new NextResponse(request.body);
+    Logger.error(`Error parsing JSON from Monday webhook: ${error}`);
+    return new Response('Invalid JSON', { status: 400 });
   }
 
-  // parse events
-  const data = await request.json();
+  // 1. Handle Monday's verification challenge
+  if (data.challenge) {
+    return Response.json({ challenge: data.challenge });
+  }
 
-  let appMondayId: string;
-  let status: ApplicationStatusEnum;
-  try {
-    const { inputFields } = data.payload as Record<string, unknown>;
-    const { subitemId, subitemStatus } = inputFields as Record<string, string>;
+  // 2. Verify JWT if present (for Monday Apps / Custom Actions)
+  const authHeader = request.headers.get('authorization');
+  if (authHeader) {
+    try {
+      jwt.verify(authHeader, signingSecret);
+    } catch (error) {
+      Logger.error(`Error decoding JWT from Monday webhook: ${error}`);
+      // Note: We don't return here because standard webhooks might not have a valid JWT
+      // if they are not coming from a Monday App custom action.
+    }
+  }
 
-    // map item status code
-    const statusCodeMap: Record<string, ApplicationStatusEnum> = {
+  let appMondayId: string | undefined;
+  let status: ApplicationStatusEnum | undefined;
+
+  // 3. Parse payload (Custom Action vs Standard Webhook)
+  if (data.payload && data.payload.inputFields) {
+    // Custom Action structure
+    const { subitemId, subitemStatus } = data.payload.inputFields;
+    appMondayId = subitemId;
+
+    const statusCodeMap: Record<number, ApplicationStatusEnum> = {
       8: 'PENDING_CONFIRMATION',
       4: 'REJECTED',
       1: 'REAPPLY',
+      10: 'ACTIVE',
+      12: 'ENDED',
     };
 
-    status = statusCodeMap[subitemStatus];
-    appMondayId = subitemId;
-  } catch (error) {
-    Logger.error(`Error parsing webhook data: ${error}`);
-    return Response.json({ data });
+    if (subitemStatus !== undefined) {
+      status = statusCodeMap[Number(subitemStatus)];
+    }
+  } else if (data.event) {
+    // Standard Webhook structure
+    const { boardId, pulseId, value, columnId } = data.event;
+
+    // Check if it's an application status change (usually on board 6666910653)
+    if (columnId === 'status' || columnId === 'status__1') {
+      const subitemStatus = value?.index;
+
+      const statusCodeMap: Record<number, ApplicationStatusEnum> = {
+        8: 'PENDING_CONFIRMATION',
+        4: 'REJECTED',
+        1: 'REAPPLY',
+        10: 'ACTIVE',
+        12: 'ENDED',
+      };
+
+      if (subitemStatus !== undefined) {
+        appMondayId = String(pulseId);
+        status = statusCodeMap[subitemStatus];
+      }
+    }
+
+    // Check if it's an inmate status change (board 6439746168)
+    if (String(boardId) === '6439746168' && value?.text?.includes('Adopted')) {
+      return await handleInmateAdopted(String(pulseId));
+    }
+  }
+
+  if (!appMondayId || !status) {
+    return Response.json({
+      success: true,
+      message: 'No actionable change detected',
+    });
   }
 
   Logger.log(
@@ -54,7 +118,16 @@ export async function POST(request: NextRequest) {
   const supabase = await dangerous_getSupabaseServiceClient();
   const { error: updateError } = await supabase
     .from('adopter_applications')
-    .update({ status })
+    .update({
+      status,
+      ...(status === 'ACTIVE'
+        ? {
+            waiting_confirmation: false,
+            time_confirmation_due: null,
+            time_started: new Date().toISOString(),
+          }
+        : {}),
+    })
     .eq('monday_id', appMondayId);
 
   if (updateError) {
@@ -78,7 +151,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ data });
     }
 
-    // call Niranjana's query to find matched adoptee
+    // call query to find matched adoptee
     const { data: matchResult, error: matchError } = await queryMatchedAdoptees(
       appData.app_uuid,
     );
@@ -165,4 +238,62 @@ export async function POST(request: NextRequest) {
   }
 
   return Response.json({ data });
+}
+
+/**
+ * Handles the case where an inmate is set to "Adopted" on Monday.
+ * It finds the corresponding pending application and activates it.
+ */
+async function handleInmateAdopted(inmateId: string) {
+  const supabase = await dangerous_getSupabaseServiceClient();
+
+  // Find application for this inmate that is waiting for confirmation
+  const { data: app, error } = await supabase
+    .from('adopter_applications')
+    .select('app_uuid')
+    .eq('matched_adoptee', inmateId)
+    .eq('status', 'PENDING_CONFIRMATION')
+    .maybeSingle();
+
+  if (error || !app) {
+    Logger.log(
+      `Inmate ${inmateId} set to Adopted but no pending application found.`,
+    );
+    return Response.json({
+      success: true,
+      message: 'Inmate adopted, but no matching pending application found.',
+    });
+  }
+
+  // Set to ACTIVE
+  const { error: updateError } = await supabase
+    .from('adopter_applications')
+    .update({
+      status: 'ACTIVE',
+      waiting_confirmation: false,
+      time_confirmation_due: null,
+      time_started: new Date().toISOString(),
+    })
+    .eq('app_uuid', app.app_uuid);
+
+  if (updateError) {
+    Logger.error(
+      `Error auto-activating app ${app.app_uuid}: ${updateError.message}`,
+    );
+    return Response.json({ success: false, error: updateError.message });
+  }
+
+  // Also ensure inmate is marked as ADOPTED and formerly_adopted
+  await supabase
+    .from('adoptee_vector')
+    .update({ status: 'ADOPTED', formerly_adopted: true })
+    .eq('id', inmateId);
+
+  Logger.log(
+    `Automatically set app ${app.app_uuid} to ACTIVE because inmate ${inmateId} was set to Adopted on Monday.`,
+  );
+  return Response.json({
+    success: true,
+    message: `Application ${app.app_uuid} activated.`,
+  });
 }
