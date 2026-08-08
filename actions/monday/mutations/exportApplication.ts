@@ -273,13 +273,7 @@ const getQueryCreateSubItem = (
     status: { label: 'Pending' },
     gender_preference: { label: parsedGenderPref },
     match_list_links: { item_ids: rankedCards },
-    // request notes column: age preference (or "none" if not set) prepended
-    // to the adopter bio, e.g. "age preference: 45-78, ranking: 1. ..., bio: ..."
-    bio_and_age: `age preference: ${
-      appData.age_pref && appData.age_pref.length === 2
-        ? `${appData.age_pref[0]}-${appData.age_pref[1]}`
-        : 'none'
-    }, ranking: ${rankedCardsOrder}, bio: ${parsedBio}`,
+    bio_and_age: parsedBio,
     list_notes: rankedCardsOrder,
     date_received: currentDateISOString,
   });
