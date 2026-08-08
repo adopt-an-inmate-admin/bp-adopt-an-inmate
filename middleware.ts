@@ -5,7 +5,7 @@ function redirectWithSession(url: URL, supabaseResponse: NextResponse) {
   const res = NextResponse.redirect(url);
 
   supabaseResponse.cookies.getAll().forEach(cookie => {
-    res.cookies.set(cookie);
+    res.cookies.set(cookie.name, cookie.value, cookie);
   });
 
   return res;

@@ -27,10 +27,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const supabaseClient = supabase();
     const getUser = async () => {
-      const { data } = await supabaseClient.auth.getUser();
-      if (data?.user) {
-        setUserId(data.user.id);
-        setUserEmail(data.user.email ?? null);
+      try {
+        const { data, error } = await supabaseClient.auth.getUser();
+        if (error) {
+          console.warn('Error fetching user in AuthProvider:', error.message);
+          // If the error is refresh_token_not_found, it means the session is definitely invalid
+          if (error.code === 'refresh_token_not_found') {
+            setUserId(null);
+            setUserEmail(null);
+          }
+          return;
+        }
+        if (data?.user) {
+          setUserId(data.user.id);
+          setUserEmail(data.user.email ?? null);
+        }
+      } catch (err) {
+        console.error('Unexpected error in AuthProvider getUser:', err);
       }
     };
 

@@ -24,9 +24,8 @@ export async function getPendingApplications(): Promise<{
   error?: string;
 }> {
   const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user;
 
   if (user?.email?.toLowerCase() !== 'admin@adoptaninmate.org') {
     return { success: false, error: 'Unauthorized' };

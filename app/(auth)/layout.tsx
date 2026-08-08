@@ -13,9 +13,8 @@ export default async function MainLayout({
   // note: we use getUser() instead of getSession() because
   // this sends a request to the Auth server to revalidate auth token,
   // preventing potential spoofing of cookies
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user;
 
   // redirect already logged-in users to main page
   if (user) return redirect('/');

@@ -160,10 +160,8 @@ export const createApplication = async () => {
   const supabase = await getSupabaseServerClient();
 
   // get user auth
-  const {
-    data: { user },
-    error: getUserError,
-  } = await supabase.auth.getUser();
+  const { data: authData, error: getUserError } = await supabase.auth.getUser();
+  const user = authData?.user;
 
   if (getUserError) {
     Logger.error(`Error fetching user: ${getUserError}`);

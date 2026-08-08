@@ -307,10 +307,8 @@ const exportApplication = async (appId: string) => {
   const supabaseService = await dangerous_getSupabaseServiceClient();
 
   // get logged in user
-  const {
-    data: { user },
-    error: getUserError,
-  } = await supabase.auth.getUser();
+  const { data: authData, error: getUserError } = await supabase.auth.getUser();
+  const user = authData?.user;
 
   if (getUserError || !user) {
     Logger.error(`Error trying to get user when exporting Monday application.`);

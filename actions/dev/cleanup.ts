@@ -19,9 +19,10 @@ export async function resetTestData(email: string) {
   const supabase = await dangerous_getSupabaseServiceClient();
 
   // Check if current user is the global admin
-  const {
-    data: { user: currentUser },
-  } = await (await getSupabaseServerClient()).auth.getUser();
+  const { data: authData } = await (
+    await getSupabaseServerClient()
+  ).auth.getUser();
+  const currentUser = authData?.user;
 
   const isGlobalAdmin =
     currentUser?.email?.toLowerCase() === 'admin@adoptaninmate.org';

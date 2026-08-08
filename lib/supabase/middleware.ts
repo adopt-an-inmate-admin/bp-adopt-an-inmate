@@ -42,9 +42,22 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
   // Calling auth.getUser() refreshes the auth token (updates cookies)
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const {
+      data: { user: authUser },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      // If there's an error, we might want to log it but still return a response
+      // so the middleware can decide whether to redirect
+      console.warn('Auth getUser error in middleware:', error.message, error.code);
+    }
+    user = authUser;
+  } catch (e) {
+    console.error('Unexpected error in middleware auth check:', e);
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

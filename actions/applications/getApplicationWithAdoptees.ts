@@ -45,10 +45,8 @@ export const getApplicationWithAdoptees = async (
   appId: string,
 ): Promise<FunctionReturn> => {
   const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-    error: getUserError,
-  } = await supabase.auth.getUser();
+  const { data: authData, error: getUserError } = await supabase.auth.getUser();
+  const user = authData?.user;
 
   if (getUserError || !user) {
     return { data: null, error: 'Unauthorized' };
