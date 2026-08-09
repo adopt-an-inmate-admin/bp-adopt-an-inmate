@@ -7,6 +7,7 @@ import {
   checkCreationConstraints,
   createApplication,
 } from '@/actions/applications/createApplication';
+import { t } from '@/lib/i18n';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 import LoadingSpinner from '../LoadingSpinner';
@@ -41,7 +42,7 @@ export default function NewApplicationButton({
     const { data: appId, error } = await createApplication();
     if (error || !appId) {
       setIsCreating(false);
-      onError(error ?? 'An unexpected error occurred.');
+      onError(error ?? t('dashboard.new_app_button.error_fallback'));
       return;
     }
     // successful; redirect to app at correct stage/question
@@ -61,12 +62,12 @@ export default function NewApplicationButton({
       {isCreating ? (
         <>
           <LoadingSpinner variant="buttonSm" />
-          Creating...
+          {t('dashboard.new_app_button.creating')}
         </>
       ) : (
         <>
           <LuPlus />
-          Create new
+          {t('dashboard.new_app_button.create_new')}
         </>
       )}
     </button>

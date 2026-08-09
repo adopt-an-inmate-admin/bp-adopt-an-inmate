@@ -4,8 +4,13 @@ import { LuLogOut } from 'react-icons/lu';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/actions/auth';
 import { Button } from '@/components/Button';
+import { t } from '@/lib/i18n';
 
-export default function LogoutButton() {
+interface LogoutButtonProps {
+  showLabel?: boolean;
+}
+
+export default function LogoutButton({ showLabel }: LogoutButtonProps) {
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -20,9 +25,11 @@ export default function LogoutButton() {
       type="button"
       onClick={handleSignOut}
       variant="outline"
-      aria-label="Logout"
+      aria-label={t('sidebar.logout')}
+      className={showLabel ? 'w-full justify-start gap-3 px-4!' : ''}
     >
       <LuLogOut className="h-5 w-5 text-red-9" />
+      {showLabel && <span>{t('sidebar.logout')}</span>}
     </Button>
   );
 }

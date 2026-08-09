@@ -5,6 +5,7 @@ import {
   getPendingApplications,
   PendingApplication,
 } from '@/actions/admin/applications';
+import { t } from '@/lib/i18n';
 import { Button } from '../Button';
 
 export function PendingApplicationsList() {
@@ -18,7 +19,7 @@ export function PendingApplicationsList() {
     if (res.success) {
       setApps(res.data || []);
     } else {
-      setError(res.error || 'Failed to fetch applications');
+      setError(res.error || t('admin.pending_applications.no_apps'));
     }
     setLoading(false);
   };
@@ -26,45 +27,46 @@ export function PendingApplicationsList() {
   useEffect(() => {
     fetchApps();
   }, []);
-
-  if (loading) return <div>Loading applications...</div>;
+  if (loading) return <div>{t('admin.pending_applications.loading')}</div>;
   if (error) return <div className="text-red-500">Error: {error}</div>;
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-800">
-          Pending Applications
+          {t('admin.pending_applications.title')}
         </h2>
         <Button variant="secondary" onClick={fetchApps}>
-          Refresh
+          {t('admin.pending_applications.refresh')}
         </Button>
       </div>
 
       {apps.length === 0 ? (
-        <p className="text-gray-500 italic">No pending applications found.</p>
+        <p className="text-gray-500 italic">
+          {t('admin.pending_applications.no_apps')}
+        </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Adopter
+                  {t('admin.pending_applications.table.adopter')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Email
+                  {t('admin.pending_applications.table.email')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Submitted
+                  {t('admin.pending_applications.table.submitted')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Status
+                  {t('admin.pending_applications.table.status')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Matched Adoptee
+                  {t('admin.pending_applications.table.matched_adoptee')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
-                  Ranked Candidates
+                  {t('admin.pending_applications.table.ranked_candidates')}
                 </th>
               </tr>
             </thead>
@@ -80,7 +82,7 @@ export function PendingApplicationsList() {
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                     {app.time_submitted
                       ? new Date(app.time_submitted).toLocaleString()
-                      : 'N/A'}
+                      : t('common.n_a')}
                   </td>
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                     <span
@@ -95,7 +97,9 @@ export function PendingApplicationsList() {
                   </td>
                   <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                     {app.adoptee_name || (
-                      <span className="text-gray-400 italic">None</span>
+                      <span className="text-gray-400 italic">
+                        {t('common.none')}
+                      </span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
@@ -107,7 +111,9 @@ export function PendingApplicationsList() {
                       ))}
                     </ol>
                     {app.ranked_adoptees.length === 0 && (
-                      <span className="text-gray-400 italic">None</span>
+                      <span className="text-gray-400 italic">
+                        {t('common.none')}
+                      </span>
                     )}
                   </td>
                 </tr>

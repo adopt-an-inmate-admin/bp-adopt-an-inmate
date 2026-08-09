@@ -15,6 +15,7 @@ import Logo from '@/components/Logo';
 import LogoutButton from '@/components/MainDashboard/LogoutButton';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useProfile } from '@/contexts/ProfileProvider';
+import { t } from '@/lib/i18n';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { appIsActive } from '@/lib/utils';
 import { AdopterApplication } from '@/types/schema';
@@ -66,7 +67,7 @@ export default function Sidebar() {
       ? [
           {
             href: '/admin',
-            label: 'Admin',
+            label: t('sidebar.admin'),
             icon: LuShield,
             external: false,
           },
@@ -74,43 +75,44 @@ export default function Sidebar() {
       : []),
     {
       href: '/',
-      label: `Applications (${activeCount})`,
+      label: t('sidebar.applications', { count: activeCount.toString() }),
       icon: LuLayoutDashboard,
       external: false,
     },
     {
       href: '/?tab=history',
-      label: `History (${historyCount})`,
+      label: t('sidebar.history', { count: historyCount.toString() }),
       icon: LuClock,
       external: false,
     },
     {
       href: 'https://givebutter.com/zuB5RG',
-      label: 'Donate',
+      label: t('sidebar.donate'),
       icon: LuHeart,
       external: true,
     },
     {
       href: 'https://adoptaninmate.org/adopting/',
-      label: 'Learn More',
+      label: t('sidebar.learn_more'),
       icon: LuInfo,
       external: true,
     },
   ] as const;
 
   const displayName = useMemo(
-    () => profileData?.first_name || (isAdmin ? 'Admin' : 'User'),
+    () =>
+      profileData?.first_name ||
+      (isAdmin ? t('sidebar.admin') : t('sidebar.user')),
     [profileData?.first_name, isAdmin],
   );
 
-  // isActive checks for startsWith on Applications/History labels with counts
-  const isActive = (label: string, href: string) => {
-    if (label.startsWith('Applications'))
+  // isActive checks for startsWith on Applications/History hrefs
+  const isActive = (href: string) => {
+    if (href === '/')
       return (
         (pathname === '/' || pathname.startsWith('/app')) && tab !== 'history'
       );
-    if (label.startsWith('History'))
-      return pathname === '/' && tab === 'history';
+    if (href === '/?tab=history') return pathname === '/' && tab === 'history';
     return pathname.startsWith(href);
   };
 
@@ -123,12 +125,14 @@ export default function Sidebar() {
 
       {/* Greeting */}
       <section className="flex w-56 flex-col gap-4">
-        <p className="text-xl text-black/60">Hi {displayName}!</p>
+        <p className="text-xl text-black/60">
+          {t('sidebar.greeting', { name: displayName })}
+        </p>
 
         {/* Nav links */}
         <nav className="flex flex-1 flex-col gap-0.5">
           {NAV_LINKS.map(({ href, label, icon: Icon, external }) => {
-            const active = isActive(label, href);
+            const active = isActive(href);
             return (
               <SidebarItem
                 key={label}
@@ -146,7 +150,7 @@ export default function Sidebar() {
       </section>
 
       {/* User profile + logout */}
-      <div className="mt-auto flex w-full gap-2">
+      <div className="mt-auto flex w-full flex-col gap-2">
         <ButtonLink
           variant="outline"
           href="/profile"
@@ -164,7 +168,7 @@ export default function Sidebar() {
             )}
           </div>
         </ButtonLink>
-        <LogoutButton />
+        <LogoutButton showLabel />
       </div>
     </aside>
   );

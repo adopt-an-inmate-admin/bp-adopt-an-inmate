@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { resetTestData } from '@/actions/dev/cleanup';
+import { t } from '@/lib/i18n';
 import { Button } from '../Button';
 import { Textbox } from '../Textbox';
 
@@ -13,7 +14,7 @@ export function AdminResetSection() {
 
   const handleReset = async () => {
     if (confirmText !== 'DELETE') {
-      alert('Please type DELETE to confirm.');
+      alert(t('admin.reset_records.confirm.alert_confirm'));
       return;
     }
 
@@ -22,33 +23,36 @@ export function AdminResetSection() {
     setLoading(false);
 
     if (res.success) {
-      alert(`Test data for ${email} reset successfully.`);
+      alert(t('admin.reset_records.confirm.alert_success', { email }));
       setEmail('');
       setConfirmText('');
       setShowConfirm(false);
     } else {
-      alert('Error resetting test data: ' + res.error);
+      alert(
+        t('admin.reset_records.confirm.alert_error', {
+          error: res.error || '',
+        }),
+      );
     }
   };
 
   return (
     <div className="rounded-lg border border-red-200 bg-white p-6 shadow-md">
       <h2 className="mb-4 text-xl font-bold text-red-700">
-        Reset Test Records
+        {t('admin.reset_records.title')}
       </h2>
       <p className="mb-4 text-sm text-gray-600">
-        This will delete the user&apos;s profile, applications, and auth
-        account. Use with caution.
+        {t('admin.reset_records.description')}
       </p>
       <div className="flex max-w-md flex-col gap-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            User Email to Reset
+            {t('admin.reset_records.label')}
           </label>
           <Textbox
             value={email}
             onChange={e => setEmail(e.target.value)}
-            placeholder="user@example.com"
+            placeholder={t('admin.reset_records.placeholder')}
             disabled={loading}
           />
         </div>
@@ -60,23 +64,24 @@ export function AdminResetSection() {
             disabled={loading}
             className="border-red-500 text-red-500 hover:bg-red-50"
           >
-            {loading ? 'Processing...' : 'Reset User Data'}
+            {loading
+              ? t('admin.reset_records.processing')
+              : t('admin.reset_records.button')}
           </Button>
         )}
 
         {showConfirm && (
           <div className="mt-4 rounded border border-red-200 bg-red-50 p-4">
             <p className="mb-2 text-sm font-bold text-red-700">
-              ARE YOU ABSOLUTELY SURE?
+              {t('admin.reset_records.confirm.title')}
             </p>
             <p className="mb-3 text-xs text-red-600">
-              This action is permanent and cannot be undone. Type
-              &quot;DELETE&quot; below to confirm.
+              {t('admin.reset_records.confirm.description')}
             </p>
             <Textbox
               value={confirmText}
               onChange={e => setConfirmText(e.target.value)}
-              placeholder="Type DELETE"
+              placeholder={t('admin.reset_records.confirm.placeholder')}
               className="mb-3"
             />
             <div className="flex gap-2">
@@ -85,14 +90,14 @@ export function AdminResetSection() {
                 disabled={loading || confirmText !== 'DELETE'}
                 className="bg-red-600 text-white hover:bg-red-700"
               >
-                Confirm Delete
+                {t('admin.reset_records.confirm.confirm_button')}
               </Button>
               <Button
                 variant="secondary"
                 onClick={() => setShowConfirm(false)}
                 disabled={loading}
               >
-                Cancel
+                {t('admin.reset_records.confirm.cancel_button')}
               </Button>
             </div>
           </div>

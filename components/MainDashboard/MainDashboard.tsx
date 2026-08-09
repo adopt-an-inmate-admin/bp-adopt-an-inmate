@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { LuClock, LuLayoutDashboard } from 'react-icons/lu';
 import { useSearchParams } from 'next/navigation';
+import { t } from '@/lib/i18n';
 import { getSupabaseBrowserClient } from '@/lib/supabase'; // new import
 import MainDashboardTabs from './MainDashboardTabs';
 import NewApplicationButton from './NewApplicationButton';
@@ -82,7 +83,9 @@ export default function MainDashboard() {
           <div className="flex items-center gap-2 text-3xl text-gray-12">
             {showHistory ? <LuClock /> : <LuLayoutDashboard />}
             <h1 className="text-3xl font-normal text-gray-12">
-              {showHistory ? 'History' : 'Applications'}
+              {showHistory
+                ? t('dashboard.title.history')
+                : t('dashboard.title.applications')}
             </h1>
           </div>
           <div>
@@ -98,42 +101,42 @@ export default function MainDashboard() {
             {/* Total Applications card */}
             <div className="flex flex-1 flex-col gap-1 rounded-lg border border-gray-4 bg-white px-6 py-4">
               <p className="text-xs tracking-wide text-gray-11 uppercase">
-                Total Applications
+                {t('dashboard.stats.total')}
               </p>
               <p className="text-green-9 text-3xl">{totalApps}</p>
-              <p className="text-sm text-gray-11">All time, incl. offline</p>
+              <p className="text-sm text-gray-11">
+                {t('dashboard.stats.total_desc')}
+              </p>
             </div>
 
             {/* Portal Applications card */}
             <div className="flex flex-1 flex-col gap-1 rounded-lg border border-gray-4 bg-white px-6 py-4">
               <p className="text-xs tracking-wide text-gray-11 uppercase">
-                Portal Applications
+                {t('dashboard.stats.portal')}
               </p>
               <p className="text-3xl text-gray-12">{portalApps}</p>
-              <p className="text-sm text-gray-11">Via this platform</p>
+              <p className="text-sm text-gray-11">
+                {t('dashboard.stats.portal_desc')}
+              </p>
             </div>
 
             {/* External Applications card */}
             <div className="flex flex-1 flex-col gap-1 rounded-lg border border-gray-4 bg-white px-6 py-4">
               <p className="text-xs tracking-wide text-gray-11 uppercase">
-                External Applications
+                {t('dashboard.stats.external')}
               </p>
               <p className="text-3xl text-gray-12">{externalApps}</p>
-              <p className="text-sm text-gray-11">Pre-platform records</p>
+              <p className="text-sm text-gray-11">
+                {t('dashboard.stats.external_desc')}
+              </p>
             </div>
           </div>
 
           {/* disclaimer message */}
           <p className="text-sm text-gray-11">
-            We don&apos;t have adoptee info for matches made on external
-            platforms. Email{' '}
-            <a
-              href="mailto:adopt@adoptaninmate.org"
-              className="underline hover:text-gray-12"
-            >
-              adopt@adoptaninmate.org
-            </a>{' '}
-            if this number is inaccurate.
+            {t('dashboard.disclaimer.text', {
+              email: 'adopt@adoptaninmate.org',
+            })}
           </p>
         </div>
       )}

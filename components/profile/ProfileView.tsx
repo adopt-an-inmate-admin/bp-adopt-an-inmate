@@ -13,6 +13,7 @@ import EditProfileModal from '@/components/profile/EditProfileModal';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useProfile } from '@/contexts/ProfileProvider';
 import { getDisplayAddress } from '@/lib/formatters';
+import { t } from '@/lib/i18n';
 
 type ProfileRowProps = {
   icon: ReactNode;
@@ -34,7 +35,7 @@ export default function ProfileView() {
       <div className="flex w-full flex-col gap-14 border-b border-gray-4 px-16 pt-16 pb-4">
         <div className="flex h-12 items-center gap-3 text-3xl text-gray-12">
           <BsPerson size={36} />
-          <h1 className="text-3xl font-normal">Profile</h1>
+          <h1 className="text-3xl font-normal">{t('profile.title')}</h1>
         </div>
       </div>
 
@@ -44,24 +45,26 @@ export default function ProfileView() {
           {/* Account */}
           <div className="flex flex-col gap-4">
             <div className="flex flex-row justify-between">
-              <p className="text-base font-medium text-gray-11">Account</p>
+              <p className="text-base font-medium text-gray-11">
+                {t('profile.account')}
+              </p>
               <p
                 className="cursor-pointer text-base font-medium text-gray-11 underline hover:text-gray-12"
                 onClick={() => setIsEditProfileOpen(true)}
               >
-                Edit Profile
+                {t('profile.edit_profile')}
               </p>
             </div>
 
             <div className="flex flex-col gap-4 rounded-2xl bg-gray-3 px-8 py-6">
               <ProfileRow
                 icon={<BsPerson size={22} />}
-                label="Name"
+                label={t('profile.fields.name')}
                 value={`${profileData.first_name} ${profileData.last_name}`}
               />
               <ProfileRow
                 icon={<BsEnvelope size={22} />}
-                label="Email"
+                label={t('profile.fields.email')}
                 value={userEmail}
               />
             </div>
@@ -70,13 +73,13 @@ export default function ProfileView() {
           {/* Personal Info */}
           <div className="flex flex-col gap-4">
             <p className="text-base font-medium text-gray-11">
-              Personal Information
+              {t('profile.personal_info')}
             </p>
 
             <div className="flex flex-col gap-4 rounded-2xl bg-gray-3 px-8 py-6">
               <ProfileRow
                 icon={<BsCalendar4Week size={22} />}
-                label="Date of Birth"
+                label={t('profile.fields.dob')}
                 value={new Date(
                   `${profileData.date_of_birth}T00:00:00`,
                 ).toLocaleDateString('en-US', {
@@ -87,23 +90,25 @@ export default function ProfileView() {
               />
               <ProfileRow
                 icon={<BsGenderAmbiguous size={22} />}
-                label="Gender"
+                label={t('profile.fields.gender')}
                 value={profileData.gender}
               />
               <ProfileRow
                 icon={<BsGenderAmbiguous size={22} />}
-                label="Pronouns"
+                label={t('profile.fields.pronouns')}
                 value={profileData.pronouns}
               />
               <ProfileRow
                 icon={<BsGlobe2 size={22} />}
-                label="Location"
+                label={t('profile.fields.location')}
                 value={getDisplayAddress(profileData.state)}
               />
               <ProfileRow
                 icon={<FaRibbon size={22} />}
-                label="Veteran"
-                value={profileData.veteran_status ? 'Yes' : 'No'}
+                label={t('profile.fields.veteran')}
+                value={
+                  profileData.veteran_status ? t('common.yes') : t('common.no')
+                }
               />
             </div>
           </div>
@@ -111,8 +116,7 @@ export default function ProfileView() {
           {/* More */}
           <div className="pt-0">
             <p className="text-center text-gray-10 italic">
-              Need help or want to update your email address? Contact
-              adopt@adoptaninmate.org.
+              {t('profile.help', { email: 'adopt@adoptaninmate.org' })}
             </p>
           </div>
         </div>

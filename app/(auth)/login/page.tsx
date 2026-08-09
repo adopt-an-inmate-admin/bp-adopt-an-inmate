@@ -10,6 +10,7 @@ import { Button, ButtonLink } from '@/components/Button';
 import CustomLink from '@/components/CustomLink';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Textbox } from '@/components/Textbox';
+import { t } from '@/lib/i18n';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 
 interface LoginForm {
@@ -41,7 +42,7 @@ export default function LoginPage() {
       if (error) {
         switch (error.code) {
           case 'email_address_invalid':
-            setAuthError('Email address not supported.');
+            setAuthError(t('auth.login.errors.email_invalid'));
             break;
           case 'email_not_confirmed':
             const supabase = getSupabaseBrowserClient();
@@ -60,12 +61,10 @@ export default function LoginPage() {
             );
             return;
           case 'invalid_credentials':
-            setAuthError('Either email or password is incorrect.');
+            setAuthError(t('auth.login.errors.invalid_credentials'));
             break;
           default:
-            setAuthError(
-              'An unexpected error occurred, please try again later.',
-            );
+            setAuthError(t('auth.login.errors.unexpected'));
         }
 
         return;
@@ -84,7 +83,7 @@ export default function LoginPage() {
       noValidate
     >
       <div className="flex w-106 flex-col gap-4 rounded-2xl bg-gray-1 p-8">
-        <p className="text-3xl font-medium">Log in</p>
+        <p className="text-3xl font-medium">{t('auth.login.title')}</p>
 
         {authError && <p className="py-2 text-error">{authError}</p>}
 
@@ -94,10 +93,10 @@ export default function LoginPage() {
 
             {/* email title and textbox */}
             <div className="flex flex-col">
-              <p className="text-base text-gray-9">Email</p>
+              <p className="text-base text-gray-9">{t('auth.login.email')}</p>
               <Textbox
                 type="email"
-                placeholder="jamie@example.com"
+                placeholder={t('auth.login.email_placeholder')}
                 {...register('email', { required: true })}
               />
             </div>
@@ -105,27 +104,33 @@ export default function LoginPage() {
             {/* password title and textbox */}
             <div className="flex flex-col">
               <div className="flex flex-row justify-between pt-4">
-                <p className="text-base text-gray-9">Password</p>
+                <p className="text-base text-gray-9">
+                  {t('auth.login.password')}
+                </p>
                 <CustomLink
                   variant="secondary"
                   className="text-sm"
                   href="/forgot-password"
                 >
-                  Forgot password?
+                  {t('auth.login.forgot_password')}
                 </CustomLink>
               </div>
 
               <div className="relative">
                 <Textbox
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
+                  placeholder={t('auth.login.password_placeholder')}
                   {...register('password', { required: true })}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={
+                    showPassword
+                      ? t('auth.login.hide_password')
+                      : t('auth.login.show_password')
+                  }
                 >
                   {showPassword ? (
                     // Eye icon (password visible)
@@ -150,7 +155,11 @@ export default function LoginPage() {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? <LoadingSpinner variant="button" /> : 'Login'}
+            {isLoading ? (
+              <LoadingSpinner variant="button" />
+            ) : (
+              t('auth.login.login_button')
+            )}
           </Button>
         </div>
 
@@ -158,10 +167,10 @@ export default function LoginPage() {
 
         <div className="flex flex-row items-center justify-between">
           <p className="text-sm font-medium text-gray-12">
-            Don&#39;t have an account?
+            {t('auth.login.no_account')}
           </p>
           <ButtonLink variant="secondary" href="/sign-up">
-            Sign Up
+            {t('auth.login.sign_up')}
           </ButtonLink>
         </div>
       </div>
