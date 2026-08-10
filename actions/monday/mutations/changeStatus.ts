@@ -5,29 +5,12 @@ import { CONFIG } from '@/config';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assertEnvVarExists } from '@/lib/utils';
 import { mondayApiClient } from '../core';
-
-assertEnvVarExists('MONDAY_WL_PIPS_BOARD_ID');
-assertEnvVarExists('MONDAY_ADOPTED_BOARD_ID');
-
-const MONDAY_ADOPTED_BOARD_ID = process.env.MONDAY_ADOPTED_BOARD_ID ?? '';
-
-export type MondayAdopteeStatus = 'WL' | 'OFC' | 'ADOPTED';
-
-//as other server
-export type UpdateAdopteeMondayStatusResult = {
-  data: string | null;
-  error: string | null;
-};
+import { MondayAdopteeStatus, UpdateAdopteeMondayStatusResult } from '../types';
 
 const OFC_STATUS_LABEL = 'OFC: Out For Consideration';
 const WL_STATUS_LABEL = 'WL: Wait Listed';
 const WLFA_STATUS_LABEL = 'WLFA: Wait Listed Formerly Adopted';
 const ADOPTED_STATUS_LABEL = 'A: Adopted (Local)';
-
-export const MONDAY_GROUPS = {
-  ADOPTED_LOCAL: 'new_group86996__1',
-  WL_READY: '1715196990_inmate_data_report___1',
-};
 
 //build mutation operations
 export async function buildStatusMutationFields(
@@ -35,6 +18,8 @@ export async function buildStatusMutationFields(
   statusLabelsById: Record<string, string>,
   aliasPrefix: string = 'update',
 ) {
+  assertEnvVarExists('MONDAY_ADOPTED_BOARD_ID');
+  const MONDAY_ADOPTED_BOARD_ID = process.env.MONDAY_ADOPTED_BOARD_ID ?? '';
   const query = `
     query ($ids: [ID!]!) {
       items(ids: $ids) {

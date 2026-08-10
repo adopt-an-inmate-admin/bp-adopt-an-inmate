@@ -23,6 +23,8 @@ export default function MainDashboard() {
 
   // fetch history stats
   useEffect(() => {
+    if (!showHistory) return;
+
     const fetchHistoryStats = async () => {
       const supabase = getSupabaseBrowserClient();
       const {
@@ -40,20 +42,20 @@ export default function MainDashboard() {
       const external = externalData?.num_external_active ?? 0;
       setExternalApps(external);
 
-      // fetch total from app_counter
-      const { data: counterData } = await supabase
-        .from('app_counter')
-        .select('last_app_num')
-        .eq('adopter_uuid', user.id)
-        .maybeSingle();
-      const portal = counterData?.last_app_num ?? 0;
+      // fetch total count from adopter_applications (portal apps)
+      const { count: portalCount } = await supabase
+        .from('adopter_applications')
+        .select('*', { count: 'exact', head: true })
+        .eq('adopter_uuid', user.id);
+
+      const portal = portalCount ?? 0;
       setPortalApps(portal);
 
       setTotalApps(external + portal);
     };
 
     fetchHistoryStats();
-  }, []);
+  }, [showHistory]);
 
   useEffect(() => {
     if (errorMessage) {

@@ -1,15 +1,9 @@
 'use server';
 
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
-import { assertEnvVarExists, getEnvVar } from '@/lib/utils';
+import { getEnvVar } from '@/lib/utils';
 import Logger from '../logging';
 import { mondayApiClient } from './core';
-
-assertEnvVarExists('MONDAY_WL_PIPS_BOARD_ID');
-assertEnvVarExists('MONDAY_ADOPTED_BOARD_ID');
-
-const MONDAY_WL_PIPS_BOARD_ID = getEnvVar('MONDAY_WL_PIPS_BOARD_ID');
-const MONDAY_ADOPTED_BOARD_ID = getEnvVar('MONDAY_ADOPTED_BOARD_ID');
 
 export interface MatchedAdopteeResult {
   data: {
@@ -84,6 +78,8 @@ async function validateItemIds(
 export async function queryMatchedAdoptees(
   applicationId: string,
 ): Promise<MatchedAdopteeResult> {
+  const MONDAY_WL_PIPS_BOARD_ID = getEnvVar('MONDAY_WL_PIPS_BOARD_ID');
+  const MONDAY_ADOPTED_BOARD_ID = getEnvVar('MONDAY_ADOPTED_BOARD_ID');
   const supabase = await dangerous_getSupabaseServiceClient();
   const { data: appData, error } = await supabase
     .from('adopter_applications')

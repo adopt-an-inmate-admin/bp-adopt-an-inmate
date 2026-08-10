@@ -60,7 +60,7 @@ export default function Sidebar() {
     };
 
     fetchCounts();
-  }, []);
+  }, [pathname, tab]);
 
   const NAV_LINKS = [
     ...(isAdmin

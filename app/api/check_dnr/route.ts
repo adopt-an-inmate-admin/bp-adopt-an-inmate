@@ -5,12 +5,14 @@ import { buildStatusMutationFields } from '@/actions/monday/mutations/changeStat
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { getEnvVar } from '@/lib/utils';
 
-const CRON_SECRET = getEnvVar('CRON_SECRET');
-const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
-  'MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID',
-);
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  const CRON_SECRET = getEnvVar('CRON_SECRET');
+  const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
+    'MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID',
+  );
+
   // check that this is issued by cron job
   const authHeader = request.headers.get('authorization');
 

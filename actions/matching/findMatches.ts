@@ -7,8 +7,6 @@ import { assertEnvVarExists } from '@/lib/utils';
 import Logger from '../logging';
 import { fetchTopK } from '../queries/query';
 
-assertEnvVarExists('HF_TOKEN');
-
 /**
  * Takes in an application ID and finds four matches
  * based on the application bio stored on the database.
@@ -17,6 +15,7 @@ assertEnvVarExists('HF_TOKEN');
  * Errors if the application bio does not exist.
  */
 export const findMatches = async (appId: string) => {
+  assertEnvVarExists('HF_TOKEN');
   // check if app id already has matches
   const supabase = await getSupabaseServerClient();
 

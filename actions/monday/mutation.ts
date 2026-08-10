@@ -6,10 +6,9 @@ import { Profile } from '@/types/schema';
 import { mondayApiClient } from './core';
 import { getColumnIdByTitle } from './utils';
 
-assertEnvVarExists('BOARD_ID');
-assertEnvVarExists('GROUP_ID');
-
 export const createRow = async (profile: Profile) => {
+  assertEnvVarExists('BOARD_ID');
+  assertEnvVarExists('GROUP_ID');
   const boardId = process.env.BOARD_ID ?? '';
   const groupId = process.env.GROUP_ID ?? '';
 

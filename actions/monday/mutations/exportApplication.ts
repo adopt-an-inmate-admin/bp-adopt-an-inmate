@@ -15,13 +15,12 @@ import { updateAdopteeMondayStatus } from './changeStatus';
 // get env var and assert it exists at system level to trigger
 // error messages at build time (rather than run time)
 // => alert us to setup these env vars before the function needs them
-const MONDAY_ADOPTER_DATA_BOARD_ID = getEnvVar('MONDAY_ADOPTER_DATA_BOARD_ID');
-const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = getEnvVar(
-  'MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID',
-);
-const MONDAY_ADOPTER_DATA_WAITING_GROUP_ID = getEnvVar(
-  'MONDAY_ADOPTER_DATA_WAITING_GROUP_ID',
-);
+const MONDAY_ADOPTER_DATA_BOARD_ID = () =>
+  getEnvVar('MONDAY_ADOPTER_DATA_BOARD_ID');
+const MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID = () =>
+  getEnvVar('MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID');
+const MONDAY_ADOPTER_DATA_WAITING_GROUP_ID = () =>
+  getEnvVar('MONDAY_ADOPTER_DATA_WAITING_GROUP_ID');
 
 ////
 // HELPER FUNCTION
@@ -188,8 +187,8 @@ const getQueryCreateMainItem = (
   const mainItemCreateQuery = `
     mutation {
       create_item(
-        board_id: "${MONDAY_ADOPTER_DATA_BOARD_ID}",
-        group_id: "${MONDAY_ADOPTER_DATA_WAITING_GROUP_ID}",
+        board_id: "${MONDAY_ADOPTER_DATA_BOARD_ID()}",
+        group_id: "${MONDAY_ADOPTER_DATA_WAITING_GROUP_ID()}",
         item_name: "${appData.first_name} ${appData.last_name}",
         create_labels_if_missing: true,
         column_values: "${JSON.stringify(mainItemColumnValues).replaceAll('"', '\\"')}"
@@ -387,8 +386,11 @@ const exportApplication = async (
   };
 
   const [mainBoardMapping, subBoardMapping] = await Promise.all([
-    getBoardColumnMapping(MONDAY_ADOPTER_DATA_BOARD_ID, mainBoardTitles),
-    getBoardColumnMapping(MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID, subBoardTitles),
+    getBoardColumnMapping(MONDAY_ADOPTER_DATA_BOARD_ID(), mainBoardTitles),
+    getBoardColumnMapping(
+      MONDAY_ADOPTER_DATA_SUBITEM_BOARD_ID(),
+      subBoardTitles,
+    ),
   ]);
 
   // if main item doesn't exist, create it

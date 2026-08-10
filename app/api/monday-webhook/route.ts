@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import Logger from '@/actions/logging';
+import { MONDAY_GROUPS } from '@/actions/monday/constants';
 import {
-  MONDAY_GROUPS,
   moveAdopteeToBoard,
   updateAdopteeMondayStatus,
 } from '@/actions/monday/mutations/changeStatus';
@@ -11,9 +11,8 @@ import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assertEnvVarExists, getEnvVar } from '@/lib/utils';
 import { ApplicationStatusEnum } from '@/types/schema';
 
-assertEnvVarExists('MONDAY_SIGNING_SECRET');
-
 export async function POST(request: NextRequest) {
+  assertEnvVarExists('MONDAY_SIGNING_SECRET');
   const signingSecret = getEnvVar('MONDAY_SIGNING_SECRET');
 
   let data: {
