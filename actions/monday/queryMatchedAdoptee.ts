@@ -15,6 +15,8 @@ export interface MatchedAdopteeResult {
   data: {
     matchedAdopteeId: string;
     unmatchedAdopteeIds: string[];
+    isDefaultMatch: boolean;
+    adopteeBoardIds: Record<string, string>;
   } | null;
   error: string | null;
 }
@@ -30,14 +32,13 @@ interface MondayResponse {
 
 /**
  * Checks whether given item IDs exist in either the adopted or waitlist boards.
- * Ensures exactly one item is in the adopted board.
- * Returns a map of item IDs to whether they exist in the adopted board.
+ * Returns a map of item IDs to their board IDs.
  */
 async function validateItemIds(
   adoptedBoardId: string,
   wlBoardId: string,
   itemIds: string[],
-): Promise<{ data: Record<string, boolean> | null; error: string | null }> {
+): Promise<{ data: Record<string, string> | null; error: string | null }> {
   if (itemIds.length === 0) {
     return { data: {}, error: null };
   }
@@ -53,9 +54,9 @@ async function validateItemIds(
     }
   `;
 
-  const exists: Record<string, boolean> = {};
+  const boardIds: Record<string, string> = {};
   for (const id of itemIds) {
-    exists[id] = false;
+    boardIds[id] = '';
   }
 
   const response = await mondayApiClient.request<MondayResponse>(query, {
@@ -69,39 +70,11 @@ async function validateItemIds(
 
   const returnedItems = response.items;
 
-  let numAdopted = 0;
-  let numWL = 0;
-
   for (const item of returnedItems) {
-    const isAdopted = item.board.id === adoptedBoardId;
-    const isWL = item.board.id === wlBoardId;
-
-    if (!isAdopted && !isWL) {
-      Logger.warn(`Item ${item.id} is in unexpected board ${item.board.id}`);
-      return { data: null, error: 'An unexpected error occurred.' };
-    }
-
-    if (isAdopted) {
-      exists[item.id] = true;
-      numAdopted += 1;
-    } else if (isWL) {
-      numWL += 1;
-    }
+    boardIds[item.id] = item.board.id;
   }
 
-  if (numAdopted > 1) {
-    Logger.warn(
-      `More than one item is in the adopted board: ${JSON.stringify(exists)}`,
-    );
-    return { data: null, error: 'An unexpected error occurred.' };
-  }
-
-  if (numWL === itemIds.length) {
-    Logger.warn(`All items are in the WL board: ${JSON.stringify(exists)}`);
-    return { data: null, error: 'An unexpected error occurred.' };
-  }
-
-  return { data: exists, error: null };
+  return { data: boardIds, error: null };
 }
 
 /**
@@ -132,28 +105,38 @@ export async function queryMatchedAdoptees(
     return { data: null, error: 'An unexpected error occurred.' };
   }
 
-  const { data: candsExist, error: candsExistError } = await validateItemIds(
-    MONDAY_ADOPTED_BOARD_ID,
-    MONDAY_WL_PIPS_BOARD_ID,
-    candidateIds,
-  );
+  const { data: adopteeBoardIds, error: boardInfoError } =
+    await validateItemIds(
+      MONDAY_ADOPTED_BOARD_ID,
+      MONDAY_WL_PIPS_BOARD_ID,
+      candidateIds,
+    );
 
-  if (!candsExist || candsExistError) {
+  if (!adopteeBoardIds || boardInfoError) {
     Logger.error(
-      `Error checking if candidates exist in board: ${candsExistError}`,
+      `Error checking candidate board information: ${boardInfoError}`,
     );
     return { data: null, error: 'An unexpected error occurred.' };
   }
 
-  const unmatchedAdopteeIds = [];
   let matchedAdopteeId = null;
+  let isDefaultMatch = false;
 
+  // 1. Look for someone already in the Adopted board
   for (const id of candidateIds) {
-    if (candsExist?.[id]) {
+    if (adopteeBoardIds[id] === MONDAY_ADOPTED_BOARD_ID) {
       matchedAdopteeId = id;
-    } else {
-      unmatchedAdopteeIds.push(id);
+      break;
     }
+  }
+
+  // 2. If no one is in the Adopted board, pick the first one from the ranked list
+  if (!matchedAdopteeId && candidateIds.length > 0) {
+    matchedAdopteeId = candidateIds[0];
+    isDefaultMatch = true;
+    Logger.info(
+      `No candidate found in Adopted board for application ${applicationId}. Using first candidate ${matchedAdopteeId} as default match.`,
+    );
   }
 
   if (!matchedAdopteeId) {
@@ -163,5 +146,17 @@ export async function queryMatchedAdoptees(
     return { data: null, error: 'An unexpected error occurred.' };
   }
 
-  return { data: { matchedAdopteeId, unmatchedAdopteeIds }, error: null };
+  const unmatchedAdopteeIds = candidateIds.filter(
+    id => id !== matchedAdopteeId,
+  );
+
+  return {
+    data: {
+      matchedAdopteeId,
+      unmatchedAdopteeIds,
+      isDefaultMatch,
+      adopteeBoardIds,
+    },
+    error: null,
+  };
 }

@@ -1,7 +1,11 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import Logger from '@/actions/logging';
-import { updateAdopteeMondayStatus } from '@/actions/monday/mutations/changeStatus';
+import {
+  MONDAY_GROUPS,
+  moveAdopteeToBoard,
+  updateAdopteeMondayStatus,
+} from '@/actions/monday/mutations/changeStatus';
 import { queryMatchedAdoptees } from '@/actions/monday/queryMatchedAdoptee';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assertEnvVarExists, getEnvVar } from '@/lib/utils';
@@ -174,7 +178,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { matchedAdopteeId, unmatchedAdopteeIds } = matchResult;
+    const {
+      matchedAdopteeId,
+      unmatchedAdopteeIds,
+      isDefaultMatch,
+      adopteeBoardIds,
+    } = matchResult;
+
+    const MONDAY_ADOPTED_BOARD_ID = getEnvVar('MONDAY_ADOPTED_BOARD_ID');
+    const MONDAY_WL_PIPS_BOARD_ID = getEnvVar('MONDAY_WL_PIPS_BOARD_ID');
+
+    // move matched adoptee to Adopted board if needed
+    if (
+      isDefaultMatch ||
+      adopteeBoardIds[matchedAdopteeId] !== MONDAY_ADOPTED_BOARD_ID
+    ) {
+      Logger.log(
+        `Moving matched adoptee ${matchedAdopteeId} to Adopted board ${MONDAY_ADOPTED_BOARD_ID}`,
+      );
+      await moveAdopteeToBoard(
+        matchedAdopteeId,
+        MONDAY_ADOPTED_BOARD_ID,
+        MONDAY_GROUPS.ADOPTED_LOCAL,
+      );
+    }
+
+    // always ensure status is ADOPTED on Monday
+    try {
+      await updateAdopteeMondayStatus([matchedAdopteeId], 'ADOPTED');
+    } catch (e) {
+      Logger.error(`Error updating matched adoptee status on Monday: ${e}`);
+    }
 
     // calculate time_confirmation_due: midnight UTC 2 weeks from now
     const confirmationDue = new Date();
@@ -224,6 +258,19 @@ export async function POST(request: NextRequest) {
 
       // update unmatched adoptees status on Monday WL PIPs board
       try {
+        // Move to WL board if they are somewhere else
+        for (const id of unmatchedAdopteeIds) {
+          if (adopteeBoardIds[id] !== MONDAY_WL_PIPS_BOARD_ID) {
+            Logger.log(
+              `Moving unmatched adoptee ${id} to WL board ${MONDAY_WL_PIPS_BOARD_ID}`,
+            );
+            await moveAdopteeToBoard(
+              id,
+              MONDAY_WL_PIPS_BOARD_ID,
+              MONDAY_GROUPS.WL_READY,
+            );
+          }
+        }
         await updateAdopteeMondayStatus(unmatchedAdopteeIds, 'WL');
       } catch (e) {
         Logger.error(

@@ -84,14 +84,30 @@ The approval process is driven by status changes on the application **Subitem** 
 A webhook is configured in Monday.com to send a `POST` request to `/api/monday-webhook` whenever the `subitemStatus` changes. The system handles the following status codes:
 
 - **Status Code 8 (`PENDING_CONFIRMATION`)**: This signifies the application has been reviewed and a match is ready.
-  - The system automatically identifies the matched adoptee.
-  - The application status in Supabase is updated to `PENDING_CONFIRMATION`.
-  - The adoptee's status is updated to `ADOPTED`.
-  - The adopter is given 2 weeks to confirm the match.
+  - **Candidate Selection**: The system automatically identifies the matched adoptee using the following logic:
+    1. It checks the 4 candidates chosen by the adopter in their ranked order.
+    2. If any candidate has already been moved to the **Adopted** board, that candidate is selected as the match.
+    3. If none of the candidates are in the **Adopted** board, it defaults to the **Rank 1** candidate.
+  - **Automated Actions**:
+    - The matched adoptee is moved to the **Adopted** board (if not already there) and their status is set to `A: Adopted (Local)`.
+    - All other candidates are moved to the **WL PIPs** board and marked as `Wait Listed`.
+    - The application status in Supabase is updated to `PENDING_CONFIRMATION`.
+    - The adopter is given 2 weeks to confirm the match.
 - **Status Code 4 (`REJECTED`)**: The application is marked as `REJECTED` in Supabase.
 - **Status Code 1 (`REAPPLY`)**: The application status is set to `REAPPLY`, allowing the adopter to submit a new one.
 
-### 3. Admin Tools
+### 3. Administrative Candidate Selection
+If the Rank 1 candidate is no longer available (e.g., they were released), the admin can manually select a different candidate (Rank 2, 3, or 4) to be the match.
+
+**Steps to manually select a candidate:**
+1. Locate the desired candidate in Monday.com (usually in the **WL PIPs** board).
+2. Move that candidate's item to the **Adopted** board.
+3. (Optional) Move the unavailable candidate to an appropriate board (e.g., a "Released" board) to ensure they are not accidentally selected.
+4. Go to the **Adopter Data** board and change the application subitem status to **Pending Confirmation**.
+
+The system will detect that the manually moved candidate is in the **Adopted** board and prioritize them over the Rank 1 default.
+
+### 4. Admin Tools
 Administrative functions are available at `/admin` (restricted to the global admin user `admin@adoptaninmate.org`).
 
 **Setup Admin User:**

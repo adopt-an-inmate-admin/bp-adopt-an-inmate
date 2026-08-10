@@ -11,7 +11,7 @@ assertEnvVarExists('MONDAY_ADOPTED_BOARD_ID');
 
 const MONDAY_ADOPTED_BOARD_ID = process.env.MONDAY_ADOPTED_BOARD_ID ?? '';
 
-export type MondayAdopteeStatus = 'WL' | 'OFC';
+export type MondayAdopteeStatus = 'WL' | 'OFC' | 'ADOPTED';
 
 //as other server
 export type UpdateAdopteeMondayStatusResult = {
@@ -22,6 +22,12 @@ export type UpdateAdopteeMondayStatusResult = {
 const OFC_STATUS_LABEL = 'OFC: Out For Consideration';
 const WL_STATUS_LABEL = 'WL: Wait Listed';
 const WLFA_STATUS_LABEL = 'WLFA: Wait Listed Formerly Adopted';
+const ADOPTED_STATUS_LABEL = 'A: Adopted (Local)';
+
+export const MONDAY_GROUPS = {
+  ADOPTED_LOCAL: 'new_group86996__1',
+  WL_READY: '1715196990_inmate_data_report___1',
+};
 
 //build mutation operations
 export async function buildStatusMutationFields(
@@ -103,6 +109,45 @@ export async function buildStatusMutationFields(
     .join(',');
 }
 
+/**
+ * Moves an item to a different board.
+ */
+export async function moveAdopteeToBoard(
+  adopteeMondayId: string,
+  targetBoardId: string,
+  targetGroupId?: string,
+) {
+  if (!CONFIG.enableMondayMutations) return { success: false };
+
+  const mutation = `
+    mutation ($itemId: ID!, $boardId: ID!, $groupId: String) {
+      move_item_to_board (
+        item_id: $itemId,
+        board_id: $boardId,
+        group_id: $groupId
+      ) {
+        id
+      }
+    }
+  `;
+
+  try {
+    const response = await mondayApiClient.request<{
+      move_item_to_board: { id: string };
+    }>(mutation, {
+      itemId: adopteeMondayId,
+      boardId: targetBoardId,
+      groupId: targetGroupId,
+    });
+    return { success: !!response.move_item_to_board.id };
+  } catch (error) {
+    Logger.error(
+      `Failed to move adoptee ${adopteeMondayId} to board ${targetBoardId}: ${JSON.stringify(error, null, 2)}`,
+    );
+    return { success: false };
+  }
+}
+
 type WaitListLabelsResult =
   | { success: true; statusLabelsById: Record<string, string> }
   | { success: false; message: string };
@@ -178,6 +223,10 @@ export async function updateAdopteeMondayStatus(
       };
     }
     statusLabelsById = wlLabels.statusLabelsById;
+  } else if (status === 'ADOPTED') {
+    statusLabelsById = Object.fromEntries(
+      adopteeMondayIds.map(id => [id, ADOPTED_STATUS_LABEL]),
+    );
   } else {
     statusLabelsById = Object.fromEntries(
       adopteeMondayIds.map(id => [id, OFC_STATUS_LABEL]),
@@ -193,8 +242,8 @@ export async function updateAdopteeMondayStatus(
     return { data: '', error: null };
   }
 
-  //only run if WL to avoid extra queries
-  if (status === 'WL') {
+  //only run if WL or ADOPTED to avoid extra queries (OFC returns query to be batched)
+  if (status === 'WL' || status === 'ADOPTED') {
     const mutationQuery = ` 
       mutation {
         ${mutationFields}
@@ -206,7 +255,7 @@ export async function updateAdopteeMondayStatus(
       return { data: mutationFields, error: null };
     } catch (error) {
       Logger.error(
-        `Failed to update adoptee Monday status to WL for ids ${adopteeMondayIds.join(',')}: ${JSON.stringify(error, null, 2)}`,
+        `Failed to update adoptee Monday status to ${status} for ids ${adopteeMondayIds.join(',')}: ${JSON.stringify(error, null, 2)}`,
       );
       return {
         data: null,
