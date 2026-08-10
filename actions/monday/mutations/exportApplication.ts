@@ -218,7 +218,7 @@ const getQueryCreateSubItem = (
     last_name: string | null;
   }[],
   columnMapping: Record<string, string>,
-  rankedCards: string[],
+  finalRankedCards: string[],
 ) => {
   // get current time
   const currentTime = new Date();
@@ -237,26 +237,31 @@ const getQueryCreateSubItem = (
     ? genderPrefMap[appData.gender_pref as keyof typeof genderPrefMap]
     : 'None';
 
-  // parse ranked cards
-  const adopteeMap = adopteeData.reduce(
-    (acc, cur) => {
-      const name = `${cur.first_name || ''} ${cur.last_name || ''}`.trim();
-      acc[cur.id] = {
-        name: name || 'Unknown',
-        inmateId: cur.inmate_id,
-        mondayId: cur.id, // Assuming id is the Monday ID, but keeping it flexible
-      };
-      return acc;
-    },
-    {} as Record<string, { name: string; inmateId: string; mondayId: string }>,
-  );
+  // Create an ordered map of adoptee data based on the provided ranks
+  const adopteeMap = new Map<
+    string,
+    { name: string; inmateId: string; mondayId: string }
+  >();
 
-  const rankedCardsOrder = rankedCards
-    .map((c, i) => {
-      const adoptee = adopteeMap[c];
+  finalRankedCards.forEach(id => {
+    const cur = adopteeData.find(a => a.id === id);
+    if (cur) {
+      const name =
+        `${cur.first_name || ''} ${cur.last_name || ''}`.trim() || 'Unknown';
+      adopteeMap.set(id, {
+        name,
+        inmateId: cur.inmate_id,
+        mondayId: cur.id,
+      });
+    }
+  });
+
+  const rankedCardsOrder = finalRankedCards
+    .map((id, i) => {
+      const adoptee = adopteeMap.get(id);
       const info = adoptee
         ? `${adoptee.name} (${adoptee.inmateId})`
-        : `Unknown (${c})`;
+        : `Unknown (${id})`;
       return `${i + 1}. ${info}`;
     })
     .join(', ');
@@ -269,8 +274,8 @@ const getQueryCreateSubItem = (
     .trim();
 
   // Build the list of Monday Item IDs in the user's preferred order
-  const orderedMondayIds = rankedCards
-    .map(c => adopteeMap[c]?.mondayId)
+  const orderedMondayIds = finalRankedCards
+    .map(id => adopteeMap.get(id)?.mondayId)
     .filter((id): id is string => !!id);
 
   const subItemColumnValues = parseColumns(columnMapping, {
