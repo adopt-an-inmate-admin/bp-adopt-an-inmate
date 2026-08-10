@@ -218,7 +218,7 @@ const getQueryCreateSubItem = (
     last_name: string | null;
   }[],
   columnMapping: Record<string, string>,
-  rankedCardsOverride?: string[],
+  rankedCards: string[],
 ) => {
   // get current time
   const currentTime = new Date();
@@ -250,8 +250,6 @@ const getQueryCreateSubItem = (
     {} as Record<string, { name: string; inmateId: string }>,
   );
 
-  const rankedCards = (rankedCardsOverride ||
-    appData.ranked_cards) as Array<string>;
   const rankedCardsOrder = rankedCards
     .map((c, i) => {
       const adoptee = adopteeMap[c];
@@ -329,8 +327,10 @@ const exportApplication = async (
   if (!appData) return { success: false, error: appDataError };
 
   // Use override if provided, otherwise use data from database
-  const finalRankedCards = (rankedCardsOverride ||
-    appData.ranked_cards) as string[];
+  const finalRankedCards =
+    rankedCardsOverride && rankedCardsOverride.length > 0
+      ? rankedCardsOverride
+      : (appData.ranked_cards as string[]);
 
   // get relevant adoptee data
   const { data: adopteeData, error: getAdopteeError } = await supabaseService
@@ -441,7 +441,7 @@ const exportApplication = async (
     mainItemId,
     adopteeData,
     subBoardMapping,
-    rankedCardsOverride,
+    finalRankedCards,
   );
 
   let updateAdopteesQuery;
