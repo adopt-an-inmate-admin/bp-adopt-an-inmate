@@ -3,14 +3,18 @@
 import { useEffect, useState } from 'react';
 import { LuClock, LuLayoutDashboard } from 'react-icons/lu';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthProvider';
 import { t } from '@/lib/i18n';
-import { getSupabaseBrowserClient } from '@/lib/supabase'; // new import
+import { getSupabaseBrowserClient } from '@/lib/supabase';
+import { appIsActive } from '@/lib/utils';
+import { AdopterApplication } from '@/types/schema';
 import MainDashboardTabs from './MainDashboardTabs';
 import NewApplicationButton from './NewApplicationButton';
 
 export default function MainDashboard() {
   const searchParams = useSearchParams();
   const showHistory = searchParams.get('tab') === 'history';
+  const { userId } = useAuth();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -27,35 +31,34 @@ export default function MainDashboard() {
 
     const fetchHistoryStats = async () => {
       const supabase = getSupabaseBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!userId) return;
 
       // fetch external applications count
       const { data: externalData } = await supabase
         .from('adopter_num_external_active')
         .select('num_external_active')
-        .eq('adopter_uuid', user.id)
+        .eq('adopter_uuid', userId)
         .maybeSingle();
 
       const external = externalData?.num_external_active ?? 0;
       setExternalApps(external);
 
       // fetch total count from adopter_applications (portal apps)
-      const { count: portalCount } = await supabase
+      const { data: apps } = await supabase
         .from('adopter_applications')
-        .select('*', { count: 'exact', head: true })
-        .eq('adopter_uuid', user.id);
+        .select('*')
+        .eq('adopter_uuid', userId);
 
-      const portal = portalCount ?? 0;
+      const portal =
+        apps?.filter((app: AdopterApplication) => !appIsActive(app)).length ??
+        0;
       setPortalApps(portal);
 
       setTotalApps(external + portal);
     };
 
     fetchHistoryStats();
-  }, [showHistory]);
+  }, [showHistory, userId]);
 
   useEffect(() => {
     if (errorMessage) {

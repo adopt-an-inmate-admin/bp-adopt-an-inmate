@@ -27,7 +27,7 @@ export default function Sidebar() {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const { profileData } = useProfile();
-  const { userEmail } = useAuth();
+  const { userId, userEmail } = useAuth();
 
   const isAdmin = userEmail?.toLowerCase() === 'admin@adoptaninmate.org';
 
@@ -39,20 +39,27 @@ export default function Sidebar() {
   useEffect(() => {
     const fetchCounts = async () => {
       const supabase = getSupabaseBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!userId) return;
 
-      const { data: apps } = await supabase
-        .from('adopter_applications')
-        .select('*')
-        .eq('adopter_uuid', user.id);
+      const [{ data: apps }, { data: externalData }] = await Promise.all([
+        supabase
+          .from('adopter_applications')
+          .select('*')
+          .eq('adopter_uuid', userId),
+        supabase
+          .from('adopter_num_external_active')
+          .select('num_external_active')
+          .eq('adopter_uuid', userId)
+          .maybeSingle(),
+      ]);
+
+      const external = externalData?.num_external_active ?? 0;
 
       if (!apps) return;
 
       setActiveCount(
-        apps.filter((app: AdopterApplication) => appIsActive(app)).length,
+        apps.filter((app: AdopterApplication) => appIsActive(app)).length +
+          external,
       );
       setHistoryCount(
         apps.filter((app: AdopterApplication) => !appIsActive(app)).length,
@@ -60,7 +67,7 @@ export default function Sidebar() {
     };
 
     fetchCounts();
-  }, [pathname, tab]);
+  }, [userId, pathname, tab]);
 
   const NAV_LINKS = [
     ...(isAdmin
