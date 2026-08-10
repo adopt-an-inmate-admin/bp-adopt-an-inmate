@@ -244,10 +244,11 @@ const getQueryCreateSubItem = (
       acc[cur.id] = {
         name: name || 'Unknown',
         inmateId: cur.inmate_id,
+        mondayId: cur.id, // Assuming id is the Monday ID, but keeping it flexible
       };
       return acc;
     },
-    {} as Record<string, { name: string; inmateId: string }>,
+    {} as Record<string, { name: string; inmateId: string; mondayId: string }>,
   );
 
   const rankedCardsOrder = rankedCards
@@ -267,10 +268,15 @@ const getQueryCreateSubItem = (
     .replace(/\r/g, ' ')
     .trim();
 
+  // Build the list of Monday Item IDs in the user's preferred order
+  const orderedMondayIds = rankedCards
+    .map(c => adopteeMap[c]?.mondayId)
+    .filter((id): id is string => !!id);
+
   const subItemColumnValues = parseColumns(columnMapping, {
     status: { label: 'Pending' },
     gender_preference: { label: parsedGenderPref },
-    match_list_links: { item_ids: rankedCards },
+    match_list_links: { item_ids: orderedMondayIds },
     bio_and_age: parsedBio,
     list_notes: rankedCardsOrder,
     date_received: currentDateISOString,
@@ -363,7 +369,7 @@ const exportApplication = async (
     notes: 'Notes',
     veteran_status: 'Are you a veteran?',
     how_did_you_hear: 'Source',
-    how_did_you_hear_other: 'For other, please specify',
+    how_did_you_hear_other: 'For other, please specify:',
   };
 
   const subBoardTitles = {
