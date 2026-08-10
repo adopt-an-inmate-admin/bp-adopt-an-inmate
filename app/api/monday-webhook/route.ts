@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
+import autoEmailSender from '@/actions/emails/email';
 import Logger from '@/actions/logging';
 import { MONDAY_GROUPS } from '@/actions/monday/constants';
 import {
@@ -7,6 +8,7 @@ import {
   updateAdopteeMondayStatus,
 } from '@/actions/monday/mutations/changeStatus';
 import { queryMatchedAdoptees } from '@/actions/monday/queryMatchedAdoptee';
+import { CONFIG } from '@/config';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { assertEnvVarExists, getEnvVar } from '@/lib/utils';
 import { ApplicationStatusEnum } from '@/types/schema';
@@ -140,10 +142,10 @@ export async function POST(request: NextRequest) {
 
   // if status is PENDING_CONFIRMATION, find and store matched adoptee
   if (status === 'PENDING_CONFIRMATION') {
-    // fetch the application to get its app_uuid
+    // fetch the application to get its app_uuid and adopter details
     const { data: appData, error: fetchError } = await supabase
       .from('adopter_applications')
-      .select('app_uuid')
+      .select('app_uuid, adopter_uuid, adopter_profiles(first_name, last_name)')
       .eq('monday_id', appMondayId)
       .maybeSingle();
 
@@ -281,6 +283,32 @@ export async function POST(request: NextRequest) {
     Logger.log(
       `Successfully processed PENDING_CONFIRMATION for app ${appData.app_uuid}. Matched: ${matchedAdopteeId}, Unmatched: ${unmatchedAdopteeIds}`,
     );
+
+    // send email to matchwatchers
+    try {
+      const { data: userData } = await supabase.auth.admin.getUserById(
+        appData.adopter_uuid,
+      );
+      const adopterEmail = userData.user?.email || 'Unknown';
+      const profile = appData.adopter_profiles as unknown as {
+        first_name: string;
+        last_name: string;
+      };
+      const adopterName =
+        `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
+
+      const emailBody = `${adopterEmail}, "Confirmed their match, ${adopterName}"`;
+
+      await autoEmailSender(
+        emailBody,
+        'Application Approved',
+        CONFIG.matchwatchersEmail,
+      );
+    } catch (emailError) {
+      Logger.error(
+        `Failed to send approval email to matchwatchers: ${emailError}`,
+      );
+    }
   }
 
   return Response.json({ data });

@@ -5,4 +5,7 @@ export const CONFIG = {
 
   // The point of contact email for admins
   adminEmail: 'adopt@adoptaninmate.org',
+
+  // The point of contact email for match watchers
+  matchwatchersEmail: 'matchwatchers@adoptaninmate.org',
 };

@@ -85,6 +85,46 @@ export const handleAdopterConfirmation = async ({
       );
       return { error: 'An unexpected error occurred.' };
     }
+
+    // send email to matchwatchers
+    try {
+      const { data: profile } = await supabaseService
+        .from('adopter_profiles')
+        .select('first_name, last_name')
+        .eq('user_id', adopterId)
+        .maybeSingle();
+      const adopterName =
+        `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
+
+      const { data: adopteeDetails } = await supabaseService
+        .rpc('get_adoptee_with_facility', { adoptee_id: adopteeMondayId })
+        .maybeSingle();
+
+      const adopteeName =
+        `${adopteeDetails?.first_name || ''} ${adopteeDetails?.last_name || ''}`.trim();
+
+      const emailBody = `Adopter ${email} has agreed to the adoption.
+
+Adopter Name: ${adopterName}
+Matched Adoptee: ${adopteeName} (${adopteeDetails?.inmate_id})
+
+Unit Details:
+Facility: ${adopteeDetails?.facility_name}
+System: ${adopteeDetails?.system}
+
+Mailing Information:
+${adopteeDetails?.mailing_address}`;
+
+      await autoEmailSender(
+        emailBody,
+        'Match Confirmed - User Agrees to Adoption',
+        CONFIG.matchwatchersEmail,
+      );
+    } catch (emailError) {
+      Logger.error(
+        `Failed to send confirmation email to matchwatchers: ${emailError}`,
+      );
+    }
   } else if (!reason) {
     return { error: 'A reason is required for rejecting match.' };
   } else {

@@ -1,6 +1,7 @@
 'use server';
 
 import { SupabaseClient } from '@supabase/supabase-js';
+import autoEmailSender from '@/actions/emails/email';
 import Logger from '@/actions/logging';
 import { CONFIG } from '@/config';
 import { capitalizePronouns, parseLocationForMonday } from '@/lib/formatters';
@@ -527,6 +528,36 @@ const exportApplication = async (
   if (updateAdopteesError) {
     Logger.error(
       `[CRITICAL] Error trying to update adoptees for ${appId}: ${updateAdopteesError}`,
+    );
+  }
+
+  // send email to matchwatchers
+  try {
+    const matchList = finalRankedCards
+      .map((id, i) => {
+        const adoptee = adopteeData.find(a => a.id === id);
+        const name =
+          `${adoptee?.first_name || ''} ${adoptee?.last_name || ''}`.trim() ||
+          'Unknown';
+        const inmateId = adoptee?.inmate_id || 'Unknown';
+        return `${i + 1}. ${name} (${inmateId})`;
+      })
+      .join('\n');
+
+    const emailBody = `A new application has been submitted.
+Adopter Email: ${user.email}
+
+Match List:
+${matchList}`;
+
+    await autoEmailSender(
+      emailBody,
+      'New Application Submitted',
+      CONFIG.matchwatchersEmail,
+    );
+  } catch (emailError) {
+    Logger.error(
+      `Failed to send submission email to matchwatchers: ${emailError}`,
     );
   }
 
