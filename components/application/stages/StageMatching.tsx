@@ -80,6 +80,7 @@ export default function StageMatching() {
       return (
         <MatchingSelectScreen
           matchCards={matchCards}
+          initialRankedIds={rankedIds}
           onTransitionToReview={handleTransitionToReview}
         />
       );

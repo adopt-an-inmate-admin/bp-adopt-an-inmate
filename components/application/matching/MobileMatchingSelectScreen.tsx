@@ -35,7 +35,8 @@ interface MobileMatchingSelectScreenProps {
 }
 
 export default function MobileMatchingSelectScreen({
-  matches: initialMatches,
+  matches,
+  rankedIds,
   isNextDisabled,
   selectedMatch,
   isRankingOpen,
@@ -45,14 +46,26 @@ export default function MobileMatchingSelectScreen({
   onClosePopUp,
 }: MobileMatchingSelectScreenProps) {
   // manage ordered matches internally so drag reorder updates the UI
-  const [orderedMatches, setOrderedMatches] =
-    useState<RankedAdopteeMatch[]>(initialMatches);
+  // initialize from rankedIds if available, otherwise use initial matches order
+  const [orderedMatches, setOrderedMatches] = useState<RankedAdopteeMatch[]>(
+    () => {
+      if (rankedIds && rankedIds.length === matches.length) {
+        return rankedIds
+          .map(id => matches.find(m => m.id === id))
+          .filter((m): m is RankedAdopteeMatch => !!m);
+      }
+      return matches;
+    },
+  );
 
-  // notify parent of initial order on mount so Next button is enabled by default
-  const initialMatchesRef = useRef(initialMatches);
+  // notify parent of initial order on mount ONLY IF rankedIds is empty
+  // so we don't overwrite already-chosen ranks
+  const initialMatchesRef = useRef(matches);
   useEffect(() => {
-    onRankedIdsChange(initialMatchesRef.current.map(m => m.id));
-  }, [onRankedIdsChange]);
+    if (!rankedIds || rankedIds.length === 0) {
+      onRankedIdsChange(initialMatchesRef.current.map(m => m.id));
+    }
+  }, [onRankedIdsChange, rankedIds]);
 
   const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
 

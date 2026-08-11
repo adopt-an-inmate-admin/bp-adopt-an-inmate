@@ -2,6 +2,7 @@ export interface ApplicationState {
   appId: string;
   form: Partial<FormState>;
   matches: string[] | null;
+  rankedMatches?: string[];
   selectedMatch: string | null;
   stillInCorrespondence?: boolean;
 }

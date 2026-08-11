@@ -11,15 +11,17 @@ import MobileMatchingSelectScreen from './MobileMatchingSelectScreen';
 
 interface MatchingSelectScreenProps {
   matchCards: RankedAdopteeMatch[];
+  initialRankedIds?: string[];
   onTransitionToReview: (rankedIds: string[]) => void;
 }
 
 export default function MatchingSelectScreen({
   matchCards,
+  initialRankedIds = [],
   onTransitionToReview,
 }: MatchingSelectScreenProps) {
   const { appState } = useApplicationContext();
-  const [rankedIds, setRankedIds] = useState<string[]>([]);
+  const [rankedIds, setRankedIds] = useState<string[]>(initialRankedIds);
   const isMobile = useMediaQuery('(max-width: 640px)');
   const [isRankingOpen, setIsRankingOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<RankedAdopteeMatch | null>(

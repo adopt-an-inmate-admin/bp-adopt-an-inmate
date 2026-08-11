@@ -116,8 +116,18 @@ export const getApplicationWithAdoptees = async (
     return { data: null, error: 'An unexpected error occurred' };
   }
 
+  // preserve the original ranking order
+  const orderedAdopteeData = (appData.ranked_cards as string[])
+    .map(id => adopteeData.find(a => a.id === id))
+    .filter((a): a is UnmatchedAdopteeInfo => !!a);
+
   return {
-    data: { matched: false, email: user.email, appData, adoptees: adopteeData },
+    data: {
+      matched: false,
+      email: user.email,
+      appData,
+      adoptees: orderedAdopteeData,
+    },
     error: null,
   };
 };

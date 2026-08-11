@@ -290,14 +290,18 @@ export async function POST(request: NextRequest) {
         appData.adopter_uuid,
       );
       const adopterEmail = userData.user?.email || 'Unknown';
-      const profile = appData.adopter_profiles as unknown as {
-        first_name: string;
-        last_name: string;
-      };
-      const adopterName =
-        `${profile?.first_name || ''} ${profile?.last_name || ''}`.trim();
 
-      const emailBody = `${adopterEmail}, "Confirmed their match, ${adopterName}"`;
+      const { data: adopteeData } = await supabase
+        .from('adoptee_vector')
+        .select('first_name, last_name')
+        .eq('id', matchedAdopteeId)
+        .maybeSingle();
+
+      const adopteeName =
+        `${adopteeData?.first_name || ''} ${adopteeData?.last_name || ''}`.trim() ||
+        'Unknown';
+
+      const emailBody = `${adopterEmail}, "Confirmed their match, ${adopteeName}"`;
 
       await autoEmailSender(
         emailBody,
