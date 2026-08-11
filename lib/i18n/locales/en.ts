@@ -109,6 +109,11 @@ export const en = {
         unexpected: 'An unexpected error occurred, please try again later.',
       },
     },
+    preliminary: {
+      title: 'Before You Begin',
+      button: 'I have read and understood',
+      scroll_instruction: 'Please scroll to the end of the text to proceed.',
+    },
   },
   app: {
     callout: {

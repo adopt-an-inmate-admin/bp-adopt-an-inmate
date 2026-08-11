@@ -169,7 +169,7 @@ export default function LoginPage() {
           <p className="text-sm font-medium text-gray-12">
             {t('auth.login.no_account')}
           </p>
-          <ButtonLink variant="secondary" href="/sign-up">
+          <ButtonLink variant="secondary" href="/preliminary">
             {t('auth.login.sign_up')}
           </ButtonLink>
         </div>
