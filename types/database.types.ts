@@ -150,6 +150,7 @@ export type Database = {
           monday_id: string | null
           personal_bio: string | null
           ranked_cards: string[] | null
+          reminder_sent_at: string | null
           status: Database["public"]["Enums"]["status_vals"]
           time_confirmation_due: string | null
           time_created: string
@@ -171,6 +172,7 @@ export type Database = {
           monday_id?: string | null
           personal_bio?: string | null
           ranked_cards?: string[] | null
+          reminder_sent_at?: string | null
           status?: Database["public"]["Enums"]["status_vals"]
           time_confirmation_due?: string | null
           time_created?: string
@@ -192,6 +194,7 @@ export type Database = {
           monday_id?: string | null
           personal_bio?: string | null
           ranked_cards?: string[] | null
+          reminder_sent_at?: string | null
           status?: Database["public"]["Enums"]["status_vals"]
           time_confirmation_due?: string | null
           time_created?: string

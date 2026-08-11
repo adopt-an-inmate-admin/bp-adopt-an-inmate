@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import autoEmailSender from '@/actions/emails/email';
 import Logger from '@/actions/logging';
 import { mondayApiClient } from '@/actions/monday/core';
 import { buildStatusMutationFields } from '@/actions/monday/mutations/changeStatus';
@@ -24,6 +25,61 @@ export async function GET(request: NextRequest) {
   const supabaseService = await dangerous_getSupabaseServiceClient();
   const now = new Date();
 
+  // 1. Handle Reminders (7 days after PENDING_CONFIRMATION)
+  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const { data: reminderApps } = await supabaseService
+    .from('adopter_applications')
+    .select('app_uuid, adopter_uuid, adopter_profiles(first_name)')
+    .eq('waiting_confirmation', true)
+    .is('reminder_sent_at', null)
+    .lte('time_confirmation_due', sevenDaysFromNow.toISOString());
+
+  if (reminderApps && reminderApps.length > 0) {
+    for (const app of reminderApps) {
+      try {
+        const { data: userData } = await supabaseService.auth.admin.getUserById(
+          app.adopter_uuid,
+        );
+        const email = userData.user?.email;
+        const profile = app.adopter_profiles as unknown as {
+          first_name: string;
+        };
+        const firstName = profile?.first_name || 'Adopter';
+
+        if (email) {
+          const siteUrl = getEnvVar('NEXT_PUBLIC_SITE_URL');
+          const emailBody = `Hi ${firstName},
+
+This is a reminder to please come back to the Adopt an Inmate app to approve your match. 
+You can access your application here: ${siteUrl}/app
+
+If you don't respond within the next 7 days, your application will be automatically closed.
+
+Best,
+Adopt an Inmate Team`;
+
+          await autoEmailSender(
+            emailBody,
+            'Reminder: Action required on your application',
+            email,
+          );
+
+          await supabaseService
+            .from('adopter_applications')
+            .update({ reminder_sent_at: now.toISOString() })
+            .eq('app_uuid', app.app_uuid);
+
+          Logger.log(`Sent reminder email to ${email} for app ${app.app_uuid}`);
+        }
+      } catch (e) {
+        Logger.error(
+          `Error sending reminder email for app ${app.app_uuid}: ${e}`,
+        );
+      }
+    }
+  }
+
+  // 2. Handle DNR (7 days after reminder)
   const { data: dnrApps, error: getAppsError } = await supabaseService.rpc(
     'get_dnr_applications',
   );
@@ -34,7 +90,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (!dnrApps || dnrApps.length === 0) {
-    return new Response('No apps past confirmation deadline. Skipped.');
+    return new Response('Processed reminders. No apps past DNR deadline.');
   }
 
   // map ids
