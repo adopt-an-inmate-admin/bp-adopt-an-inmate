@@ -50,9 +50,14 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (error) {
-      // If there's an error, we might want to log it but still return a response
-      // so the middleware can decide whether to redirect
-      console.warn('Auth getUser error in middleware:', error.message, error.code);
+      // Only log errors that are not just "session missing" as that's expected for guests
+      if (error.message !== 'Auth session missing!') {
+        console.warn(
+          'Auth getUser error in middleware:',
+          error.message,
+          error.code,
+        );
+      }
     }
     user = authUser;
   } catch (e) {
