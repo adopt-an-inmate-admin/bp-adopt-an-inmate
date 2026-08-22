@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF #11 new bug. Raw json shouldn't be displayed">
-      <change afterPath="$PROJECT_DIR$/supabase/migrations/20260804191400_fix_get_user_and_application.sql" afterDir="false" />
+    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF improve documentation.">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/export-docs.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/migrations/20260731135200_update_get_user_and_application.sql" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/migrations/20260731135200_update_get_user_and_application.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/migrations/20260804111200_rename_test_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/migrations/20260804111200_rename_test_tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +25,15 @@
             <execution>
               <execution>
                 <execution>
-                  <execution />
+                  <execution>
+                    <execution>
+                      <execution>
+                        <execution>
+                          <execution />
+                        </execution>
+                      </execution>
+                    </execution>
+                  </execution>
                 </execution>
               </execution>
             </execution>
@@ -34,6 +44,13 @@
   </component>
   <component name="EmbeddingIndexingInfo">
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Rebase.Settings">
     <option name="NEW_BASE" value="main" />
@@ -60,23 +77,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.334034388002081" />
-      <entry key="MS500" value="3.802079552188578" />
-      <entry key="S2" value="7.305717171032768" />
-      <entry key="S5" value="9.967113613405411" />
-      <entry key="S10" value="13.546009131501144" />
-      <entry key="S30" value="26.86498284785369" />
-      <entry key="S60" value="40.68545169538518" />
-      <entry key="M2" value="58.4966788529388" />
-      <entry key="M5" value="86.27750412775646" />
-      <entry key="M10" value="103.41629493007333" />
-      <entry key="M15" value="110.62686345681482" />
-      <entry key="M30" value="118.79257973129774" />
-      <entry key="H1" value="128.0889520116026" />
-      <entry key="H2" value="212.87174152378074" />
-      <entry key="H4" value="527.3307159782256" />
-      <entry key="D1" value="2537.094302292708" />
-      <entry key="W1" value="4383.035307761708" />
+      <entry key="MS100" value="1.0000000003808653" />
+      <entry key="MS500" value="1.0133347472617404" />
+      <entry key="S2" value="1.5981562682133337" />
+      <entry key="S5" value="2.9086451476046347" />
+      <entry key="S10" value="4.023270306926406" />
+      <entry key="S30" value="5.207142788022101" />
+      <entry key="S60" value="5.583668599277533" />
+      <entry key="M2" value="5.931109037305465" />
+      <entry key="M5" value="20.98688826361877" />
+      <entry key="M10" value="77.66308799805795" />
+      <entry key="M15" value="126.72228042109047" />
+      <entry key="M30" value="211.0136618481614" />
+      <entry key="H1" value="306.2196420354656" />
+      <entry key="H2" value="514.3385650286618" />
+      <entry key="H4" value="942.8013359895388" />
+      <entry key="D1" value="2840.0186157101075" />
+      <entry key="W1" value="8373.883462458352" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -87,34 +104,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="5.831926043687542E-290" />
-      <entry key="M10" value="3.414075949095817E-145" />
-      <entry key="M15" value="6.154024903664849E-97" />
-      <entry key="M30" value="1.1093745180719157E-48" />
-      <entry key="H1" value="1.489532493100515E-24" />
-      <entry key="H2" value="1.725992726442276E-12" />
-      <entry key="H4" value="1.8579508523843247E-6" />
-      <entry key="D1" value="0.19755923281045734" />
-      <entry key="W1" value="1.4368487109477994" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="3.351763550122517E-276" />
+      <entry key="M30" value="2.5890190635845227E-138" />
+      <entry key="H1" value="2.2755087643705578E-69" />
+      <entry key="H2" value="6.746107023382719E-35" />
+      <entry key="H4" value="1.1615592145117357E-17" />
+      <entry key="D1" value="0.0026814221121872037" />
+      <entry key="W1" value="0.7774085411081634" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.2886701609259479" />
-      <entry key="MS500" value="3.7653092219461257" />
-      <entry key="S2" value="7.286447028044112" />
-      <entry key="S5" value="9.955984806082935" />
-      <entry key="S10" value="13.534134131366148" />
-      <entry key="S30" value="26.845300847520225" />
-      <entry key="S60" value="40.668088888804064" />
-      <entry key="M2" value="58.48467525095638" />
-      <entry key="M5" value="86.27142572549968" />
-      <entry key="M10" value="103.41295618181786" />
-      <entry key="M15" value="110.62456092097369" />
-      <entry key="M30" value="118.79138691899269" />
-      <entry key="H1" value="128.08833204118596" />
-      <entry key="H2" value="212.87132818406917" />
-      <entry key="H4" value="527.3303263529388" />
-      <entry key="D1" value="2537.291589334413" />
-      <entry key="W1" value="4384.47207343046" />
+      <entry key="MS100" value="0.9138314505430777" />
+      <entry key="MS500" value="0.994970161499927" />
+      <entry key="S2" value="1.589071029290312" />
+      <entry key="S5" value="2.9019625559911995" />
+      <entry key="S10" value="4.018785072213212" />
+      <entry key="S30" value="5.205265159090049" />
+      <entry key="S60" value="5.582670558782433" />
+      <entry key="M2" value="5.930585166954062" />
+      <entry key="M5" value="20.986294208209372" />
+      <entry key="M10" value="77.66206196472143" />
+      <entry key="M15" value="126.72117405320836" />
+      <entry key="M30" value="211.01274426432363" />
+      <entry key="H1" value="306.2189683306443" />
+      <entry key="H2" value="514.3379902917465" />
+      <entry key="H4" value="942.8008042673405" />
+      <entry key="D1" value="2840.0209298332525" />
+      <entry key="W1" value="8374.660698442738" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -128,6 +145,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -154,11 +172,12 @@
     &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/800/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/816/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;HTML&quot;,
       &quot;DotEnv&quot;
     ]
   }
@@ -190,7 +209,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
       </set>
     </attachedChunks>
   </component>
@@ -223,21 +242,32 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="RWF - #3 appliation submission hanging due to gender fields missing." />
-    <MESSAGE value="RWF - #5 change state to location to accomodate intl. applicants" />
-    <MESSAGE value="RWF - #5 change state to location to accomodate intl. applicants - format wasn't correct" />
-    <MESSAGE value="RWF - #5 change state to location to accomodate intl. applicants - format wasn't correct - adding predixtive text" />
-    <MESSAGE value="RWF - #3 tryng to makw gender field properly propogate from the form." />
-    <MESSAGE value="RWF #7 increase bio to max 4k" />
-    <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately" />
-    <MESSAGE value="RWF #5 Improve location collection to match Monday form more accureately - predictive text stopped working." />
-    <MESSAGE value="RWF #3 still working on making gender come over properly." />
     <MESSAGE value="RWF #3 still working on making gender come over properly. And #5 make location pull all from ajax" />
     <MESSAGE value="RWF #9 fix strange login issue." />
     <MESSAGE value="RWF #9 fix strange login issue. #3 Gender value push" />
     <MESSAGE value="RWF #10 add functions and triggers to migration/refactor" />
     <MESSAGE value="RWF #11 new bug. Raw json shouldn't be displayed" />
-    <option name="LAST_COMMIT_MESSAGE" value="RWF #11 new bug. Raw json shouldn't be displayed" />
+    <MESSAGE value="RWF #10 refactor didn't account for columns." />
+    <MESSAGE value="RWF #12 - admin interface to delete test data and check application statuses." />
+    <MESSAGE value="RWF #10 missing bio columnn." />
+    <MESSAGE value="RWF #10 still trying to ensure that collecting data works." />
+    <MESSAGE value="RWF #13 - make sure adoptee data is in the request when updating Monday" />
+    <MESSAGE value="RWF #14 add how did you hear about us." />
+    <MESSAGE value="RWF #15 usre/logout improvements." />
+    <MESSAGE value="RWF #21 - Ranking order not preserved" />
+    <MESSAGE value="RWF #17 - keep list_notes and request_notes clean." />
+    <MESSAGE value="RWF #22 - webhook failing for request completion." />
+    <MESSAGE value="RWF #23 - fix NPO mesage. Added internationalization so all ztrings can be easily changed and eventually translated." />
+    <MESSAGE value="RWF #15 - logout button is still badly placed. Also update labels to internationaized messages." />
+    <MESSAGE value="RWF #ranking order still broken" />
+    <MESSAGE value="RWF #22 #19 furthering qpplication status handling" />
+    <MESSAGE value="RWF #24 sync sidebar with history details" />
+    <MESSAGE value="RWF #25 - add email notifications during app process" />
+    <MESSAGE value="RWF #25 - add column so we can keep track of and remind adopters to complete their applications." />
+    <MESSAGE value="RWF #16 - attempting to fix email friendly name display when emails are sent." />
+    <MESSAGE value="RWF #26 - consideration message before signup." />
+    <MESSAGE value="RWF improve documentation." />
+    <option name="LAST_COMMIT_MESSAGE" value="RWF improve documentation." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

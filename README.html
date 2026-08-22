@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adopt an Inmate - Documentation</title>
+    <style>
+      :root {
+        --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+          'Liberation Mono', monospace;
+        --bg-color: #ffffff;
+        --text-color: #1f2937;
+        --text-muted: #4b5563;
+        --primary-color: #2563eb;
+        --border-color: #e5e7eb;
+        --card-bg: #f9fafb;
+        --code-bg: #f3f4f6;
+        --header-border: #e5e7eb;
+        --table-header: #f8fafc;
+        --table-row-alt: #fcfdfe;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #0f172a;
+          --text-color: #f1f5f9;
+          --text-muted: #94a3b8;
+          --primary-color: #38bdf8;
+          --border-color: #334155;
+          --card-bg: #1e293b;
+          --code-bg: #1e293b;
+          --header-border: #334155;
+          --table-header: #1e293b;
+          --table-row-alt: #0f172a;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        line-height: 1.65;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 2.5rem 1.5rem;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--text-color);
+        font-weight: 700;
+        line-height: 1.3;
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+        border-bottom: 2px solid var(--header-border);
+        padding-bottom: 0.5rem;
+        margin-top: 0;
+      }
+
+      h2 {
+        font-size: 1.65rem;
+        border-bottom: 1px solid var(--header-border);
+        padding-bottom: 0.4rem;
+        margin-top: 2.25rem;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        margin-top: 1.75rem;
+      }
+
+      h4 {
+        font-size: 1.1rem;
+        margin-top: 1.25rem;
+      }
+
+      p {
+        margin-top: 0;
+        margin-bottom: 1rem;
+      }
+
+      a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.88em;
+        background-color: var(--code-bg);
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+      }
+
+      pre {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        overflow-x: auto;
+        margin: 1.25rem 0;
+      }
+
+      pre code {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+
+      ul,
+      ol {
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+        padding-left: 1.75rem;
+      }
+
+      li {
+        margin-bottom: 0.35rem;
+      }
+
+      blockquote {
+        margin: 1.25rem 0;
+        padding: 0.75rem 1.25rem;
+        border-left: 4px solid var(--primary-color);
+        background-color: var(--card-bg);
+        border-radius: 0 6px 6px 0;
+        color: var(--text-muted);
+      }
+
+      blockquote p {
+        margin: 0;
+      }
+
+      hr {
+        border: 0;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 2.5rem 0;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      th {
+        background-color: var(--table-header);
+        font-weight: 600;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:nth-child(even) {
+        background-color: var(--table-row-alt);
+      }
+
+      .actions-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .btn:hover {
+        background-color: var(--code-bg);
+        text-decoration: none;
+      }
+
+      @media print {
+        body {
+          padding: 0;
+          background: white;
+          color: black;
+        }
+        .actions-bar {
+          display: none;
+        }
+        .container {
+          max-width: 100%;
+          padding: 0;
+        }
+        a {
+          color: black;
+          text-decoration: underline;
+        }
+        pre,
+        blockquote,
+        .table-container {
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="actions-bar">
+        <button class="btn" onclick="window.print()">
+          🖨️ Print / Save as PDF
+        </button>
+      </div>
+      <h1 id="adopt-an-inmate">Adopt an Inmate</h1>
+      <p>
+        This project is being built by a team at
+        <a
+          href="https://calblueprint.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Blueprint</a
+        >, a student organization at the University of California, Berkeley
+        building software pro bono for nonprofits.
+      </p>
+      <h2 id="getting-started">Getting Started</h2>
+      <h3 id="prerequisites">Prerequisites</h3>
+      <p>Check your installation of <code>node</code> and <code>pnpm</code>:</p>
+      <pre><code class="language-bash">node -v
+pnpm -v</code></pre>
+      <p>
+        We strongly recommend using a Node version manager like
+        <a
+          href="https://github.com/nvm-sh/nvm"
+          target="_blank"
+          rel="noopener noreferrer"
+          >nvm</a
+        >
+        (for Mac) or
+        <a
+          href="https://github.com/coreybutler/nvm-windows"
+          target="_blank"
+          rel="noopener noreferrer"
+          >nvm-windows</a
+        >
+        (for Windows) to install Node.js. If you don't plan on switching between
+        different Node versions, you can alternatively get a
+        <a
+          href="https://nodejs.org/en/download/prebuilt-installer"
+          target="_blank"
+          rel="noopener noreferrer"
+          >prebuilt installer</a
+        >
+        from the Node.js website for an easier approach. Make sure to get Node
+        version 20 and up, the latest LTS version should be sufficient.
+      </p>
+      <p>
+        After installing Node, you most likely have npm installed as well (check
+        by running <code>npm -v</code>). If you have npm installed, simply run
+        <code>npm install -g pnpm</code> to install pnpm. If your command line
+        does not recognize npm as a command, refer to
+        <a
+          href="https://www.geeksforgeeks.org/how-to-resolve-npm-command-not-found-error-in-node-js/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >this article</a
+        >
+        to troubleshoot.
+      </p>
+      <p>Additional resources:</p>
+      <ul>
+        <li>
+          <a
+            href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Downloading and installing Node.js and npm</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://pnpm.io/installation"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Installing pnpm without npm</a
+          >
+        </li>
+      </ul>
+      <h3 id="installation">Installation</h3>
+      <ol>
+        <li>Clone the repo & install dependencies</li>
+      </ol>
+      <ol>
+        <li>Clone this repo</li>
+      </ol>
+      <ul>
+        <li>using SSH (recommended)</li>
+      </ul>
+      <pre><code class="language-bash">        git clone git@github.com:calblueprint/adopt-an-inmate</code></pre>
+      <ul>
+        <li>using HTTPS</li>
+      </ul>
+      <pre><code class="language-bash">        git clone https://github.com/calblueprint/adopt-an-inmate.git</code></pre>
+      <ol>
+        <li>Enter the cloned directory</li>
+      </ol>
+      <pre><code class="language-bash">      cd adopt-an-inmate</code></pre>
+      <ol>
+        <li>
+          Install project dependencies. This command installs all packages from
+          <a href="package.json" target="_blank" rel="noopener noreferrer"
+            ><code>package.json</code></a
+          >.
+        </li>
+      </ol>
+      <pre><code class="language-bash">      pnpm install</code></pre>
+      <ol>
+        <li>Set up secrets:</li>
+        <li>
+          In the project's root directory (<code>adopt-an-inmate</code>), create
+          a new file named <code>.env.local</code>
+        </li>
+        <li>
+          Copy the credentials from
+          <a
+            href="https://www.notion.so/calblueprint/Environment-Setup-6fb1e251cdca4393b9dd47a3436abc11?pvs=4#9c2ff603f7a44348835c97e96d521d2d"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Blueprint's internal Notion</a
+          >
+          (access is required) and paste them into the
+          <code>.env.local</code> file.
+        </li>
+      </ol>
+      <p><strong>Helpful resources</strong></p>
+      <ul>
+        <li>
+          <a
+            href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub: Cloning a Repository</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub: Generating SSH keys</a
+          >
+        </li>
+      </ul>
+      <h3 id="development-environment">Development environment</h3>
+      <ul>
+        <li>
+          <strong
+            ><a
+              href="https://code.visualstudio.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >VSCode</a
+            >
+            (recommended)</strong
+          >
+        </li>
+      </ul>
+      <ol>
+        <li>Open the <code>adopt-an-inmate</code> project in VSCode.</li>
+        <li>
+          Install recommended workspace VSCode extensions. You should see a
+          pop-up on the bottom right to "install the recommended extensions for
+          this repository".
+        </li>
+      </ol>
+      <h3 id="running-the-app">Running the app</h3>
+      <p>In the project directory, run:</p>
+      <pre><code class="language-shell">pnpm dev</code></pre>
+      <p>
+        Then, navigate to http://localhost:3000 to launch the web application.
+      </p>
+      <h2 id="application-workflow-mondaycom-integration">
+        Application Workflow & Monday.com Integration
+      </h2>
+      <p>
+        Applications submitted through this site are synchronized with
+        Monday.com for administrative approval.
+      </p>
+      <h3 id="1-export-to-mondaycom">1. Export to Monday.com</h3>
+      <p>
+        When an adopter submits their application, it is exported to the
+        <strong>Monday Adopter Data</strong> board.
+      </p>
+      <ul>
+        <li>The adopter is created as a <strong>Main Item</strong>.</li>
+        <li>
+          The specific application is created as a <strong>Subitem</strong>.
+        </li>
+        <li>Initial status is set to <code>Pending</code>.</li>
+      </ul>
+      <h3 id="2-approval-via-mondaycom-webhooks">
+        2. Approval via Monday.com Webhooks
+      </h3>
+      <p>
+        The approval process is driven by status changes on the application
+        <strong>Subitem</strong> in Monday.com.
+      </p>
+      <p>
+        A webhook is configured in Monday.com to send a
+        <code>POST</code> request to <code>/api/monday-webhook</code> whenever
+        the <code>subitemStatus</code> changes. The system handles the following
+        status codes:
+      </p>
+      <ul>
+        <li>
+          <strong>Status Code 8 (<code>PENDING_CONFIRMATION</code>)</strong>:
+          This signifies the application has been reviewed and a match is ready.
+        </li>
+        <li>
+          <strong>Candidate Selection</strong>: The system automatically
+          identifies the matched adoptee using the following logic:
+        </li>
+      </ul>
+      <ol>
+        <li>
+          It checks the 4 candidates chosen by the adopter in their ranked
+          order.
+        </li>
+        <li>
+          If any candidate has already been moved to the
+          <strong>Adopted</strong> board, that candidate is selected as the
+          match.
+        </li>
+        <li>
+          If none of the candidates are in the <strong>Adopted</strong> board,
+          it defaults to the <strong>Rank 1</strong> candidate.
+        </li>
+      </ol>
+      <ul>
+        <li><strong>Automated Actions</strong>:</li>
+        <li>
+          The matched adoptee is moved to the <strong>Adopted</strong> board (if
+          not already there) and their status is set to
+          <code>A: Adopted (Local)</code>.
+        </li>
+        <li>
+          All other candidates are moved to the <strong>WL PIPs</strong> board
+          and marked as <code>Wait Listed</code>.
+        </li>
+        <li>
+          The application status in Supabase is updated to
+          <code>PENDING_CONFIRMATION</code>.
+        </li>
+        <li>The adopter is given 2 weeks to confirm the match.</li>
+        <li>
+          <strong>Status Code 4 (<code>REJECTED</code>)</strong>: The
+          application is marked as <code>REJECTED</code> in Supabase.
+        </li>
+        <li>
+          <strong>Status Code 1 (<code>REAPPLY</code>)</strong>: The application
+          status is set to <code>REAPPLY</code>, allowing the adopter to submit
+          a new one.
+        </li>
+      </ul>
+      <h3 id="3-administrative-candidate-selection">
+        3. Administrative Candidate Selection
+      </h3>
+      <p>
+        If the Rank 1 candidate is no longer available (e.g., they were
+        released), the admin can manually select a different candidate (Rank 2,
+        3, or 4) to be the match.
+      </p>
+      <p><strong>Steps to manually select a candidate:</strong></p>
+      <ol>
+        <li>
+          Locate the desired candidate in Monday.com (usually in the
+          <strong>WL PIPs</strong> board).
+        </li>
+        <li>
+          Move that candidate's item to the <strong>Adopted</strong> board.
+        </li>
+        <li>
+          (Optional) Move the unavailable candidate to an appropriate board
+          (e.g., a "Released" board) to ensure they are not accidentally
+          selected.
+        </li>
+        <li>
+          Go to the <strong>Adopter Data</strong> board and change the
+          application subitem status to <strong>Pending Confirmation</strong>.
+        </li>
+      </ol>
+      <p>
+        The system will detect that the manually moved candidate is in the
+        <strong>Adopted</strong> board and prioritize them over the Rank 1
+        default.
+      </p>
+      <h3 id="4-admin-tools">4. Admin Tools</h3>
+      <p>
+        Administrative functions are available at
+        <code>/admin</code> (restricted to the global admin user
+        <code>admin@adoptaninmate.org</code>).
+      </p>
+      <p><strong>Setup Admin User:</strong></p>
+      <p>
+        If the admin user does not exist in your Supabase instance, you can
+        create it by running:
+      </p>
+      <pre><code class="language-bash">pnpm setup-admin</code></pre>
+      <p>
+        This script uses the <code>SUPABASE<em>SERVICE</em>KEY</code> from your
+        <code>.env.local</code> to create the
+        <code>admin@adoptaninmate.org</code> user with the default password
+        <code>St@y0ut!</code>.
+      </p>
+      <ul>
+        <li>
+          <strong>Pending Applications</strong>: View a list of applications
+          currently awaiting review.
+        </li>
+        <li>
+          <strong>Reset Test Records</strong>: Completely remove a test user's
+          data to allow for re-testing the onboarding flow.
+        </li>
+        <li>
+          <strong>Effect on Supabase</strong>: Deletes the user's profile, all
+          applications, and the Supabase Auth account.
+        </li>
+        <li>
+          <strong>Effect on Monday.com</strong>: Deletes the adopter's
+          <strong>Main Item</strong> and all associated
+          <strong>Subitems</strong> from the Monday boards using the stored
+          <code>monday_id</code>s. This ensures Monday.com remains in sync with
+          the test environment.
+        </li>
+      </ul>
+      <h2 id="system-email-notifications-automated-triggers">
+        System Email Notifications & Automated Triggers
+      </h2>
+      <p>
+        The system sends transactional and lifecycle emails to applicants
+        (adopters) as well as administrative notifications to the Adopt an
+        Inmate team and match watchers.
+      </p>
+      <h3 id="email-configuration-infrastructure">
+        Email Configuration & Infrastructure
+      </h3>
+      <p>
+        Emails are sent via
+        <strong>Brevo SMTP</strong> (<code>smtp-relay.brevo.com:587</code>)
+        using <code>nodemailer</code>.
+      </p>
+      <p>Key environment variables in <code>.env.local</code>:</p>
+      <ul>
+        <li>
+          <code>BREVO<em>SMTP</em>USER</code>: Brevo SMTP login username /
+          account email.
+        </li>
+        <li>
+          <code>BREVO<em>SMTP</em>KEY</code>: Brevo SMTP API key / password.
+        </li>
+        <li>
+          <code>EMAIL<em>SENDER</em>NAME</code>: Sender display name (defaults
+          to <code>"Adopt an Inmate Team"</code>).
+        </li>
+        <li>
+          <code>EMAIL<em>SENDER</em>ADDRESS</code>: Sender address (defaults to
+          <code>"adopt@adoptaninmate.org"</code>).
+        </li>
+        <li>
+          <code>NEXT<em>PUBLIC</em>SITE_URL</code>: Base application URL for
+          links generated in email bodies.
+        </li>
+      </ul>
+      <p>Key internal contact emails (<code>config.ts</code>):</p>
+      <ul>
+        <li>
+          <code>CONFIG.adminEmail</code>:
+          <code>adopt@adoptaninmate.org</code> (receives escalation, match
+          rejections, and correspondence termination alerts).
+        </li>
+        <li>
+          <code>CONFIG.matchwatchersEmail</code>:
+          <code>matchwatchers@adoptaninmate.org</code> (receives new application
+          alerts, Monday approval notifications, and adoption confirmation
+          details).
+        </li>
+      </ul>
+      <hr />
+      <h3 id="summary-of-system-emails">Summary of System Emails</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Email Type</th>
+              <th>Recipient</th>
+              <th>Trigger / Source</th>
+              <th>Subject Line</th>
+              <th>Timing / Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Application Submission Confirmation</strong></td>
+              <td>Applicant / Adopter</td>
+              <td>
+                User submits application (<code>actions/queries/query.ts</code>)
+              </td>
+              <td><code>Adoption Application Submitted</code></td>
+              <td>Instant upon form submission</td>
+            </tr>
+            <tr>
+              <td><strong>Match Confirmation 7-Day Reminder</strong></td>
+              <td>Applicant / Adopter</td>
+              <td>Daily cron job (<code>/api/check_dnr</code>)</td>
+              <td>
+                <code>Reminder: Action required on your application</code>
+              </td>
+              <td>7 days after match approval (7 days before DNR deadline)</td>
+            </tr>
+            <tr>
+              <td><strong>Account Verification / Confirmation</strong></td>
+              <td>Applicant / Adopter</td>
+              <td>
+                Supabase Auth sign-up (<code>actions/auth/sign-up.ts</code>)
+              </td>
+              <td>Supabase default confirmation template</td>
+              <td>Instant upon user registration</td>
+            </tr>
+            <tr>
+              <td><strong>Password Reset</strong></td>
+              <td>Applicant / Adopter</td>
+              <td>Supabase Auth password reset request</td>
+              <td>Supabase default password reset template</td>
+              <td>Instant upon password reset request</td>
+            </tr>
+            <tr>
+              <td><strong>New Application Export Alert</strong></td>
+              <td>Match Watchers (<code>CONFIG.matchwatchersEmail</code>)</td>
+              <td>
+                Application exported to Monday
+                (<code>actions/monday/mutations/exportApplication.ts</code>)
+              </td>
+              <td><code>New Application Submitted</code></td>
+              <td>Instant after Monday.com items created</td>
+            </tr>
+            <tr>
+              <td><strong>Match Approved via Monday</strong></td>
+              <td>Match Watchers (<code>CONFIG.matchwatchersEmail</code>)</td>
+              <td>
+                Monday subitem changed to
+                <code>PENDING_CONFIRMATION</code>
+                (<code>/api/monday-webhook</code>)
+              </td>
+              <td><code>Application Approved</code></td>
+              <td>Triggered by Monday status update</td>
+            </tr>
+            <tr>
+              <td><strong>Match Accepted (Adoption Confirmed)</strong></td>
+              <td>Match Watchers (<code>CONFIG.matchwatchersEmail</code>)</td>
+              <td>
+                Adopter clicks "Accept" in portal
+                (<code>actions/applications/handleAdopterConfirmation.ts</code>)
+              </td>
+              <td><code>Match Confirmed - User Agrees to Adoption</code></td>
+              <td>Instant upon applicant confirmation</td>
+            </tr>
+            <tr>
+              <td><strong>Match Rejected</strong></td>
+              <td>Admin (<code>CONFIG.adminEmail</code>)</td>
+              <td>
+                Adopter clicks "Reject" in portal
+                (<code>actions/applications/handleAdopterConfirmation.ts</code>)
+              </td>
+              <td><code>An adopter rejected a match</code></td>
+              <td>Instant upon applicant rejection</td>
+            </tr>
+            <tr>
+              <td><strong>Correspondence Ended</strong></td>
+              <td>Admin (<code>CONFIG.adminEmail</code>)</td>
+              <td>
+                Adopter ends correspondence
+                (<code>actions/applications/handleEndCorrespondence.ts</code>)
+              </td>
+              <td><code>An adopter ended their correspondence</code></td>
+              <td>Instant upon ending correspondence</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <hr />
+      <h3 id="detailed-email-workflows">Detailed Email Workflows</h3>
+      <h4 id="1-emails-sent-to-applicants">1. Emails Sent to Applicants</h4>
+      <h5 id="a-application-submission-confirmation">
+        A. Application Submission Confirmation
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: When an applicant finishes selecting and
+          ranking their 4 prospective adoptees and submits their application.
+        </li>
+        <li>
+          <strong>Code Reference</strong>: <code>submitApplication</code> in
+          <code>actions/queries/query.ts</code>
+        </li>
+        <li><strong>Recipient</strong>: Applicant email address</li>
+        <li>
+          <strong>Subject</strong>: <code>Adoption Application Submitted</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Hi! Thank you for submitting your adoption application (ID: &lt;app_uuid&gt;). We'll review it and get back to you with a match soon.
+
+  Best,
+  The Adopt an Inmate Team</code></pre>
+      <h5 id="b-action-required-reminder-7-day-warning-before-expiration">
+        B. Action Required Reminder (7-Day Warning Before Expiration)
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: When an administrator sets the application
+          status on Monday.com to <strong>Pending Confirmation</strong> (Status
+          Code 8), the applicant is granted a 14-day window to review and
+          confirm their match. A daily cron job (<code>GET /api/check_dnr</code
+          >) evaluates all pending applications. If 7 days have elapsed without
+          confirmation (leaving 7 days remaining before the DNR cutoff), a
+          reminder email is automatically dispatched.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>app/api/check_dnr/route.ts</code>
+        </li>
+        <li><strong>Recipient</strong>: Applicant email address</li>
+        <li>
+          <strong>Subject</strong>:
+          <code>Reminder: Action required on your application</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Hi &lt;first_name&gt;,
+
+  This is a reminder to please come back to the Adopt an Inmate app to approve your match. 
+  You can access your application here: &lt;NEXT_PUBLIC_SITE_URL&gt;/app
+
+  If you don't respond within the next 7 days, your application will be automatically closed.
+
+  Best,
+  Adopt an Inmate Team</code></pre>
+      <ul>
+        <li>
+          <strong>Note</strong>: A database flag
+          <code>reminder<em>sent</em>at</code> ensures this reminder is only
+          dispatched once. If the user still does not respond after the full 14
+          days, the application transitions to <code>ENDED</code> with reason
+          <code>DNR</code> (Did Not Respond), the Monday item is marked
+          <code>Closed Out</code>, and the adoptee is returned to the waitlist
+          pool.
+        </li>
+      </ul>
+      <h5 id="c-authentication-password-reset-emails">
+        C. Authentication & Password Reset Emails
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: Standard user account actions powered by
+          Supabase Auth (e.g. account registration confirmation and forgot
+          password links).
+        </li>
+        <li>
+          <strong>Code Reference</strong>: <code>actions/auth/sign-up.ts</code>,
+          <code>components/auth/forgot-password/</code>
+        </li>
+      </ul>
+      <hr />
+      <h4
+        id="2-administrative-match-watcher-emails-triggered-by-mondaycom-user-actions"
+      >
+        2. Administrative & Match Watcher Emails (Triggered by Monday.com & User
+        Actions)
+      </h4>
+      <h5 id="a-mondaycom-webhook-approval-notification">
+        A. Monday.com Webhook Approval Notification
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: An admin changes the Subitem status on
+          Monday.com to
+          <strong>Status Code 8 (<code>PENDING_CONFIRMATION</code>)</strong>.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>app/api/monday-webhook/route.ts</code>
+        </li>
+        <li>
+          <strong>Recipient</strong>:
+          <code>matchwatchers@adoptaninmate.org</code>
+        </li>
+        <li><strong>Subject</strong>: <code>Application Approved</code></li>
+        <li>
+          <strong>Body Content</strong>:
+          <code
+            >&lt;adopterEmail&gt;, "Confirmed their match,
+            &lt;adopteeName&gt;"</code
+          >
+        </li>
+        <li><strong>System Actions</strong>:</li>
+        <li>
+          Automatically selects the matched adoptee (from Adopted board if
+          pre-moved, or defaults to Rank 1).
+        </li>
+        <li>
+          Moves matched adoptee to <strong>Adopted</strong> board with status
+          <code>ADOPTED</code>.
+        </li>
+        <li>
+          Moves unmatched candidate adoptees to <strong>WL PIPs</strong> board
+          with status <code>WAIT_LISTED</code>.
+        </li>
+        <li>
+          Sets application status to <code>PENDING_CONFIRMATION</code> with
+          14-day confirmation deadline.
+        </li>
+      </ul>
+      <h5 id="b-new-application-submitted-monday-export">
+        B. New Application Submitted (Monday Export)
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: When an application is successfully written
+          as a Main Item and Subitem on Monday.com.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>actions/monday/mutations/exportApplication.ts</code>
+        </li>
+        <li>
+          <strong>Recipient</strong>:
+          <code>matchwatchers@adoptaninmate.org</code>
+        </li>
+        <li>
+          <strong>Subject</strong>: <code>New Application Submitted</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  A new application has been submitted.
+  Adopter Email: &lt;adopter_email&gt;
+
+  Match List:
+  1. &lt;First Last&gt; (&lt;Inmate ID&gt;)
+  2. &lt;First Last&gt; (&lt;Inmate ID&gt;)
+  3. &lt;First Last&gt; (&lt;Inmate ID&gt;)
+  4. &lt;First Last&gt; (&lt;Inmate ID&gt;)</code></pre>
+      <h5 id="c-adopter-confirms-match">C. Adopter Confirms Match</h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: Adopter logs into <code>/app</code> during
+          the 14-day confirmation window and confirms adoption.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>actions/applications/handleAdopterConfirmation.ts</code>
+        </li>
+        <li>
+          <strong>Recipient</strong>:
+          <code>matchwatchers@adoptaninmate.org</code>
+        </li>
+        <li>
+          <strong>Subject</strong>:
+          <code>Match Confirmed - User Agrees to Adoption</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Adopter &lt;adopter_email&gt; has agreed to the adoption.
+
+  Adopter Name: &lt;adopter_first_name&gt; &lt;adopter_last_name&gt;
+  Matched Adoptee: &lt;adoptee_first_name&gt; &lt;adoptee_last_name&gt; (&lt;inmate_id&gt;)
+
+  Unit Details:
+  Facility: &lt;facility_name&gt;
+  System: &lt;system&gt;
+
+  Mailing Information:
+  &lt;mailing_address&gt;</code></pre>
+      <ul>
+        <li>
+          <strong>System Actions</strong>: Updates application status to
+          <code>ACTIVE</code>, marks adoptee as
+          <code>formerly_adopted = true</code> in Supabase and Monday.com.
+        </li>
+      </ul>
+      <h5 id="d-adopter-rejects-match">D. Adopter Rejects Match</h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: Adopter logs into <code>/app</code> and
+          declines the proposed match with a provided reason.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>actions/applications/handleAdopterConfirmation.ts</code>
+        </li>
+        <li>
+          <strong>Recipient</strong>: <code>adopt@adoptaninmate.org</code>
+        </li>
+        <li>
+          <strong>Subject</strong>: <code>An adopter rejected a match</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Dear Adopt an Inmate team,
+
+  An adopter rejected their match. Here are the details:
+  - Adopter: &lt;adopter_email&gt; (ID: &lt;adopter_id&gt;)
+  - Adoptee: &lt;adoptee_inmate_id&gt; (ID: &lt;adoptee_id&gt;)
+  - Timestamp: &lt;timestamp&gt; (UTC+0)
+  - Reason: "&lt;reason&gt;"
+
+  This is an automated email sent by the Adopt an Inmate web server. Please do not reply.</code></pre>
+      <ul>
+        <li>
+          <strong>System Actions</strong>: Updates application status to
+          <code>ENDED</code>, subitem on Monday to <code>Closed Out</code>, and
+          resets adoptee status to waitlist.
+        </li>
+      </ul>
+      <h5 id="e-adopter-ends-correspondence">E. Adopter Ends Correspondence</h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: Adopter with an active adoption chooses to
+          end correspondence from the dashboard.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>actions/applications/handleEndCorrespondence.ts</code>
+        </li>
+        <li>
+          <strong>Recipient</strong>: <code>adopt@adoptaninmate.org</code>
+        </li>
+        <li>
+          <strong>Subject</strong>:
+          <code>An adopter ended their correspondence</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Dear Adopt an Inmate team,
+
+  An adopter has ended their correspondence. Here are the details:
+  - Adopter: &lt;adopter_email&gt; (ID: &lt;adopter_id&gt;)
+  - Adoptee: &lt;adoptee_inmate_id&gt; (ID: &lt;adoptee_id&gt;)
+  - Timestamp: &lt;timestamp&gt; (UTC+0)
+  - Reason: &lt;reason_label&gt; (&lt;reason_value&gt;)
+
+  This is an automated email sent by the Adopt an Inmate web server. Please do not reply.</code></pre>
+      <hr />
+      <h2 id="exporting-converting-documentation">
+        Exporting & Converting Documentation
+      </h2>
+      <p>
+        You can convert this <code>README.md</code> into standalone, formatted
+        documentation (HTML, PDF, or Rich Text) to share outside of the project
+        repository.
+      </p>
+      <h3 id="1-export-to-html">1. Export to HTML</h3>
+      <p>Run the built-in documentation export script:</p>
+      <pre><code class="language-bash">pnpm docs:export</code></pre>
+      <p>
+        <em>(or <code>pnpm docs:html</code>)</em>
+      </p>
+      <p>
+        This converts <code>README.md</code> into a self-contained, beautifully
+        styled <code>README.html</code> file in the project root.
+      </p>
+      <p>You can also specify custom input/output paths:</p>
+      <pre><code class="language-bash">node scripts/export-docs.mjs &lt;input-markdown-file&gt; &lt;output-html-file&gt;</code></pre>
+      <h3 id="2-export-to-pdf-or-rich-text">2. Export to PDF or Rich Text</h3>
+      <p>Once <code>README.html</code> is generated:</p>
+      <ul>
+        <li>
+          <strong>PDF</strong>: Open <code>README.html</code> in any web browser
+          (Chrome, Safari, Edge, Firefox) and click the
+          <strong>Print / Save as PDF</strong> button in the top right (or press
+          <code>Ctrl+P</code> / <code>Cmd+P</code> > select
+          <strong>Save as PDF</strong>).
+        </li>
+        <li>
+          <strong>Rich Text / Word / Google Docs</strong>: Open
+          <code>README.html</code> in a browser, select all content (<code
+            >Ctrl+A</code
+          >
+          / <code>Cmd+A</code>), copy (<code>Ctrl+C</code> /
+          <code>Cmd+C</code>), and paste directly into Google Docs, Microsoft
+          Word, Apple Pages, or an email composer. The formatted tables,
+          headings, blockquotes, and code blocks will retain their rich text
+          formatting.
+        </li>
+      </ul>
+      <hr />
+      <h2 id="database-migrations">Database & Migrations</h2>
+      <p>
+        This project uses <strong>Supabase</strong> for its database and auth.
+        Schema migrations are located in the
+        <code>supabase/migrations</code> directory.
+      </p>
+      <h3 id="1-manual-migrations">1. Manual Migrations</h3>
+      <p>To deploy new migrations to your linked Supabase project manually:</p>
+      <pre><code class="language-bash">pnpm db:migrate</code></pre>
+      <p>
+        <em
+          >Note: You may need to login first via
+          <code>pnpm supabase login</code>.</em
+        >
+      </p>
+      <h3 id="2-automatic-migrations-recommended">
+        2. Automatic Migrations (Recommended)
+      </h3>
+      <p>
+        Vercel does <strong>not</strong> run database migrations during its
+        build process. To automate this and avoid manual execution, we recommend
+        using the <strong>Supabase GitHub Integration</strong>:
+      </p>
+      <ol>
+        <li>Go to your <strong>Supabase Dashboard</strong>.</li>
+        <li>
+          Navigate to <strong>Project Settings</strong> >
+          <strong>Integrations</strong>.
+        </li>
+        <li>Link your GitHub repository.</li>
+        <li>
+          Enable the <strong>GitHub Actions</strong> or
+          <strong>GitHub Integration</strong> toggle.
+        </li>
+        <li>
+          Now, whenever you push to <code>main</code>, Supabase will
+          automatically apply any new migrations in the
+          <code>supabase/migrations</code> folder to your production database.
+        </li>
+      </ol>
+      <p>
+        Alternatively, you can set up a custom GitHub Action using the
+        <code>supabase/setup-cli</code> action.
+      </p>
+    </div>
+  </body>
+</html>

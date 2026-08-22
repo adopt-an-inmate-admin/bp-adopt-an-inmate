@@ -16,6 +16,8 @@
     "test": "vitest",
     "gen-schema": "node scripts/generate-schema.mjs",
     "setup-admin": "node scripts/create-admin.mjs",
+    "docs:export": "node scripts/export-docs.mjs",
+    "docs:html": "node scripts/export-docs.mjs",
     "db:migrate": "supabase db push",
     "db:status": "supabase db status",
     "db:reset": "supabase db reset"
