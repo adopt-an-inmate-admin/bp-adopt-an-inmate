@@ -4,6 +4,7 @@ export async function autoEmailSender(
   text: string,
   subject: string,
   recipient: string,
+  bcc?: string | string[],
 ) {
   const senderAddress = process.env.BREVO_SMTP_USER;
   const senderAppPassword = process.env.BREVO_SMTP_KEY;
@@ -33,6 +34,7 @@ export async function autoEmailSender(
       address: senderEmail,
     },
     to: recipient,
+    ...(bcc ? { bcc } : {}),
     subject,
     text,
   });

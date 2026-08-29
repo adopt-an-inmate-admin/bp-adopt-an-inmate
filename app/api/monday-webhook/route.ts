@@ -284,34 +284,40 @@ export async function POST(request: NextRequest) {
       `Successfully processed PENDING_CONFIRMATION for app ${appData.app_uuid}. Matched: ${matchedAdopteeId}, Unmatched: ${unmatchedAdopteeIds}`,
     );
 
-    // send email to matchwatchers
+    // send email notification to adopter and BCC matchwatchers
     try {
       const { data: userData } = await supabase.auth.admin.getUserById(
         appData.adopter_uuid,
       );
-      const adopterEmail = userData.user?.email || 'Unknown';
+      const adopterEmail = userData.user?.email;
 
-      const { data: adopteeData } = await supabase
-        .from('adoptee_vector')
-        .select('first_name, last_name')
-        .eq('id', matchedAdopteeId)
-        .maybeSingle();
+      const profile = appData.adopter_profiles as unknown as {
+        first_name: string;
+        last_name: string;
+      };
+      const firstName = profile?.first_name || 'Adopter';
 
-      const adopteeName =
-        `${adopteeData?.first_name || ''} ${adopteeData?.last_name || ''}`.trim() ||
-        'Unknown';
+      if (adopterEmail) {
+        const siteUrl = getEnvVar('NEXT_PUBLIC_SITE_URL');
+        const emailBody = `Hi ${firstName},
 
-      const emailBody = `${adopterEmail}, "Confirmed their match, ${adopteeName}"`;
+A match has been approved for your adoption application! Please return to the Adopt an Inmate app to review and accept the single adoptee approved for you within the next 14 days.
+You can access your application here: ${siteUrl}/app
 
-      await autoEmailSender(
-        emailBody,
-        'Application Approved',
-        CONFIG.matchwatchersEmail,
-      );
+If you don't respond within 14 days, your application will be automatically closed.
+
+Best,
+Adopt an Inmate Team`;
+
+        await autoEmailSender(
+          emailBody,
+          'Your match has been approved - Action required',
+          adopterEmail,
+          CONFIG.matchwatchersEmail,
+        );
+      }
     } catch (emailError) {
-      Logger.error(
-        `Failed to send approval email to matchwatchers: ${emailError}`,
-      );
+      Logger.error(`Failed to send match approval email: ${emailError}`);
     }
   }
 

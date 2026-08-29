@@ -3,6 +3,7 @@ import autoEmailSender from '@/actions/emails/email';
 import Logger from '@/actions/logging';
 import { mondayApiClient } from '@/actions/monday/core';
 import { buildStatusMutationFields } from '@/actions/monday/mutations/changeStatus';
+import { CONFIG } from '@/config';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
 import { getEnvVar } from '@/lib/utils';
 
@@ -62,6 +63,7 @@ Adopt an Inmate Team`;
             emailBody,
             'Reminder: Action required on your application',
             email,
+            CONFIG.matchwatchersEmail,
           );
 
           await supabaseService

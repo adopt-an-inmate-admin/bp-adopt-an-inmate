@@ -657,8 +657,27 @@ pnpm -v</code></pre>
               <td>Instant upon form submission</td>
             </tr>
             <tr>
+              <td><strong>Match Approved Notification</strong></td>
+              <td>
+                Applicant / Adopter (BCC:
+                <code>CONFIG.matchwatchersEmail</code>)
+              </td>
+              <td>
+                Monday subitem changed to
+                <code>PENDING_CONFIRMATION</code>
+                (<code>/api/monday-webhook</code>)
+              </td>
+              <td>
+                <code>Your match has been approved - Action required</code>
+              </td>
+              <td>Triggered by Monday status update</td>
+            </tr>
+            <tr>
               <td><strong>Match Confirmation 7-Day Reminder</strong></td>
-              <td>Applicant / Adopter</td>
+              <td>
+                Applicant / Adopter (BCC:
+                <code>CONFIG.matchwatchersEmail</code>)
+              </td>
               <td>Daily cron job (<code>/api/check_dnr</code>)</td>
               <td>
                 <code>Reminder: Action required on your application</code>
@@ -690,17 +709,6 @@ pnpm -v</code></pre>
               </td>
               <td><code>New Application Submitted</code></td>
               <td>Instant after Monday.com items created</td>
-            </tr>
-            <tr>
-              <td><strong>Match Approved via Monday</strong></td>
-              <td>Match Watchers (<code>CONFIG.matchwatchersEmail</code>)</td>
-              <td>
-                Monday subitem changed to
-                <code>PENDING_CONFIRMATION</code>
-                (<code>/api/monday-webhook</code>)
-              </td>
-              <td><code>Application Approved</code></td>
-              <td>Triggered by Monday status update</td>
             </tr>
             <tr>
               <td><strong>Match Accepted (Adoption Confirmed)</strong></td>
@@ -760,24 +768,81 @@ pnpm -v</code></pre>
 
   Best,
   The Adopt an Inmate Team</code></pre>
-      <h5 id="b-action-required-reminder-7-day-warning-before-expiration">
-        B. Action Required Reminder (7-Day Warning Before Expiration)
+      <h5 id="b-match-approved-notification-action-required">
+        B. Match Approved Notification (Action Required)
       </h5>
       <ul>
         <li>
           <strong>Trigger</strong>: When an administrator sets the application
           status on Monday.com to <strong>Pending Confirmation</strong> (Status
-          Code 8), the applicant is granted a 14-day window to review and
-          confirm their match. A daily cron job (<code>GET /api/check_dnr</code
-          >) evaluates all pending applications. If 7 days have elapsed without
-          confirmation (leaving 7 days remaining before the DNR cutoff), a
-          reminder email is automatically dispatched.
+          Code 8), matching a single adoptee to the application.
+        </li>
+        <li>
+          <strong>Code Reference</strong>:
+          <code>app/api/monday-webhook/route.ts</code>
+        </li>
+        <li><strong>Recipient</strong>: Applicant email address</li>
+        <li>
+          <strong>BCC</strong>:
+          <code>matchwatchers@adoptaninmate.org</code>
+          (<code>CONFIG.matchwatchersEmail</code>)
+        </li>
+        <li>
+          <strong>Subject</strong>:
+          <code>Your match has been approved - Action required</code>
+        </li>
+        <li><strong>Body Template</strong>:</li>
+      </ul>
+      <pre><code class="language-text">  Hi &lt;first_name&gt;,
+
+  A match has been approved for your adoption application! Please return to the Adopt an Inmate app to review and accept the single adoptee approved for you within the next 14 days.
+  You can access your application here: &lt;NEXT_PUBLIC_SITE_URL&gt;/app
+
+  If you don't respond within 14 days, your application will be automatically closed.
+
+  Best,
+  Adopt an Inmate Team</code></pre>
+      <ul>
+        <li><strong>System Actions</strong>:</li>
+        <li>
+          Automatically selects the matched adoptee (from Adopted board if
+          pre-moved, or defaults to Rank 1).
+        </li>
+        <li>
+          Moves matched adoptee to <strong>Adopted</strong> board with status
+          <code>ADOPTED</code>.
+        </li>
+        <li>
+          Moves unmatched candidate adoptees to <strong>WL PIPs</strong> board
+          with status <code>WAIT_LISTED</code>.
+        </li>
+        <li>
+          Sets application status to <code>PENDING_CONFIRMATION</code> with
+          14-day confirmation deadline.
+        </li>
+      </ul>
+      <h5 id="c-action-required-reminder-7-day-warning-before-expiration">
+        C. Action Required Reminder (7-Day Warning Before Expiration)
+      </h5>
+      <ul>
+        <li>
+          <strong>Trigger</strong>: When an application is in
+          <strong>Pending Confirmation</strong> status, the applicant is granted
+          a 14-day window to review and confirm their match. A daily cron job
+          (<code>GET /api/check_dnr</code>) evaluates all pending applications.
+          If 7 days have elapsed without confirmation (leaving 7 days remaining
+          before the DNR cutoff), a reminder email is automatically dispatched.
         </li>
         <li>
           <strong>Code Reference</strong>:
           <code>app/api/check_dnr/route.ts</code>
         </li>
         <li><strong>Recipient</strong>: Applicant email address</li>
+        <li>
+          <strong>BCC</strong>:
+          <code>matchwatchers@adoptaninmate.org</code>
+          (<code>CONFIG.matchwatchersEmail</code>)
+        </li>
         <li>
           <strong>Subject</strong>:
           <code>Reminder: Action required on your application</code>
@@ -804,8 +869,8 @@ pnpm -v</code></pre>
           pool.
         </li>
       </ul>
-      <h5 id="c-authentication-password-reset-emails">
-        C. Authentication & Password Reset Emails
+      <h5 id="d-authentication-password-reset-emails">
+        D. Authentication & Password Reset Emails
       </h5>
       <ul>
         <li>
@@ -825,51 +890,8 @@ pnpm -v</code></pre>
         2. Administrative & Match Watcher Emails (Triggered by Monday.com & User
         Actions)
       </h4>
-      <h5 id="a-mondaycom-webhook-approval-notification">
-        A. Monday.com Webhook Approval Notification
-      </h5>
-      <ul>
-        <li>
-          <strong>Trigger</strong>: An admin changes the Subitem status on
-          Monday.com to
-          <strong>Status Code 8 (<code>PENDING_CONFIRMATION</code>)</strong>.
-        </li>
-        <li>
-          <strong>Code Reference</strong>:
-          <code>app/api/monday-webhook/route.ts</code>
-        </li>
-        <li>
-          <strong>Recipient</strong>:
-          <code>matchwatchers@adoptaninmate.org</code>
-        </li>
-        <li><strong>Subject</strong>: <code>Application Approved</code></li>
-        <li>
-          <strong>Body Content</strong>:
-          <code
-            >&lt;adopterEmail&gt;, "Confirmed their match,
-            &lt;adopteeName&gt;"</code
-          >
-        </li>
-        <li><strong>System Actions</strong>:</li>
-        <li>
-          Automatically selects the matched adoptee (from Adopted board if
-          pre-moved, or defaults to Rank 1).
-        </li>
-        <li>
-          Moves matched adoptee to <strong>Adopted</strong> board with status
-          <code>ADOPTED</code>.
-        </li>
-        <li>
-          Moves unmatched candidate adoptees to <strong>WL PIPs</strong> board
-          with status <code>WAIT_LISTED</code>.
-        </li>
-        <li>
-          Sets application status to <code>PENDING_CONFIRMATION</code> with
-          14-day confirmation deadline.
-        </li>
-      </ul>
-      <h5 id="b-new-application-submitted-monday-export">
-        B. New Application Submitted (Monday Export)
+      <h5 id="a-new-application-submitted-monday-export">
+        A. New Application Submitted (Monday Export)
       </h5>
       <ul>
         <li>
@@ -897,7 +919,7 @@ pnpm -v</code></pre>
   2. &lt;First Last&gt; (&lt;Inmate ID&gt;)
   3. &lt;First Last&gt; (&lt;Inmate ID&gt;)
   4. &lt;First Last&gt; (&lt;Inmate ID&gt;)</code></pre>
-      <h5 id="c-adopter-confirms-match">C. Adopter Confirms Match</h5>
+      <h5 id="b-adopter-confirms-match">B. Adopter Confirms Match</h5>
       <ul>
         <li>
           <strong>Trigger</strong>: Adopter logs into <code>/app</code> during
@@ -935,7 +957,7 @@ pnpm -v</code></pre>
           <code>formerly_adopted = true</code> in Supabase and Monday.com.
         </li>
       </ul>
-      <h5 id="d-adopter-rejects-match">D. Adopter Rejects Match</h5>
+      <h5 id="c-adopter-rejects-match">C. Adopter Rejects Match</h5>
       <ul>
         <li>
           <strong>Trigger</strong>: Adopter logs into <code>/app</code> and
@@ -969,7 +991,7 @@ pnpm -v</code></pre>
           resets adoptee status to waitlist.
         </li>
       </ul>
-      <h5 id="e-adopter-ends-correspondence">E. Adopter Ends Correspondence</h5>
+      <h5 id="d-adopter-ends-correspondence">D. Adopter Ends Correspondence</h5>
       <ul>
         <li>
           <strong>Trigger</strong>: Adopter with an active adoption chooses to

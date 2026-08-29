@@ -148,11 +148,11 @@ Key internal contact emails (`config.ts`):
 | Email Type | Recipient | Trigger / Source | Subject Line | Timing / Frequency |
 | :--- | :--- | :--- | :--- | :--- |
 | **Application Submission Confirmation** | Applicant / Adopter | User submits application (`actions/queries/query.ts`) | `Adoption Application Submitted` | Instant upon form submission |
-| **Match Confirmation 7-Day Reminder** | Applicant / Adopter | Daily cron job (`/api/check_dnr`) | `Reminder: Action required on your application` | 7 days after match approval (7 days before DNR deadline) |
+| **Match Approved Notification** | Applicant / Adopter (BCC: `CONFIG.matchwatchersEmail`) | Monday subitem changed to `PENDING_CONFIRMATION` (`/api/monday-webhook`) | `Your match has been approved - Action required` | Triggered by Monday status update |
+| **Match Confirmation 7-Day Reminder** | Applicant / Adopter (BCC: `CONFIG.matchwatchersEmail`) | Daily cron job (`/api/check_dnr`) | `Reminder: Action required on your application` | 7 days after match approval (7 days before DNR deadline) |
 | **Account Verification / Confirmation** | Applicant / Adopter | Supabase Auth sign-up (`actions/auth/sign-up.ts`) | Supabase default confirmation template | Instant upon user registration |
 | **Password Reset** | Applicant / Adopter | Supabase Auth password reset request | Supabase default password reset template | Instant upon password reset request |
 | **New Application Export Alert** | Match Watchers (`CONFIG.matchwatchersEmail`) | Application exported to Monday (`actions/monday/mutations/exportApplication.ts`) | `New Application Submitted` | Instant after Monday.com items created |
-| **Match Approved via Monday** | Match Watchers (`CONFIG.matchwatchersEmail`) | Monday subitem changed to `PENDING_CONFIRMATION` (`/api/monday-webhook`) | `Application Approved` | Triggered by Monday status update |
 | **Match Accepted (Adoption Confirmed)** | Match Watchers (`CONFIG.matchwatchersEmail`) | Adopter clicks "Accept" in portal (`actions/applications/handleAdopterConfirmation.ts`) | `Match Confirmed - User Agrees to Adoption` | Instant upon applicant confirmation |
 | **Match Rejected** | Admin (`CONFIG.adminEmail`) | Adopter clicks "Reject" in portal (`actions/applications/handleAdopterConfirmation.ts`) | `An adopter rejected a match` | Instant upon applicant rejection |
 | **Correspondence Ended** | Admin (`CONFIG.adminEmail`) | Adopter ends correspondence (`actions/applications/handleEndCorrespondence.ts`) | `An adopter ended their correspondence` | Instant upon ending correspondence |
@@ -176,10 +176,35 @@ Key internal contact emails (`config.ts`):
   The Adopt an Inmate Team
   ```
 
-##### B. Action Required Reminder (7-Day Warning Before Expiration)
-- **Trigger**: When an administrator sets the application status on Monday.com to **Pending Confirmation** (Status Code 8), the applicant is granted a 14-day window to review and confirm their match. A daily cron job (`GET /api/check_dnr`) evaluates all pending applications. If 7 days have elapsed without confirmation (leaving 7 days remaining before the DNR cutoff), a reminder email is automatically dispatched.
+##### B. Match Approved Notification (Action Required)
+- **Trigger**: When an administrator sets the application status on Monday.com to **Pending Confirmation** (Status Code 8), matching a single adoptee to the application.
+- **Code Reference**: `app/api/monday-webhook/route.ts`
+- **Recipient**: Applicant email address
+- **BCC**: `matchwatchers@adoptaninmate.org` (`CONFIG.matchwatchersEmail`)
+- **Subject**: `Your match has been approved - Action required`
+- **Body Template**:
+  ```text
+  Hi <first_name>,
+
+  A match has been approved for your adoption application! Please return to the Adopt an Inmate app to review and accept the single adoptee approved for you within the next 14 days.
+  You can access your application here: <NEXT_PUBLIC_SITE_URL>/app
+
+  If you don't respond within 14 days, your application will be automatically closed.
+
+  Best,
+  Adopt an Inmate Team
+  ```
+- **System Actions**:
+  - Automatically selects the matched adoptee (from Adopted board if pre-moved, or defaults to Rank 1).
+  - Moves matched adoptee to **Adopted** board with status `ADOPTED`.
+  - Moves unmatched candidate adoptees to **WL PIPs** board with status `WAIT_LISTED`.
+  - Sets application status to `PENDING_CONFIRMATION` with 14-day confirmation deadline.
+
+##### C. Action Required Reminder (7-Day Warning Before Expiration)
+- **Trigger**: When an application is in **Pending Confirmation** status, the applicant is granted a 14-day window to review and confirm their match. A daily cron job (`GET /api/check_dnr`) evaluates all pending applications. If 7 days have elapsed without confirmation (leaving 7 days remaining before the DNR cutoff), a reminder email is automatically dispatched.
 - **Code Reference**: `app/api/check_dnr/route.ts`
 - **Recipient**: Applicant email address
+- **BCC**: `matchwatchers@adoptaninmate.org` (`CONFIG.matchwatchersEmail`)
 - **Subject**: `Reminder: Action required on your application`
 - **Body Template**:
   ```text
@@ -195,7 +220,7 @@ Key internal contact emails (`config.ts`):
   ```
 - **Note**: A database flag `reminder_sent_at` ensures this reminder is only dispatched once. If the user still does not respond after the full 14 days, the application transitions to `ENDED` with reason `DNR` (Did Not Respond), the Monday item is marked `Closed Out`, and the adoptee is returned to the waitlist pool.
 
-##### C. Authentication & Password Reset Emails
+##### D. Authentication & Password Reset Emails
 - **Trigger**: Standard user account actions powered by Supabase Auth (e.g. account registration confirmation and forgot password links).
 - **Code Reference**: `actions/auth/sign-up.ts`, `components/auth/forgot-password/`
 
@@ -203,19 +228,7 @@ Key internal contact emails (`config.ts`):
 
 #### 2. Administrative & Match Watcher Emails (Triggered by Monday.com & User Actions)
 
-##### A. Monday.com Webhook Approval Notification
-- **Trigger**: An admin changes the Subitem status on Monday.com to **Status Code 8 (`PENDING_CONFIRMATION`)**.
-- **Code Reference**: `app/api/monday-webhook/route.ts`
-- **Recipient**: `matchwatchers@adoptaninmate.org`
-- **Subject**: `Application Approved`
-- **Body Content**: `<adopterEmail>, "Confirmed their match, <adopteeName>"`
-- **System Actions**:
-  - Automatically selects the matched adoptee (from Adopted board if pre-moved, or defaults to Rank 1).
-  - Moves matched adoptee to **Adopted** board with status `ADOPTED`.
-  - Moves unmatched candidate adoptees to **WL PIPs** board with status `WAIT_LISTED`.
-  - Sets application status to `PENDING_CONFIRMATION` with 14-day confirmation deadline.
-
-##### B. New Application Submitted (Monday Export)
+##### A. New Application Submitted (Monday Export)
 - **Trigger**: When an application is successfully written as a Main Item and Subitem on Monday.com.
 - **Code Reference**: `actions/monday/mutations/exportApplication.ts`
 - **Recipient**: `matchwatchers@adoptaninmate.org`
@@ -232,7 +245,7 @@ Key internal contact emails (`config.ts`):
   4. <First Last> (<Inmate ID>)
   ```
 
-##### C. Adopter Confirms Match
+##### B. Adopter Confirms Match
 - **Trigger**: Adopter logs into `/app` during the 14-day confirmation window and confirms adoption.
 - **Code Reference**: `actions/applications/handleAdopterConfirmation.ts`
 - **Recipient**: `matchwatchers@adoptaninmate.org`
@@ -253,7 +266,7 @@ Key internal contact emails (`config.ts`):
   ```
 - **System Actions**: Updates application status to `ACTIVE`, marks adoptee as `formerly_adopted = true` in Supabase and Monday.com.
 
-##### D. Adopter Rejects Match
+##### C. Adopter Rejects Match
 - **Trigger**: Adopter logs into `/app` and declines the proposed match with a provided reason.
 - **Code Reference**: `actions/applications/handleAdopterConfirmation.ts`
 - **Recipient**: `adopt@adoptaninmate.org`
@@ -272,7 +285,7 @@ Key internal contact emails (`config.ts`):
   ```
 - **System Actions**: Updates application status to `ENDED`, subitem on Monday to `Closed Out`, and resets adoptee status to waitlist.
 
-##### E. Adopter Ends Correspondence
+##### D. Adopter Ends Correspondence
 - **Trigger**: Adopter with an active adoption chooses to end correspondence from the dashboard.
 - **Code Reference**: `actions/applications/handleEndCorrespondence.ts`
 - **Recipient**: `adopt@adoptaninmate.org`
