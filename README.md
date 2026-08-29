@@ -117,7 +117,7 @@ pnpm setup-admin
 ```
 This script uses the `SUPABASE_SERVICE_KEY` from your `.env.local` to create the `admin@adoptaninmate.org` user with the default password `St@y0ut!`.
 
-- **Pending Applications**: View a list of applications currently awaiting review.
+- **Applications List**: View and filter applications across all status phases (Pending Review, Pending Confirmation, Active, Reapply, Rejected, Ended, Incomplete, etc.) with real-time status counts and search.
 - **Reset Test Records**: Completely remove a test user's data to allow for re-testing the onboarding flow.
   - **Effect on Supabase**: Deletes the user's profile, all applications, and the Supabase Auth account.
   - **Effect on Monday.com**: Deletes the adopter's **Main Item** and all associated **Subitems** from the Monday boards using the stored `monday_id`s. This ensures Monday.com remains in sync with the test environment.

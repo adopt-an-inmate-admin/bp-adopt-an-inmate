@@ -1,5 +1,5 @@
 import { AdminResetSection } from '@/components/admin/AdminResetSection';
-import { PendingApplicationsList } from '@/components/admin/PendingApplicationsList';
+import { AdminApplicationsList } from '@/components/admin/PendingApplicationsList';
 
 export default function AdminPage() {
   return (
@@ -10,7 +10,7 @@ export default function AdminPage() {
 
       <div className="grid grid-cols-1 gap-8">
         <section>
-          <PendingApplicationsList />
+          <AdminApplicationsList />
         </section>
 
         <section>

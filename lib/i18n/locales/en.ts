@@ -40,10 +40,14 @@ export const en = {
   },
   admin: {
     pending_applications: {
-      title: 'Pending Applications',
+      title: 'Applications',
       refresh: 'Refresh',
       loading: 'Loading applications...',
-      no_apps: 'No pending applications found.',
+      no_apps: 'No applications found.',
+      all_statuses: 'All Statuses',
+      filter_by_status: 'Filter by status',
+      search_placeholder: 'Search by adopter, email, or adoptee...',
+      showing_count: 'Showing {count} of {total} applications',
       table: {
         adopter: 'Adopter',
         email: 'Email',
@@ -51,6 +55,17 @@ export const en = {
         status: 'Status',
         matched_adoptee: 'Matched Adoptee',
         ranked_candidates: 'Ranked Candidates',
+      },
+      statuses: {
+        all: 'All',
+        pending: 'Pending',
+        pending_confirmation: 'Pending Confirmation',
+        active: 'Active',
+        accepted: 'Accepted',
+        rejected: 'Rejected',
+        reapply: 'Reapply',
+        ended: 'Ended',
+        incomplete: 'Incomplete',
       },
     },
     reset_records: {
