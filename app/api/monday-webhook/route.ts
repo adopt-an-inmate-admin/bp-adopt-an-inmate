@@ -10,7 +10,7 @@ import {
 import { queryMatchedAdoptees } from '@/actions/monday/queryMatchedAdoptee';
 import { CONFIG } from '@/config';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
-import { assertEnvVarExists, getEnvVar } from '@/lib/utils';
+import { assertEnvVarExists, getEnvVar, getSiteUrl } from '@/lib/utils';
 import { ApplicationStatusEnum } from '@/types/schema';
 
 export async function POST(request: NextRequest) {
@@ -194,14 +194,18 @@ export async function POST(request: NextRequest) {
       isDefaultMatch ||
       adopteeBoardIds[matchedAdopteeId] !== MONDAY_ADOPTED_BOARD_ID
     ) {
-      Logger.log(
-        `Moving matched adoptee ${matchedAdopteeId} to Adopted board ${MONDAY_ADOPTED_BOARD_ID}`,
-      );
-      await moveAdopteeToBoard(
-        matchedAdopteeId,
-        MONDAY_ADOPTED_BOARD_ID,
-        MONDAY_GROUPS.ADOPTED_LOCAL,
-      );
+      try {
+        Logger.log(
+          `Moving matched adoptee ${matchedAdopteeId} to Adopted board ${MONDAY_ADOPTED_BOARD_ID}`,
+        );
+        await moveAdopteeToBoard(
+          matchedAdopteeId,
+          MONDAY_ADOPTED_BOARD_ID,
+          MONDAY_GROUPS.ADOPTED_LOCAL,
+        );
+      } catch (e) {
+        Logger.error(`Error moving matched adoptee to Adopted board: ${e}`);
+      }
     }
 
     // always ensure status is ADOPTED on Monday
@@ -298,7 +302,7 @@ export async function POST(request: NextRequest) {
       const firstName = profile?.first_name || 'Adopter';
 
       if (adopterEmail) {
-        const siteUrl = getEnvVar('NEXT_PUBLIC_SITE_URL');
+        const siteUrl = getSiteUrl().replace(/\/+$/, '');
         const emailBody = `Hi ${firstName},
 
 A match has been approved for your adoption application! Please return to the Adopt an Inmate app to review and accept the single adoptee approved for you within the next 14 days.

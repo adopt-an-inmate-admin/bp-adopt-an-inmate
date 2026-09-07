@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF - add more options to showing applications by status">
+    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF - make sure that communications from the app are bcc'd to matchwatchers">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.prettierignore" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.html" beforeDir="false" afterPath="$PROJECT_DIR$/README.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/actions/emails/email.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/emails/email.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/check_dnr/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/check_dnr/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/monday-webhook/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/monday-webhook/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,23 +79,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.3234272996143" />
-      <entry key="MS500" value="2.5403677811722085" />
-      <entry key="S2" value="6.103678673044429" />
-      <entry key="S5" value="12.555869493390068" />
-      <entry key="S10" value="23.27614813254136" />
-      <entry key="S30" value="62.02832263244709" />
-      <entry key="S60" value="101.0387291434604" />
-      <entry key="M2" value="160.91273558591251" />
-      <entry key="M5" value="271.40411618247475" />
-      <entry key="M10" value="357.2305735849907" />
-      <entry key="M15" value="398.8758053826975" />
-      <entry key="M30" value="450.42645155669385" />
-      <entry key="H1" value="480.8515966343101" />
-      <entry key="H2" value="497.4271434452645" />
-      <entry key="H4" value="506.0844696792721" />
-      <entry key="D1" value="535.8823436225108" />
-      <entry key="W1" value="4707.06895280357" />
+      <entry key="MS100" value="1.6101492505197355" />
+      <entry key="MS500" value="3.39339515429276" />
+      <entry key="S2" value="8.868265087227684" />
+      <entry key="S5" value="20.61850035278163" />
+      <entry key="S10" value="37.93292175566168" />
+      <entry key="S30" value="88.95572341455158" />
+      <entry key="S60" value="126.6243384822695" />
+      <entry key="M2" value="156.7784003808736" />
+      <entry key="M5" value="182.2056681401756" />
+      <entry key="M10" value="192.80886995627438" />
+      <entry key="M15" value="196.67430775637635" />
+      <entry key="M30" value="200.74292373610373" />
+      <entry key="H1" value="203.05028674551565" />
+      <entry key="H2" value="204.83307768730242" />
+      <entry key="H4" value="206.37365215232686" />
+      <entry key="D1" value="212.83917185563598" />
+      <entry key="W1" value="2337.856062401799" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -107,31 +109,31 @@
       <entry key="M5" value="0.0" />
       <entry key="M10" value="0.0" />
       <entry key="M15" value="0.0" />
-      <entry key="M30" value="2.8388126028134856E-239" />
-      <entry key="H1" value="7.534930497940152E-120" />
-      <entry key="H2" value="3.881982701889899E-60" />
-      <entry key="H4" value="2.7863876651606504E-30" />
-      <entry key="D1" value="2.113644207994476E-5" />
-      <entry key="W1" value="0.3892002599600898" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="1.1881326596997144E-185" />
+      <entry key="H2" value="4.874683658329974E-93" />
+      <entry key="H4" value="9.873882612784845E-47" />
+      <entry key="D1" value="3.8306542422483325E-8" />
+      <entry key="W1" value="0.15794041490332927" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.2178012610655475" />
-      <entry key="MS500" value="2.4986130772848067" />
-      <entry key="S2" value="6.0797638600744275" />
-      <entry key="S5" value="12.536666459800431" />
-      <entry key="S10" value="23.258143078751083" />
-      <entry key="S30" value="62.011891410736624" />
-      <entry key="S60" value="101.02507274136832" />
-      <entry key="M2" value="160.900868778716" />
-      <entry key="M5" value="271.3944913011838" />
-      <entry key="M10" value="357.22366759556445" />
-      <entry key="M15" value="398.87051556091996" />
-      <entry key="M30" value="450.4233820821001" />
-      <entry key="H1" value="480.8499368852954" />
-      <entry key="H2" value="497.4262795823761" />
-      <entry key="H4" value="506.0840288819902" />
-      <entry key="D1" value="535.8822871334876" />
-      <entry key="W1" value="4707.458055967949" />
+      <entry key="MS100" value="1.5493094772104925" />
+      <entry key="MS500" value="3.3613171051028545" />
+      <entry key="S2" value="8.847065393546393" />
+      <entry key="S5" value="20.5996837296905" />
+      <entry key="S10" value="37.915997805521535" />
+      <entry key="S30" value="88.94231972183502" />
+      <entry key="S60" value="126.61457335800816" />
+      <entry key="M2" value="156.77199122403582" />
+      <entry key="M5" value="182.20236558321957" />
+      <entry key="M10" value="192.80702049019212" />
+      <entry key="M15" value="196.67302185585152" />
+      <entry key="M30" value="200.74225156519677" />
+      <entry key="H1" value="203.04994226952653" />
+      <entry key="H2" value="204.83290245653154" />
+      <entry key="H4" value="206.373563345129" />
+      <entry key="D1" value="212.83915649521944" />
+      <entry key="W1" value="2338.013959402767" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -242,7 +244,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="RWF #9 fix strange login issue." />
     <MESSAGE value="RWF #9 fix strange login issue. #3 Gender value push" />
     <MESSAGE value="RWF #10 add functions and triggers to migration/refactor" />
     <MESSAGE value="RWF #11 new bug. Raw json shouldn't be displayed" />
@@ -267,7 +268,8 @@
     <MESSAGE value="RWF #26 - consideration message before signup." />
     <MESSAGE value="RWF improve documentation." />
     <MESSAGE value="RWF - add more options to showing applications by status" />
-    <option name="LAST_COMMIT_MESSAGE" value="RWF - add more options to showing applications by status" />
+    <MESSAGE value="RWF - make sure that communications from the app are bcc'd to matchwatchers" />
+    <option name="LAST_COMMIT_MESSAGE" value="RWF - make sure that communications from the app are bcc'd to matchwatchers" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

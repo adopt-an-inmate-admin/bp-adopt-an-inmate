@@ -40,6 +40,11 @@ export function cn(...inputs: ClassValue[]) {
  * Returns the site URL depending on environment.
  */
 export const getSiteUrl = () => {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    const url = process.env.NEXT_PUBLIC_SITE_URL.trim();
+    return url.endsWith('/') ? url : `${url}/`;
+  }
+
   const deployEnv = process.env.NEXT_PUBLIC_VERCEL_ENV;
 
   // no vercel env => local environment, use localhost
@@ -52,7 +57,7 @@ export const getSiteUrl = () => {
       ? process.env.NEXT_PUBLIC_VERCEL_URL
       : process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
 
-  return `https://${siteUrl}/`;
+  return siteUrl ? `https://${siteUrl}/` : 'http://localhost:3000/';
 };
 
 /**

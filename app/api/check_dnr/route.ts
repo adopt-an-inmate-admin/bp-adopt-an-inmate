@@ -5,7 +5,7 @@ import { mondayApiClient } from '@/actions/monday/core';
 import { buildStatusMutationFields } from '@/actions/monday/mutations/changeStatus';
 import { CONFIG } from '@/config';
 import { dangerous_getSupabaseServiceClient } from '@/lib/supabase/service';
-import { getEnvVar } from '@/lib/utils';
+import { getEnvVar, getSiteUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         const firstName = profile?.first_name || 'Adopter';
 
         if (email) {
-          const siteUrl = getEnvVar('NEXT_PUBLIC_SITE_URL');
+          const siteUrl = getSiteUrl().replace(/\/+$/, '');
           const emailBody = `Hi ${firstName},
 
 This is a reminder to please come back to the Adopt an Inmate app to approve your match. 
