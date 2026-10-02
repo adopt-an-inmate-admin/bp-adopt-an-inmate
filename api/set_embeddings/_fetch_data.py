@@ -101,6 +101,28 @@ class MondayBoardFetcher:
           column_data = {}
           for col in item["column_values"]:
             column_data[col["id"]] = col["text"]
+
+          # Filter out items whose status is not waitlisted (e.g. Adopted, Released, OFC)
+          status_col_id = MONDAY_COLUMN_IDS.get("status", "status__1")
+          status_text = column_data.get(status_col_id)
+          if status_text:
+            status_clean = status_text.strip()
+            status_lower = status_clean.lower()
+            is_waitlisted = (
+              status_clean in [
+                "WL: Wait Listed",
+                "WLFA: Wait Listed Formerly Adopted",
+                "WL",
+                "WLFA",
+                "Wait Listed",
+                "Waitlisted",
+              ]
+              or status_lower.startswith("wl")
+              or "wait list" in status_lower
+            )
+            if not is_waitlisted:
+              continue
+
           linked_items = item.get("linked_items", [])
           facility_id = str(linked_items[0]["id"]) if linked_items else ""
           item_data = {
@@ -114,8 +136,8 @@ class MondayBoardFetcher:
     return cursor, adoptee_batch
 
   def fetch_data(self):
-    one_month_ago = datetime.now(timezone.utc) - timedelta(days=31)
-    since_date_str = one_month_ago.strftime('%Y-%m-%d')
+    one_week_ago = datetime.now(timezone.utc) - timedelta(days=8)
+    since_date_str = one_week_ago.strftime('%Y-%m-%d')
 
     initial_query = self._build_query(is_initial=True, since_date_str=since_date_str)
     curr_cursor, full_bios = self._fetch_page(query=initial_query)

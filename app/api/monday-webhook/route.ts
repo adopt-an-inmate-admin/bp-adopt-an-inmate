@@ -335,6 +335,18 @@ Adopt an Inmate Team`;
 async function handleInmateAdopted(inmateId: string) {
   const supabase = await dangerous_getSupabaseServiceClient();
 
+  // Always ensure inmate is marked as ADOPTED and formerly_adopted
+  const { error: adopteeUpdateError } = await supabase
+    .from('adoptee_vector')
+    .update({ status: 'ADOPTED', formerly_adopted: true })
+    .eq('id', inmateId);
+
+  if (adopteeUpdateError) {
+    Logger.error(
+      `Error updating adoptee_vector status for inmate ${inmateId}: ${adopteeUpdateError.message}`,
+    );
+  }
+
   // Find application for this inmate that is waiting for confirmation
   const { data: app, error } = await supabase
     .from('adopter_applications')
@@ -345,7 +357,7 @@ async function handleInmateAdopted(inmateId: string) {
 
   if (error || !app) {
     Logger.log(
-      `Inmate ${inmateId} set to Adopted but no pending application found.`,
+      `Inmate ${inmateId} set to Adopted; adoptee_vector updated, but no pending application found.`,
     );
     return Response.json({
       success: true,
@@ -370,12 +382,6 @@ async function handleInmateAdopted(inmateId: string) {
     );
     return Response.json({ success: false, error: updateError.message });
   }
-
-  // Also ensure inmate is marked as ADOPTED and formerly_adopted
-  await supabase
-    .from('adoptee_vector')
-    .update({ status: 'ADOPTED', formerly_adopted: true })
-    .eq('id', inmateId);
 
   Logger.log(
     `Automatically set app ${app.app_uuid} to ACTIVE because inmate ${inmateId} was set to Adopted on Monday.`,

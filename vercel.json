@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/set_embeddings/pipeline",
-      "schedule": "0 20 1 * *"
+      "schedule": "0 20 * * 0"
     },
     {
       "path": "/api/check_dnr",

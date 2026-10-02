@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF - make sure that communications from the app are bcc'd to matchwatchers">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierignore" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.html" beforeDir="false" afterPath="$PROJECT_DIR$/README.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/check_dnr/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/check_dnr/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/set_embeddings/_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/set_embeddings/_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/set_embeddings/_fetch_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/set_embeddings/_fetch_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/monday-webhook/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/monday-webhook/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vercel.json" beforeDir="false" afterPath="$PROJECT_DIR$/vercel.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +28,11 @@
                     <execution>
                       <execution>
                         <execution>
-                          <execution />
+                          <execution>
+                            <execution>
+                              <execution />
+                            </execution>
+                          </execution>
                         </execution>
                       </execution>
                     </execution>
@@ -79,23 +80,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.6101492505197355" />
-      <entry key="MS500" value="3.39339515429276" />
-      <entry key="S2" value="8.868265087227684" />
-      <entry key="S5" value="20.61850035278163" />
-      <entry key="S10" value="37.93292175566168" />
-      <entry key="S30" value="88.95572341455158" />
-      <entry key="S60" value="126.6243384822695" />
-      <entry key="M2" value="156.7784003808736" />
-      <entry key="M5" value="182.2056681401756" />
-      <entry key="M10" value="192.80886995627438" />
-      <entry key="M15" value="196.67430775637635" />
-      <entry key="M30" value="200.74292373610373" />
-      <entry key="H1" value="203.05028674551565" />
-      <entry key="H2" value="204.83307768730242" />
-      <entry key="H4" value="206.37365215232686" />
-      <entry key="D1" value="212.83917185563598" />
-      <entry key="W1" value="2337.856062401799" />
+      <entry key="MS100" value="1.0000001328343198" />
+      <entry key="MS500" value="1.0807515370035954" />
+      <entry key="S2" value="3.8994298775224396" />
+      <entry key="S5" value="12.526051009224744" />
+      <entry key="S10" value="28.57610902226357" />
+      <entry key="S30" value="85.0024424181231" />
+      <entry key="S60" value="132.83669995988188" />
+      <entry key="M2" value="173.82120294698893" />
+      <entry key="M5" value="209.23671993172005" />
+      <entry key="M10" value="224.03544309542087" />
+      <entry key="M15" value="229.4218898085055" />
+      <entry key="M30" value="235.0798553982484" />
+      <entry key="H1" value="238.2084505885374" />
+      <entry key="H2" value="240.40838085010716" />
+      <entry key="H4" value="242.15974022539388" />
+      <entry key="D1" value="248.8024807045003" />
+      <entry key="W1" value="2373.8026700757373" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -110,30 +111,30 @@
       <entry key="M10" value="0.0" />
       <entry key="M15" value="0.0" />
       <entry key="M30" value="0.0" />
-      <entry key="H1" value="1.1881326596997144E-185" />
-      <entry key="H2" value="4.874683658329974E-93" />
-      <entry key="H4" value="9.873882612784845E-47" />
-      <entry key="D1" value="3.8306542422483325E-8" />
-      <entry key="W1" value="0.15794041490332927" />
+      <entry key="H1" value="1.183618362239124E-185" />
+      <entry key="H2" value="4.865414190666184E-93" />
+      <entry key="H4" value="9.864490291802086E-47" />
+      <entry key="D1" value="3.8300466966669504E-8" />
+      <entry key="W1" value="0.15793683615903295" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.5493094772104925" />
-      <entry key="MS500" value="3.3613171051028545" />
-      <entry key="S2" value="8.847065393546393" />
-      <entry key="S5" value="20.5996837296905" />
-      <entry key="S10" value="37.915997805521535" />
-      <entry key="S30" value="88.94231972183502" />
-      <entry key="S60" value="126.61457335800816" />
-      <entry key="M2" value="156.77199122403582" />
-      <entry key="M5" value="182.20236558321957" />
-      <entry key="M10" value="192.80702049019212" />
-      <entry key="M15" value="196.67302185585152" />
-      <entry key="M30" value="200.74225156519677" />
-      <entry key="H1" value="203.04994226952653" />
-      <entry key="H2" value="204.83290245653154" />
-      <entry key="H4" value="206.373563345129" />
-      <entry key="D1" value="212.83915649521944" />
-      <entry key="W1" value="2338.013959402767" />
+      <entry key="MS100" value="0.8705506830037932" />
+      <entry key="MS500" value="1.0516490384522683" />
+      <entry key="S2" value="3.8752046474086845" />
+      <entry key="S5" value="12.49509001242244" />
+      <entry key="S10" value="28.545363960779685" />
+      <entry key="S30" value="84.98007660556809" />
+      <entry key="S60" value="132.82108657468413" />
+      <entry key="M2" value="173.81131121643116" />
+      <entry key="M5" value="209.23183053474602" />
+      <entry key="M10" value="224.0327571331851" />
+      <entry key="M15" value="229.42003533989876" />
+      <entry key="M30" value="235.07889307221444" />
+      <entry key="H1" value="238.20795948024013" />
+      <entry key="H2" value="240.40813190319273" />
+      <entry key="H4" value="242.15961445827995" />
+      <entry key="D1" value="248.8024591697149" />
+      <entry key="W1" value="2373.9605626164785" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -145,45 +146,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;git.auto.fetch.suggestion.counter&quot;: &quot;1&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rfisk/IdeaProjects/adopt-an-inmate&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
-    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/816/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "git.auto.fetch.suggestion.counter": "1",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/rfisk/IdeaProjects/adopt-an-inmate",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "npm.Next.js: server-side.executor": "Run",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/snap/intellij-idea-ultimate/816/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;HTML&quot;,
-      &quot;DotEnv&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "HTML",
+      "DotEnv"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -211,7 +213,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-jdk-30f59d01ecdd-a203e0a19954-intellij.indexing.shared.core-IU-262.10968.63" />
       </set>
     </attachedChunks>
   </component>
