@@ -1,28 +1,11 @@
 'use server';
 
-import type { FeatureExtractionPipeline } from '@huggingface/transformers';
-import os from 'os';
-import path from 'path';
-import { env, pipeline } from '@huggingface/transformers';
+import { InferenceClient } from '@huggingface/inference';
 import { parseStateFromLocation } from '@/lib/formatters';
 import { getSupabaseServerClient } from '@/lib/supabase';
+import { assertEnvVarExists } from '@/lib/utils';
 import Logger from '../logging';
 import { fetchTopK } from '../queries/query';
-
-// Configure cache directory for serverless environments (e.g. Vercel /tmp)
-env.cacheDir = path.join(os.tmpdir(), '.transformers-cache');
-
-let extractorPromise: Promise<FeatureExtractionPipeline> | null = null;
-const getExtractor = (): Promise<FeatureExtractionPipeline> => {
-  if (!extractorPromise) {
-    extractorPromise = pipeline(
-      'feature-extraction',
-      'Xenova/all-MiniLM-L6-v2',
-      { dtype: 'fp32' },
-    ) as Promise<FeatureExtractionPipeline>;
-  }
-  return extractorPromise;
-};
 
 /**
  * Takes in an application ID and finds four matches
@@ -33,6 +16,7 @@ const getExtractor = (): Promise<FeatureExtractionPipeline> => {
  */
 export const findMatches = async (appId: string) => {
   try {
+    assertEnvVarExists('HF_TOKEN');
     // check if app id already has matches
     const supabase = await getSupabaseServerClient();
 
@@ -66,22 +50,22 @@ export const findMatches = async (appId: string) => {
     if (fetchUserError) return { data: null, error: fetchUserError.message };
     if (!userProfile) return { data: null, error: 'User profile not found' };
 
-    // generate embedding locally
-    const extractor = await getExtractor();
-    const output = await extractor(appData.personal_bio, {
-      pooling: 'mean',
-      normalize: true,
+    // generate embedding using Hugging Face hosted inference API
+    const hfClient = new InferenceClient(process.env.HF_TOKEN);
+    const embedding = await hfClient.featureExtraction({
+      model: 'sentence-transformers/all-MiniLM-L6-v2',
+      inputs: appData.personal_bio,
     });
-    const embedding = Array.from(output.data as Float32Array);
 
-    if (embedding.length === 0 || typeof embedding[0] !== 'number') {
-      Logger.error(`Unexpected embedding generated: ${embedding}`);
-      return { data: null, error: 'Failed to generate embedding' };
+    // assert embedding type
+    if (!(embedding instanceof Array && typeof embedding[0] === 'number')) {
+      Logger.error(`Unexpected embedding type received: ${embedding}`);
+      return { data: null, error: 'An unexpected error occurred' };
     }
 
     // Map veteran status to filter criteria
     const matches = await fetchTopK(
-      embedding,
+      embedding as number[],
       4,
       appData.gender_pref ?? undefined,
       userProfile.veteran_status ? 'Yes' : 'No',
