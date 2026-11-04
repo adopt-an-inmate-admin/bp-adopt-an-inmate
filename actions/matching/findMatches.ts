@@ -1,11 +1,16 @@
 'use server';
 
 import type { FeatureExtractionPipeline } from '@huggingface/transformers';
-import { pipeline } from '@huggingface/transformers';
+import os from 'os';
+import path from 'path';
+import { env, pipeline } from '@huggingface/transformers';
 import { parseStateFromLocation } from '@/lib/formatters';
 import { getSupabaseServerClient } from '@/lib/supabase';
 import Logger from '../logging';
 import { fetchTopK } from '../queries/query';
+
+// Configure cache directory for serverless environments (e.g. Vercel /tmp)
+env.cacheDir = path.join(os.tmpdir(), '.transformers-cache');
 
 let extractorPromise: Promise<FeatureExtractionPipeline> | null = null;
 const getExtractor = (): Promise<FeatureExtractionPipeline> => {
