@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF - fix the pull schedule and make sure we don't import released or wait listed inmates">
+    <list default="true" id="2842aa57-4bf9-425e-84a2-a76c9bf09ab7" name="Changes" comment="RWF - fixing a problem with vercel - default setting for search was triggering a now paid feature.">
+      <change afterPath="$PROJECT_DIR$/components/application/matching/MatchingErrorScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/actions/matching/findMatches.ts" beforeDir="false" afterPath="$PROJECT_DIR$/actions/matching/findMatches.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/application/stages/StageMatching.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/application/stages/StageMatching.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-workspace.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-workspace.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,23 +86,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0441151201688434" />
-      <entry key="MS500" value="1.7286003923150668" />
-      <entry key="S2" value="3.02732464604288" />
-      <entry key="S5" value="5.300461851289823" />
-      <entry key="S10" value="8.969416229764542" />
-      <entry key="S30" value="18.898391148538433" />
-      <entry key="S60" value="27.25226495148969" />
-      <entry key="M2" value="40.52214352385261" />
-      <entry key="M5" value="63.78510183050775" />
-      <entry key="M10" value="79.4844214859445" />
-      <entry key="M15" value="91.33680652624965" />
-      <entry key="M30" value="132.14457040718293" />
-      <entry key="H1" value="194.35435615972162" />
-      <entry key="H2" value="252.22791816906727" />
-      <entry key="H4" value="292.58154561565675" />
-      <entry key="D1" value="338.7280860602811" />
-      <entry key="W1" value="2460.452660470517" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.000602896061319" />
+      <entry key="S2" value="1.191178848942921" />
+      <entry key="S5" value="1.989149750466898" />
+      <entry key="S10" value="3.7064772880248205" />
+      <entry key="S30" value="8.692761502924665" />
+      <entry key="S60" value="11.610378674353523" />
+      <entry key="M2" value="13.623392338852105" />
+      <entry key="M5" value="18.166317987026677" />
+      <entry key="M10" value="30.045580447709266" />
+      <entry key="M15" value="40.19321877966982" />
+      <entry key="M30" value="62.59956022987589" />
+      <entry key="H1" value="109.91342072313651" />
+      <entry key="H2" value="192.17214796558477" />
+      <entry key="H4" value="278.7498061207699" />
+      <entry key="D1" value="401.6717505798779" />
+      <entry key="W1" value="2522.6180190373098" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -112,30 +117,30 @@
       <entry key="M10" value="0.0" />
       <entry key="M15" value="0.0" />
       <entry key="M30" value="0.0" />
-      <entry key="H1" value="4.936112964865525E-186" />
-      <entry key="H2" value="3.142002422425844E-93" />
-      <entry key="H4" value="7.927166840762798E-47" />
-      <entry key="D1" value="3.69298854465249E-8" />
-      <entry key="W1" value="0.15711677682663636" />
+      <entry key="H1" value="1.0383074830517721E-186" />
+      <entry key="H2" value="1.441043074054513E-93" />
+      <entry key="H4" value="5.36850327295857E-47" />
+      <entry key="D1" value="3.460725590837764E-8" />
+      <entry key="W1" value="0.15566552742692127" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9610627464355648" />
-      <entry key="MS500" value="1.7008486429719314" />
-      <entry key="S2" value="3.015529375517824" />
-      <entry key="S5" value="5.292576634571162" />
-      <entry key="S10" value="8.962928581927443" />
-      <entry key="S30" value="18.89387791031201" />
-      <entry key="S60" value="27.248834735073647" />
-      <entry key="M2" value="40.519143976379794" />
-      <entry key="M5" value="63.78283232940958" />
-      <entry key="M10" value="79.48291868164394" />
-      <entry key="M15" value="91.33565738452334" />
-      <entry key="M30" value="132.14379941280686" />
-      <entry key="H1" value="194.35383383602465" />
-      <entry key="H2" value="252.22759452910756" />
-      <entry key="H4" value="292.58136205698867" />
-      <entry key="D1" value="338.72805139895144" />
-      <entry key="W1" value="2460.6097311929475" />
+      <entry key="MS100" value="0.8950250709279725" />
+      <entry key="MS500" value="0.9786523222180142" />
+      <entry key="S2" value="1.1844915402455423" />
+      <entry key="S5" value="1.984673509672094" />
+      <entry key="S10" value="3.702566974714392" />
+      <entry key="S30" value="8.68991933049278" />
+      <entry key="S60" value="11.608510247152427" />
+      <entry key="M2" value="13.622302662407524" />
+      <entry key="M5" value="18.16571765495811" />
+      <entry key="M10" value="30.045056441356003" />
+      <entry key="M15" value="40.19274207928521" />
+      <entry key="M30" value="62.5991840322279" />
+      <entry key="H1" value="109.91310140299669" />
+      <entry key="H2" value="192.17188314830497" />
+      <entry key="H4" value="278.7496204036877" />
+      <entry key="D1" value="401.67170739011186" />
+      <entry key="W1" value="2522.7736373939792" />
     </decayedShown>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="/bin/php" />
@@ -147,46 +152,46 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;git.auto.fetch.suggestion.counter&quot;: &quot;1&quot;,
-    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
-    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/rfisk/IdeaProjects/adopt-an-inmate&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
-    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
-    &quot;python.packages.toolwindow.project.migrated.to.right.top.v2&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/snap/intellij-idea-ultimate/830/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "git.auto.fetch.suggestion.counter": "1",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/rfisk/IdeaProjects/adopt-an-inmate",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "npm.Next.js: server-side.executor": "Run",
+    "python.packages.toolwindow.project.migrated.to.right.top.v2": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/snap/intellij-idea-ultimate/845/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;HTML&quot;,
-      &quot;DotEnv&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "HTML",
+      "DotEnv"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -247,7 +252,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="RWF #10 add functions and triggers to migration/refactor" />
     <MESSAGE value="RWF #11 new bug. Raw json shouldn't be displayed" />
     <MESSAGE value="RWF #10 refactor didn't account for columns." />
     <MESSAGE value="RWF #12 - admin interface to delete test data and check application statuses." />
@@ -272,7 +276,8 @@
     <MESSAGE value="RWF - add more options to showing applications by status" />
     <MESSAGE value="RWF - make sure that communications from the app are bcc'd to matchwatchers" />
     <MESSAGE value="RWF - fix the pull schedule and make sure we don't import released or wait listed inmates" />
-    <option name="LAST_COMMIT_MESSAGE" value="RWF - fix the pull schedule and make sure we don't import released or wait listed inmates" />
+    <MESSAGE value="RWF - fixing a problem with vercel - default setting for search was triggering a now paid feature." />
+    <option name="LAST_COMMIT_MESSAGE" value="RWF - fixing a problem with vercel - default setting for search was triggering a now paid feature." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

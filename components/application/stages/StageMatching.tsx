@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { findMatches } from '@/actions/matching';
 import { fetchAdopteeCardsInfo } from '@/actions/queries/query';
 import { useApplicationContext } from '@/contexts/ApplicationContext';
 import { getSupabaseBrowserClient } from '@/lib/supabase';
 import { RankedAdopteeMatch } from '@/types/schema';
+import MatchingErrorScreen from '../matching/MatchingErrorScreen';
 import MatchingLoading from '../matching/MatchingLoading';
 import MatchingReviewScreen from '../matching/MatchingReviewScreen';
 import MatchingSelectScreen from '../matching/MatchingSelectScreen';
@@ -15,22 +16,23 @@ export default function StageMatching() {
   const [subStage, setSubStage] = useState<'select' | 'review'>('select');
   const [rankedIds, setRankedIds] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [matchCards, setMatchCards] = useState<RankedAdopteeMatch[]>([]);
   const loadStarted = useRef(false);
 
-  useEffect(() => {
-    if (loadStarted.current) return;
-    loadStarted.current = true;
-
-    // find matches
-    const loadMatches = async () => {
+  const loadMatches = useCallback(async () => {
+    setErrorMessage(null);
+    try {
       const supabase = getSupabaseBrowserClient();
       const {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
 
-      if (authError) throw new Error(authError.message);
+      if (authError) {
+        setErrorMessage(authError.message);
+        return;
+      }
 
       // not logged in: should be redirected
       if (!user) return;
@@ -46,17 +48,37 @@ export default function StageMatching() {
 
       // get existing match or find matches if none exist
       const { data: matchIds, error } = await findMatches(appState.appId);
-      if (error) throw new Error(error);
+      if (error || !matchIds) {
+        setErrorMessage(
+          error || 'Failed to generate matches. Please try again.',
+        );
+        return;
+      }
 
       // fetch full card info and store IDs in appState
-      const cards = await fetchAdopteeCardsInfo(matchIds!);
+      const cards = await fetchAdopteeCardsInfo(matchIds);
       setMatchCards(cards);
       setAppState(prev => ({ ...prev, matches: matchIds }));
       setIsLoaded(true);
-    };
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : 'An unexpected error occurred while loading matches.',
+      );
+    }
+  }, [appState.appId, appState.matches, setAppState]);
 
+  useEffect(() => {
+    if (loadStarted.current) return;
+    loadStarted.current = true;
     loadMatches();
-  }, [isLoaded, appState, setAppState]);
+  }, [loadMatches]);
+
+  const handleRetry = () => {
+    loadStarted.current = false;
+    loadMatches();
+  };
 
   /**
    * Function to finalize the ranks and transition to the review screen.
@@ -74,6 +96,10 @@ export default function StageMatching() {
   const handleBackToSelect = () => {
     setSubStage('select');
   };
+
+  if (errorMessage) {
+    return <MatchingErrorScreen error={errorMessage} onRetry={handleRetry} />;
+  }
 
   if (isLoaded) {
     if (subStage === 'select') {

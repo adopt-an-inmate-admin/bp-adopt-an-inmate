@@ -4,6 +4,8 @@ packages:
 allowBuilds:
   '@tailwindcss/oxide': true
   esbuild: true
+  onnxruntime-node: true
+  protobufjs: true
   sharp: true
   supabase: true
 
