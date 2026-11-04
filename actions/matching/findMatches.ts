@@ -55,7 +55,6 @@ export const findMatches = async (appId: string) => {
   const embedding = await hfClient.featureExtraction({
     model: 'sentence-transformers/all-MiniLM-L6-v2',
     inputs: appData.personal_bio,
-    provider: 'auto',
   });
 
   // assert embedding type
